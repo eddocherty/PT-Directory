@@ -1,4 +1,4 @@
-# PT Directory UK
+# Train Local
 
 A directory of personal trainers across the UK. Visitors filter by location and radius, training style, fitness goal, online or in-person sessions, home visits, price and trainer gender.
 

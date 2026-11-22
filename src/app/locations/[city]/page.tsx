@@ -27,15 +27,16 @@ export default async function CityPage({ params, searchParams }: Props) {
 
   return (
     <SearchLayout
-      eyebrow={city.region}
+      eyebrow={`${city.county}, ${city.nation}`}
       title={`Personal trainers in ${city.name}`}
-      subtitle={`${total} ${total === 1 ? "trainer" : "trainers"} within ${f.radius} miles`}
+      subtitle={`Independent trainers within ${f.radius} miles of ${city.name}, nearest first.`}
       filters={f}
       action={`/locations/${city.slug}`}
       hideLocation
       trainers={trainers}
       total={total}
       params={sp}
+      origin={city.name}
     />
   );
 }

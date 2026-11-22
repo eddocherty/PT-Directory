@@ -47,9 +47,9 @@ export default async function TrainerPage({ params }: Props) {
       <section className="bg-soft text-ink">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_1fr] md:items-end md:py-14">
           <div className="relative">
-            <Avatar t={t} className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
+            <Avatar t={t} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
             {t.free_consultation && (
-              <span className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-paper">
+              <span className="absolute left-4 top-4 rounded-full bg-paper px-3 py-1.5 text-xs font-semibold text-accent">
                 Free consultation
               </span>
             )}
@@ -176,7 +176,7 @@ export default async function TrainerPage({ params }: Props) {
             </p>
             {direct ? (
               <>
-                <p className="mb-4 text-sm">This profile hasn’t been claimed yet, so get in touch with {first} directly.</p>
+                <p className="mb-4 text-sm">Get in touch with {first} directly through their website.</p>
                 {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" className="btn w-full justify-center">Visit {first}’s website</a>}
               </>
             ) : (
@@ -194,8 +194,8 @@ export default async function TrainerPage({ params }: Props) {
             </p>
           )}
           <p className="mt-4 px-2 text-xs text-muted">
-            Is this you? <Link href={`/for-trainers?listing=${t.slug}`} className="underline">Claim or edit this profile</Link> or{" "}
-            <Link href={`/remove?listing=${t.slug}`} className="underline">ask us to remove it</Link>.
+            Is this your listing?{" "}
+            <Link href={`/remove?listing=${t.slug}`} className="underline hover:text-ink">Request removal or a correction</Link>.
           </p>
         </aside>
       </div>

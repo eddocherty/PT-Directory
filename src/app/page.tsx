@@ -24,7 +24,7 @@ export default async function Home() {
         <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[36rem] w-[36rem] rounded-full bg-zap blur-3xl" />
         <div aria-hidden className="pointer-events-none absolute -bottom-40 right-1/4 h-80 w-80 rounded-full bg-accent/15 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20">
-          <p className="eyebrow text-accent">The UK’s personal trainer directory</p>
+          <p className="eyebrow text-accent">Independent trainers, near you</p>
           <h1 className="display mt-5 text-5xl sm:text-7xl lg:text-8xl">
             Find your<br /><span className="text-accent">trainer.</span>
           </h1>
@@ -117,24 +117,17 @@ export default async function Home() {
       <section className="mx-auto max-w-7xl px-4 pb-16">
         <h2 className="display mb-6 text-3xl sm:text-4xl">Trainers near you</h2>
         <div className="flex flex-wrap gap-2">
-          {CITIES.map((c) => (
+          {CITIES.filter((c) => c.popular).map((c) => (
             <Link key={c.slug} href={`/locations/${c.slug}`} className="rounded-full border border-line px-4 py-2 text-sm font-medium hover:border-ink">
               {c.name}
             </Link>
           ))}
+          <Link href="/locations" className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper hover:bg-accent">
+            All {CITIES.length} towns by county →
+          </Link>
         </div>
       </section>
 
-      {/* Trainer CTA */}
-      <section className="bg-accent text-paper">
-        <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-4 py-14 md:flex-row md:items-center">
-          <div>
-            <h2 className="display text-4xl sm:text-5xl">Are you a PT?</h2>
-            <p className="mt-2 max-w-lg text-lg text-paper/85">Claim your free profile, add your photos and specialisms, and start getting enquiries.</p>
-          </div>
-          <Link href="/for-trainers" className="btn-light text-base">Claim your profile</Link>
-        </div>
-      </section>
     </>
   );
 }

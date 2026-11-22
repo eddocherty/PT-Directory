@@ -203,7 +203,7 @@ export async function getTrainer(slug: string): Promise<Trainer | null> {
 
 export async function submitListingRequest(req: {
   trainer_slug?: string;
-  kind: "claim" | "removal" | "correction";
+  kind: "removal" | "correction";
   requester_name?: string;
   requester_email: string;
   message?: string;

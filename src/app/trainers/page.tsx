@@ -11,12 +11,11 @@ export default async function TrainersPage({ searchParams }: { searchParams: Pro
   const f = parseFilters(params);
   const geo = f.location ? await geocodeUk(f.location) : null;
   const { trainers, total } = await searchTrainers({ ...f, lat: geo?.lat, lng: geo?.lng });
-  const subtitle = [
-    `${total} ${total === 1 ? "trainer" : "trainers"}`,
-    geo && `within ${f.radius} miles`,
-    geo && f.online && "plus online coaches anywhere",
-    f.location && !geo && `we couldn’t find “${f.location}”, so showing everywhere`,
-  ].filter(Boolean).join(" · ");
+  const subtitle = geo
+    ? `Independent trainers within ${f.radius} miles of ${geo.label}${f.online ? ", plus online coaches anywhere" : ""}, nearest first.`
+    : f.location
+      ? `We couldn’t find “${f.location}”. Try a full postcode or a nearby town. Showing trainers everywhere for now.`
+      : "Enter your postcode or town to see the trainers nearest you first.";
 
   return (
     <SearchLayout
@@ -28,6 +27,7 @@ export default async function TrainersPage({ searchParams }: { searchParams: Pro
       trainers={trainers}
       total={total}
       params={params}
+      origin={geo?.label}
     />
   );
 }

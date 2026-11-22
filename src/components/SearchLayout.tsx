@@ -1,41 +1,73 @@
+import { FilterDrawer } from "./FilterDrawer";
 import { FilterForm } from "./FilterForm";
 import { Results } from "./Results";
+import { RADII } from "@/lib/taxonomy";
 import type { RawParams } from "@/lib/filters";
 import type { SearchFilters, TrainerSummary } from "@/lib/trainers";
 
+const KEEP_OUT = new Set(["location", "radius", "page"]);
+
 export function SearchLayout({
-  eyebrow, title, subtitle, filters, action, hideLocation, trainers, total, params,
+  eyebrow, title, subtitle, filters, action, hideLocation, trainers, total, params, origin,
 }: {
   eyebrow: string; title: string; subtitle: string; filters: SearchFilters & { location?: string };
   action: string; hideLocation?: boolean; trainers: TrainerSummary[]; total: number; params: RawParams;
+  /** Place the results are measured from. When set, results are sorted nearest first. */
+  origin?: string;
 }) {
   const active = (filters.styles?.length ?? 0) + (filters.goals?.length ?? 0) + (filters.sports?.length ?? 0) +
-    (filters.online ? 1 : 0) + (filters.homeVisits ? 1 : 0) + (filters.maxPrice ? 1 : 0) + (filters.gender ? 1 : 0);
+    (filters.online ? 1 : 0) + (filters.homeVisits ? 1 : 0) + (filters.maxPrice ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.q ? 1 : 0);
+  const form = <FilterForm action={action} values={filters} hideLocation={hideLocation} />;
   return (
     <>
       <section className="border-b border-line bg-soft text-ink">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:py-14">
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:py-12">
           <p className="eyebrow text-accent">{eyebrow}</p>
-          <h1 className="display mt-3 text-4xl sm:text-5xl">{title}</h1>
+          <h1 className="display mt-3 text-3xl sm:text-5xl">{title}</h1>
           <p className="mt-3 text-muted">{subtitle}</p>
+
+          {/* Quick where + how far bar, keeps any other filters already chosen */}
+          <form action={action} className="mt-6 flex max-w-2xl flex-col gap-2 sm:flex-row">
+            {Object.entries(params).flatMap(([k, v]) =>
+              KEEP_OUT.has(k) ? [] : (Array.isArray(v) ? v : v ? [v] : []).map((item, i) => (
+                <input key={`${k}-${i}`} type="hidden" name={k} value={item} />
+              )),
+            )}
+            {!hideLocation && (
+              <input
+                name="location"
+                defaultValue={filters.location}
+                placeholder="Your postcode or town"
+                aria-label="Your postcode or town"
+                className="input flex-1 bg-paper"
+              />
+            )}
+            <div className="flex gap-2">
+              <select name="radius" defaultValue={String(filters.radius ?? 25)} className="input flex-1 bg-paper sm:w-auto" aria-label="Distance">
+                {RADII.map((r) => <option key={r} value={r}>Within {r} miles</option>)}
+              </select>
+              <button type="submit" className="btn shrink-0">{hideLocation ? "Update" : "Search"}</button>
+            </div>
+          </form>
         </div>
       </section>
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 lg:grid-cols-[300px_1fr]">
+      <div className="mx-auto grid max-w-7xl gap-6 px-4 py-6 sm:py-8 lg:grid-cols-[280px_1fr] lg:gap-10">
         <aside>
-          {/* Mobile: collapsible. Desktop: always open (details forced open via lg:block on content). */}
-          <details className="group rounded-3xl border border-line p-4 lg:hidden">
-            <summary className="flex cursor-pointer list-none items-center justify-between font-semibold">
-              Filters {active > 0 && <span className="rounded-full bg-ink px-2 py-0.5 text-xs text-paper">{active}</span>}
-              <span className="text-xl transition group-open:rotate-45">+</span>
-            </summary>
-            <div className="mt-4"><FilterForm action={action} values={filters} hideLocation={hideLocation} /></div>
-          </details>
+          <div className="lg:hidden"><FilterDrawer active={active}>{form}</FilterDrawer></div>
           <div className="hidden lg:sticky lg:top-24 lg:block">
-            <FilterForm action={action} values={filters} hideLocation={hideLocation} />
+            <p className="eyebrow pb-3">Filter results</p>
+            {form}
           </div>
         </aside>
         <section>
-          <Results trainers={trainers} total={total} page={filters.page ?? 1} params={params} basePath={action} />
+          <Results
+            trainers={trainers}
+            total={total}
+            filters={filters}
+            params={params}
+            basePath={action}
+            origin={origin}
+          />
         </section>
       </div>
     </>

@@ -1,0 +1,473 @@
+[
+  {
+    "slug": "gav-noble-pilates-lisburn",
+    "name": "Gav Noble Physiotherapy",
+    "business_name": "Gav Noble Physiotherapy",
+    "headline": "Physio-led Pilates studio in Lisburn",
+    "bio": "A physiotherapy-led Pilates studio in Lisburn where every session is guided by APPI-trained physiotherapists, so you can move safely and build strength.",
+    "city": "Lisburn",
+    "region": "Northern Ireland",
+    "postcode_district": "BT28",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates",
+      "mobility"
+    ],
+    "goals": [
+      "rehab",
+      "flexibility"
+    ],
+    "free_consultation": false,
+    "website": "https://www.gavnoble.com/",
+    "source": "website",
+    "source_url": "https://www.gavnoble.com/pilates/",
+    "lat": 54.5229,
+    "lng": -6.0866
+  },
+  {
+    "slug": "all-active-pilates-lisburn",
+    "name": "All Active Pilates & Physio",
+    "business_name": "All Active Pilates & Physio",
+    "headline": "Pilates classes and physio across Lisburn, Hillsborough and Dromore",
+    "bio": "All Active runs Pilates classes, physiotherapy and massage across Lisburn, Hillsborough and Dromore.",
+    "city": "Lisburn",
+    "region": "Northern Ireland",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates",
+      "mobility"
+    ],
+    "goals": [
+      "rehab",
+      "flexibility",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://www.allactivepilatesandphysio.co.uk/",
+    "source": "website",
+    "source_url": "https://www.allactivepilatesandphysio.co.uk/",
+    "lat": 54.5229,
+    "lng": -6.0866
+  },
+  {
+    "slug": "phg-fitness-lisburn",
+    "name": "Pauline Hunter-Graham",
+    "business_name": "PHG Fitness",
+    "headline": "Specialist, accessible personal training in Lisburn",
+    "bio": "Pauline offers specialist personal training at 360 Health Physiotherapy and Pilates Studio in Lisburn, believing exercise should be accessible to everyone, whatever their needs or circumstances.",
+    "city": "Lisburn",
+    "region": "Northern Ireland",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "functional",
+      "strength",
+      "mobility"
+    ],
+    "goals": [
+      "rehab",
+      "older-adults",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://www.phgfitness.co.uk/",
+    "source": "website",
+    "source_url": "https://www.phgfitness.co.uk/",
+    "lat": 54.5229,
+    "lng": -6.0866
+  },
+  {
+    "slug": "yvonne-mcgarrity-pilates-lisburn",
+    "name": "Yvonne McGarrity",
+    "business_name": "YMG Pilates",
+    "headline": "Pilates with a former pro dancer near Lisburn",
+    "bio": "Yvonne has been a fully qualified Pilates teacher for 19 years, after careers as a professional dancer and international aerobics competitor. She teaches in Hillsborough, near Lisburn.",
+    "city": "Lisburn",
+    "region": "Northern Ireland",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": 19,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://www.ymgpilates.com/",
+    "source": "website",
+    "source_url": "https://www.ymgpilates.com/",
+    "lat": 54.5229,
+    "lng": -6.0866
+  },
+  {
+    "slug": "liverpool-pt-studios",
+    "name": "Liverpool Personal Training Studios",
+    "business_name": "Liverpool Personal Training Studios",
+    "headline": "Liverpool's original private 1-2-1 PT studio, since 2004",
+    "bio": "Established in 2004, Liverpool Personal Training Studios provides private 1-2-1 personal training with expert coaching in a professional environment. Free consultation.",
+    "city": "Liverpool",
+    "region": "North West",
+    "postcode_district": "L19",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": 22,
+    "styles": [
+      "strength",
+      "functional"
+    ],
+    "goals": [
+      "weight-loss",
+      "general-fitness",
+      "muscle-gain"
+    ],
+    "free_consultation": true,
+    "website": "https://liverpoolpersonaltrainingstudio.co.uk/",
+    "source": "website",
+    "source_url": "https://liverpoolpersonaltrainingstudio.co.uk/",
+    "lat": 53.359,
+    "lng": -2.9033
+  },
+  {
+    "slug": "unit-7-pt-liverpool",
+    "name": "Unit 7",
+    "business_name": "Unit 7",
+    "headline": "Independent PT and group functional fitness in Liverpool",
+    "bio": "Unit 7 is an independent personal training and group fitness studio in Liverpool, billed as the house of functional fitness.",
+    "city": "Liverpool",
+    "region": "North West",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "functional",
+      "hiit",
+      "bootcamp"
+    ],
+    "goals": [
+      "general-fitness",
+      "weight-loss"
+    ],
+    "free_consultation": false,
+    "website": "https://unit7pt.co.uk/",
+    "source": "website",
+    "source_url": "https://unit7pt.co.uk/",
+    "lat": 53.402,
+    "lng": -2.9805
+  },
+  {
+    "slug": "g42-studios-liverpool",
+    "name": "G42 Studios",
+    "business_name": "G42 Studios",
+    "headline": "Exclusive 1-2-1 PT studio in Garston",
+    "bio": "G42 is an exclusive, private 1-2-1 personal training studio in Garston, Liverpool, with no members and highly qualified trainers, plus physio and CBT services.",
+    "city": "Liverpool",
+    "region": "North West",
+    "postcode_district": "L19",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "strength",
+      "functional"
+    ],
+    "goals": [
+      "weight-loss",
+      "muscle-gain",
+      "rehab"
+    ],
+    "free_consultation": false,
+    "website": "https://www.g42studiosliverpool.co.uk/",
+    "source": "website",
+    "source_url": "https://www.g42studiosliverpool.co.uk/",
+    "lat": 53.359,
+    "lng": -2.9033
+  },
+  {
+    "slug": "john-clarke-pt-liverpool",
+    "name": "John Clarke",
+    "business_name": "John Clarke Personal Trainer",
+    "headline": "Private 1-2-1 results-guaranteed PT in Garston",
+    "bio": "John offers private 1-2-1 personal training at G42 Studios in Garston, Liverpool, with no membership needed and a free consultation.",
+    "city": "Liverpool",
+    "region": "North West",
+    "postcode_district": "L19",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "strength",
+      "bodybuilding"
+    ],
+    "goals": [
+      "weight-loss",
+      "muscle-gain"
+    ],
+    "free_consultation": true,
+    "website": "https://www.johnclarkepersonaltrainer.com/",
+    "source": "website",
+    "source_url": "https://www.johnclarkepersonaltrainer.com/",
+    "lat": 53.359,
+    "lng": -2.9033
+  },
+  {
+    "slug": "strictly-boxing-fitness-liverpool",
+    "name": "Strictly Boxing Fitness",
+    "business_name": "Strictly Boxing Fitness Studio",
+    "headline": "Boxing fitness and personal training in Garston",
+    "bio": "Personal training and boxing fitness at the Strictly Boxing Fitness studio in Garston, Liverpool.",
+    "city": "Liverpool",
+    "region": "North West",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "boxing",
+      "hiit",
+      "functional"
+    ],
+    "goals": [
+      "general-fitness",
+      "weight-loss",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://liverpoolpersonaltrainer.com/",
+    "source": "website",
+    "source_url": "https://liverpoolpersonaltrainer.com/personal-training/",
+    "lat": 53.402,
+    "lng": -2.9805
+  },
+  {
+    "slug": "the-body-clinic-liverpool",
+    "name": "The Body Clinic",
+    "business_name": "The Body Clinic Liverpool",
+    "headline": "Pilates and women's health physio from two sisters",
+    "bio": "Two sisters, a physiotherapist and a podiatrist, qualified as APPI Pilates instructors and run a Pilates studio and women's health physiotherapy clinic in south Liverpool.",
+    "city": "Liverpool",
+    "region": "North West",
+    "postcode_district": "L18",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates",
+      "mobility"
+    ],
+    "goals": [
+      "pre-post-natal",
+      "rehab",
+      "flexibility"
+    ],
+    "free_consultation": false,
+    "website": "https://www.thebodyclinicliverpool.co.uk/",
+    "source": "website",
+    "source_url": "https://www.thebodyclinicliverpool.co.uk/about",
+    "lat": 53.3806,
+    "lng": -2.9083
+  },
+  {
+    "slug": "ava-pilates-liverpool",
+    "name": "AVA Pilates Studio",
+    "business_name": "AVA Pilates Studio",
+    "headline": "Boutique STOTT reformer and equipment studio in Liverpool",
+    "bio": "AVA is a boutique, fully equipped STOTT PILATES studio in the heart of Liverpool with reformers and Pilates equipment, plus online classes.",
+    "city": "Liverpool",
+    "region": "North West",
+    "postcode_district": "L1",
+    "in_person": true,
+    "online": true,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "rehab",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://www.avapilatesstudio.co.uk/",
+    "source": "website",
+    "source_url": "https://www.avapilatesstudio.co.uk/",
+    "lat": 53.402,
+    "lng": -2.9805
+  },
+  {
+    "slug": "embodied-pilates-derry",
+    "name": "Embodied Pilates Studio",
+    "business_name": "Embodied Pilates Studio",
+    "headline": "Joyful Pilates in Derry/Londonderry",
+    "bio": "Embodied Pilates Studio in Derry/Londonderry welcomes newcomers with explore sessions and classes for all levels.",
+    "city": "Londonderry",
+    "region": "Northern Ireland",
+    "postcode_district": "BT48",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://www.embodiedpilatesstudio.com/",
+    "source": "website",
+    "source_url": "https://www.embodiedpilatesstudio.com/",
+    "lat": 55.0104,
+    "lng": -7.3278
+  },
+  {
+    "slug": "platform-pilates-derry",
+    "name": "Platform Pilates",
+    "business_name": "Platform Pilates",
+    "headline": "Small reformer classes at Ebrington, Derry",
+    "bio": "Platform Pilates runs small reformer classes with personal attention at Ebrington in Derry/Londonderry, and in Coleraine.",
+    "city": "Londonderry",
+    "region": "Northern Ireland",
+    "postcode_district": "BT47",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://platformpilates.co.uk/",
+    "source": "website",
+    "source_url": "https://platformpilates.co.uk/",
+    "lat": 54.9741,
+    "lng": -7.2139
+  },
+  {
+    "slug": "sister-studio-derry",
+    "name": "Claire and Kathryn",
+    "business_name": "Sister Studio",
+    "headline": "Online Pilates from sisters in Derry/Londonderry",
+    "bio": "Sisters Claire and Kathryn run online Pilates classes for men and women, beginners or experienced, from Derry/Londonderry, including Pilates for sports.",
+    "city": null,
+    "region": null,
+    "postcode_district": null,
+    "in_person": false,
+    "online": true,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "sports-performance"
+    ],
+    "free_consultation": false,
+    "website": "https://www.sisterstudio.uk/",
+    "source": "website",
+    "source_url": "https://www.sisterstudio.uk/",
+    "lat": null,
+    "lng": null
+  },
+  {
+    "slug": "janette-milling-pilates-derry",
+    "name": "Janette Milling",
+    "business_name": "Neil Pilates",
+    "headline": "Mat Pilates classes in Derry/Londonderry",
+    "bio": "Janette is a VTCT Level 3 mat Pilates instructor running group classes in Derry/Londonderry, after 15 years of attending classes herself.",
+    "city": "Londonderry",
+    "region": "Northern Ireland",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [
+      "VTCT Level 3 Diploma in Mat Pilates"
+    ],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://neilpilates.com/",
+    "source": "website",
+    "source_url": "https://neilpilates.com/pilates-classes-in-derry-londonderry/",
+    "lat": 55.0104,
+    "lng": -7.3278
+  }
+]
