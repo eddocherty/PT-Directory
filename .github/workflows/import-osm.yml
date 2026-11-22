@@ -1,0 +1,30 @@
+name: Import trainers from OpenStreetMap
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only fetch and upload the JSON, don't write to Supabase"
+        type: boolean
+        default: true
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: node scripts/fetch-osm.mjs data/osm-trainers.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: osm-trainers
+          path: data/osm-trainers.json
+      - if: ${{ !inputs.dry_run }}
+        run: node scripts/import-trainers.mjs data/osm-trainers.json
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
