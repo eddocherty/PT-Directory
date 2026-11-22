@@ -1,0 +1,318 @@
+[
+  {
+    "slug": "the-body-rule-mk",
+    "name": "The Body Rule",
+    "business_name": "The Body Rule",
+    "headline": "Reformer Pilates studio in Milton Keynes",
+    "bio": "A reformer Pilates studio in Milton Keynes running small classes on the reformer for strength, posture and flexibility.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "general-fitness",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://thebodyrule.com/",
+    "source": "website",
+    "source_url": "https://thebodyrule.com/",
+    "lat": 52.0406,
+    "lng": -0.7594
+  },
+  {
+    "slug": "v-pilates-mk",
+    "name": "V Pilates",
+    "business_name": "V Pilates",
+    "headline": "Reformer and mat Pilates with 20 years of teaching",
+    "bio": "An independent Pilates teacher in Milton Keynes with around 20 years of experience, teaching reformer and mat Pilates.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": 20,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "rehab",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://vpilates.co.uk/",
+    "source": "website",
+    "source_url": "https://vpilates.co.uk/",
+    "lat": 52.0406,
+    "lng": -0.7594
+  },
+  {
+    "slug": "yogalily-mk",
+    "name": "Yogalily",
+    "business_name": "Yogalily",
+    "headline": "Reformer and tower Pilates in central Milton Keynes",
+    "bio": "A small studio in central Milton Keynes offering reformer and tower Pilates alongside yoga.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": "MK1",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates",
+      "yoga"
+    ],
+    "goals": [
+      "flexibility",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://yogalily.com/",
+    "source": "website",
+    "source_url": "https://yogalily.com/",
+    "lat": 52.0035,
+    "lng": -0.7317
+  },
+  {
+    "slug": "louisa-harris-pilates",
+    "name": "Louisa Harris",
+    "business_name": "Louisa Harris Pilates",
+    "headline": "Equipment Pilates studio plus free online classes",
+    "bio": "Louisa runs an equipment Pilates studio near Milton Keynes and also shares free online classes for people training at home.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": "MK17",
+    "in_person": true,
+    "online": true,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "rehab",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://louisaharrispilates.co.uk/",
+    "source": "website",
+    "source_url": "https://louisaharrispilates.co.uk/",
+    "lat": 52.0047,
+    "lng": -0.6556
+  },
+  {
+    "slug": "studio-281-mk",
+    "name": "Studio 281",
+    "business_name": "Studio 281",
+    "headline": "Private reformer Pilates sessions",
+    "bio": "A private reformer Pilates studio in Milton Keynes for one-to-one and small sessions.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "general-fitness",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://studio281.co.uk/",
+    "source": "website",
+    "source_url": "https://studio281.co.uk/",
+    "lat": 52.0406,
+    "lng": -0.7594
+  },
+  {
+    "slug": "carleynfitness",
+    "name": "Carley",
+    "business_name": "CarleyNFitness",
+    "headline": "Women-only PT, injury recovery and pre/postnatal",
+    "bio": "Carley is a personal trainer for women, specialising in injury recovery and pre and postnatal training, with a private studio in Milton Keynes and online coaching across the UK.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": null,
+    "in_person": true,
+    "online": true,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "strength",
+      "functional"
+    ],
+    "goals": [
+      "pre-post-natal",
+      "rehab",
+      "weight-loss",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://carleynfitness.com/",
+    "source": "website",
+    "source_url": "https://carleynfitness.com/",
+    "lat": 52.0406,
+    "lng": -0.7594
+  },
+  {
+    "slug": "forme-body-lab",
+    "name": "FORMÉ Body Lab",
+    "business_name": "FORMÉ Body Lab",
+    "headline": "Female personal trainer in Milton Keynes",
+    "bio": "A female-led personal training service in Milton Keynes focused on strength and body confidence.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "strength",
+      "functional"
+    ],
+    "goals": [
+      "weight-loss",
+      "confidence",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://formebodylab.com/",
+    "source": "website",
+    "source_url": "https://formebodylab.com/",
+    "lat": 52.0406,
+    "lng": -0.7594
+  },
+  {
+    "slug": "gill-dawson-pt",
+    "name": "Gill Dawson",
+    "business_name": "Gill Dawson PT",
+    "headline": "Personal trainer in Milton Keynes",
+    "bio": "Gill is a self-employed personal trainer in Milton Keynes helping clients build strength and fitness.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": "MK7",
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "strength",
+      "functional"
+    ],
+    "goals": [
+      "general-fitness",
+      "weight-loss",
+      "older-adults"
+    ],
+    "free_consultation": false,
+    "website": "https://gilldawson.com/",
+    "source": "website",
+    "source_url": "https://gilldawson.com/",
+    "lat": 52.0178,
+    "lng": -0.6986
+  },
+  {
+    "slug": "mark-esnard-fitness",
+    "name": "Mark Esnard",
+    "business_name": "Mark Esnard Fitness",
+    "headline": "Private PT in Milton Keynes and online across the UK",
+    "bio": "Mark offers private personal training in Milton Keynes and online coaching for clients anywhere in the UK.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": null,
+    "in_person": true,
+    "online": true,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "strength",
+      "functional"
+    ],
+    "goals": [
+      "weight-loss",
+      "muscle-gain",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://markesnardfitness.com/",
+    "source": "website",
+    "source_url": "https://markesnardfitness.com/",
+    "lat": 52.0406,
+    "lng": -0.7594
+  },
+  {
+    "slug": "gm-strength-and-fitness",
+    "name": "Gio",
+    "business_name": "GM Strength and Fitness",
+    "headline": "Ex-Royal Marines Commando coaching in a private gym",
+    "bio": "Gio is a former Royal Marines Commando with a first-class strength and conditioning degree, coaching clients in a private gym in Milton Keynes.",
+    "city": "Milton Keynes",
+    "region": "South East",
+    "postcode_district": null,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "strength",
+      "functional"
+    ],
+    "goals": [
+      "muscle-gain",
+      "sports-performance",
+      "general-fitness"
+    ],
+    "free_consultation": false,
+    "website": "https://gmstrengthandfitness.com/",
+    "source": "website",
+    "source_url": "https://gmstrengthandfitness.com/",
+    "lat": 52.0406,
+    "lng": -0.7594
+  }
+]
