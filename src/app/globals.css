@@ -3,12 +3,12 @@
 :root {
   --ink: #111214;
   --paper: #ffffff;
-  --soft: #f4f5f1;
-  --line: #e2e0da;
+  --soft: #f4f6fa;
+  --line: #e1e5ec;
   --muted: #6b6b68;
-  --accent: #1f7a5a;      /* fresh green: the one accent */
+  --accent: #2457c5;      /* clear cobalt blue: the one accent */
   --accent-ink: #ffffff;
-  --zap: #dff2e7;         /* pale mint, for soft highlights */
+  --zap: #e4ecfb;         /* pale sky blue, for soft highlights */
   --star: #b8962e;
 }
 
