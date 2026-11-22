@@ -224,7 +224,13 @@ export async function submitListingRequest(req: {
 }
 
 export async function featuredTrainers(limit = 4): Promise<TrainerSummary[]> {
-  const { trainers } = await searchTrainers({});
+  let trainers: TrainerSummary[] = [];
+  try {
+    ({ trainers } = await searchTrainers({}));
+  } catch (e) {
+    // Never let the home page fail (or a build break) because the database is unreachable.
+    console.error("featuredTrainers:", e);
+  }
   return [...trainers]
     .sort((a, b) => (b.rating_avg ?? 0) - (a.rating_avg ?? 0) || b.review_count - a.review_count)
     .slice(0, limit);

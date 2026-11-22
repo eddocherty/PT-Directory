@@ -3,6 +3,9 @@ import { TrainerCard } from "@/components/TrainerCard";
 import { CITIES, FITNESS_GOALS, TRAINING_STYLES } from "@/lib/taxonomy";
 import { featuredTrainers } from "@/lib/trainers";
 
+// Refresh featured trainers every 5 minutes rather than freezing them at build time.
+export const revalidate = 300;
+
 const STYLE_TILES = [
   { slug: "strength", line: "Get strong" },
   { slug: "hiit", line: "Sweat it out" },
