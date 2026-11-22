@@ -4,7 +4,7 @@ import { useActionState } from "react";
 import { sendEnquiryAction, type RequestState } from "@/app/actions";
 import { FITNESS_GOALS } from "@/lib/taxonomy";
 
-export function EnquiryForm({ slug, firstName, freeConsult }: { slug: string; firstName: string; freeConsult: boolean }) {
+export function EnquiryForm({ slug, firstName }: { slug: string; firstName: string }) {
   const [state, action, pending] = useActionState<RequestState, FormData>(sendEnquiryAction, {});
   if (state.ok)
     return (
@@ -31,7 +31,7 @@ export function EnquiryForm({ slug, firstName, freeConsult }: { slug: string; fi
       <textarea name="message" rows={4} className="input" placeholder={`Tell ${firstName} a bit about you and what you want to achieve`} />
       {state.error && <p className="font-semibold text-red-700">{state.error}</p>}
       <button disabled={pending} className="btn">
-        {pending ? "Sending…" : freeConsult ? `Book a free consultation` : `Message ${firstName}`}
+        {pending ? "Sending…" : `Message ${firstName}`}
       </button>
     </form>
   );

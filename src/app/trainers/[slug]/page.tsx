@@ -9,6 +9,9 @@ import { Avatar } from "@/components/TrainerCard";
 import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
 import { getTrainer } from "@/lib/trainers";
 
+// years_experience was recorded in 2026; show a start year so it never goes stale.
+const EXPERIENCE_BASE_YEAR = 2026;
+
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -49,11 +52,6 @@ export default async function TrainerPage({ params }: Props) {
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_1fr] md:items-end md:py-14">
           <div className="relative">
             <Avatar t={t} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
-            {t.free_consultation && (
-              <span className="absolute left-4 top-4 rounded-full bg-paper px-3 py-1.5 text-xs font-semibold text-accent">
-                Free consultation
-              </span>
-            )}
           </div>
           <div className="flex flex-col gap-5">
             <Link href="/trainers" className="text-sm text-muted hover:text-ink">← All trainers</Link>
@@ -136,7 +134,7 @@ export default async function TrainerPage({ params }: Props) {
             <section>
               <H2>Qualifications</H2>
               <ul className="flex flex-col gap-2">
-                {t.years_experience != null && <li className="font-semibold">✓ {t.years_experience} years’ experience</li>}
+                {t.years_experience != null && <li className="font-semibold">✓ Training clients since {EXPERIENCE_BASE_YEAR - t.years_experience}</li>}
                 {t.qualifications.map((q) => <li key={q}>✓ {q}</li>)}
               </ul>
             </section>
@@ -172,7 +170,6 @@ export default async function TrainerPage({ params }: Props) {
             <p className="display mt-1 text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">
               Ask {first} about prices and availability.
-              {t.free_consultation && " First consultation is free."}
             </p>
             {direct ? (
               <>
@@ -180,7 +177,7 @@ export default async function TrainerPage({ params }: Props) {
                 {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" className="btn w-full justify-center">Visit {first}’s website</a>}
               </>
             ) : (
-              <EnquiryForm slug={t.slug} firstName={first} freeConsult={t.free_consultation} />
+              <EnquiryForm slug={t.slug} firstName={first} />
             )}
             {links.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">

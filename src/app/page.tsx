@@ -111,7 +111,7 @@ export default async function Home() {
           {[
             ["01", "Search", "Pop in your postcode and what you want to work on."],
             ["02", "Compare", "Check specialisms, reviews and what they do for fun."],
-            ["03", "Message", "Contact trainers for free. Loads offer a free first session."],
+            ["03", "Message", "Get in touch with trainers directly. It’s free to message them."],
           ].map(([n, h, p]) => (
             <div key={n} className="rounded-3xl border border-line p-6">
               <p className="text-sm font-semibold text-muted">{n}</p>
