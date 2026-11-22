@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Inter, Inter_Tight } from "next/font/google";
 import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import { Logo } from "@/components/Logo";
+import { FROM_PRICE } from "@/lib/products";
 import "./globals.css";
 
 const display = Inter_Tight({ variable: "--font-display", subsets: ["latin"], weight: ["600", "700"] });
@@ -34,7 +35,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <div className="flex items-center gap-6 text-sm font-medium">
               <Link href="/trainers?online=1" className="text-muted hover:text-ink">Online</Link>
               <Link href="/locations" className="hidden text-muted hover:text-ink sm:inline">Locations</Link>
-              <Link href="/shop" className="text-muted hover:text-ink">Plans</Link>
+              <Link href="/shop" className="text-muted hover:text-ink">Plans <span className="ml-1 hidden rounded-full bg-zap px-2 py-0.5 text-xs font-semibold text-accent sm:inline">from {FROM_PRICE}</span></Link>
               <Link href="/trainers" className="btn px-4 py-2">Find a trainer</Link>
             </div>
           </nav>

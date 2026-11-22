@@ -20,7 +20,7 @@ export const PRODUCTS: Product[] = [
     short: "Beginner gym plan",
     description:
       "A confidence-building plan for anyone new to the gym. Three full-body sessions a week, every exercise explained in plain English.",
-    price: 700,
+    price: 600,
     file: "train-local-beginner-gym-plan.pdf",
     pages: 8,
     level: "Beginner",
@@ -39,7 +39,7 @@ export const PRODUCTS: Product[] = [
     short: "Postnatal return plan",
     description:
       "A gentle 12-week plan to rebuild your pelvic floor, core and everyday strength, for after your postnatal check and GP clearance.",
-    price: 800,
+    price: 700,
     file: "train-local-postnatal-return-plan.pdf",
     pages: 9,
     level: "Postnatal",
@@ -58,7 +58,7 @@ export const PRODUCTS: Product[] = [
     short: "High-protein eating guide",
     description:
       "Simple, balanced high-protein eating for gym-goers. Easy meals, a week of ideas, recipes and a shopping list. No calorie counting.",
-    price: 600,
+    price: 500,
     file: "train-local-high-protein-guide.pdf",
     pages: 7,
     level: "All levels",
@@ -77,7 +77,7 @@ export const PRODUCTS: Product[] = [
     short: "Dumbbell-only plan",
     description:
       "An 8-week strength plan you can do at home with just a pair of dumbbells. Upper, lower and full-body days that get harder every week.",
-    price: 700,
+    price: 600,
     file: "train-local-dumbbell-only-plan.pdf",
     pages: 7,
     level: "Beginner to intermediate",
@@ -96,7 +96,7 @@ export const PRODUCTS: Product[] = [
     short: "First half marathon plan",
     description:
       "A 12-week plan to take you from regular 5K runner to half marathon finisher, with strength sessions, fuelling tips and a race-day checklist.",
-    price: 800,
+    price: 700,
     file: "train-local-first-half-marathon-plan.pdf",
     pages: 7,
     level: "Can run 5K",
@@ -113,3 +113,16 @@ export const PRODUCTS: Product[] = [
 
 export const getProduct = (slug: string) => PRODUCTS.find((p) => p.slug === slug);
 export const formatPrice = (pence: number) => `£${(pence / 100).toFixed(pence % 100 ? 2 : 0)}`;
+
+export const FROM_PRICE = formatPrice(Math.min(...PRODUCTS.map((p) => p.price)));
+
+/** The plan that best fits what someone is searching for, or a trainer's specialisms. */
+export function pickPlan(goals: string[] = [], styles: string[] = []): Product {
+  const has = (...xs: string[]) => xs.some((x) => goals.includes(x) || styles.includes(x));
+  const slug = has("pre-post-natal") ? "postnatal-return-plan"
+    : has("running", "endurance", "marathon") ? "first-half-marathon-plan"
+    : has("nutrition") ? "high-protein-guide"
+    : has("muscle-gain", "strength", "bodybuilding", "kettlebells") ? "dumbbell-only-plan"
+    : "beginner-gym-plan";
+  return getProduct(slug)!;
+}
