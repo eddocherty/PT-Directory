@@ -16,14 +16,14 @@ export function Avatar({ t, className = "" }: { t: { name: string; image_url: st
     // eslint-disable-next-line @next/next/no-img-element
     <img src={t.image_url} alt={t.name} className={`object-cover ${className}`} loading="lazy" />
   ) : (
-    <div className={`flex items-center justify-center bg-ink display text-5xl text-paper/60 ${className}`}>{initials(t.name)}</div>
+    <div className={`flex items-center justify-center bg-zap display text-5xl text-accent ${className}`}>{initials(t.name)}</div>
   );
 }
 
 export function TrainerCard({ t }: { t: TrainerSummary }) {
   const specialisms = [...t.styles.map((s) => nameFor(TRAINING_STYLES, s)), ...t.goals.map((g) => nameFor(FITNESS_GOALS, g))];
   return (
-    <Link href={`/trainers/${t.slug}`} className="group flex flex-col overflow-hidden rounded-3xl bg-soft transition hover:-translate-y-1">
+    <Link href={`/trainers/${t.slug}`} className="group flex flex-col overflow-hidden rounded-3xl border border-line bg-paper transition hover:-translate-y-1 hover:shadow-lg">
       <div className="relative aspect-[4/5] overflow-hidden">
         <Avatar t={t} className="h-full w-full transition duration-500 group-hover:scale-105" />
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-2 sm:p-3">
@@ -33,7 +33,7 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
             </span>
           )}
           {t.free_consultation && (
-            <span className="rounded-full bg-ink/80 px-2.5 py-1 text-xs font-medium text-paper backdrop-blur">Free consult</span>
+            <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-paper">Free consult</span>
           )}
         </div>
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent p-3 pt-16 text-paper sm:p-4">
@@ -47,7 +47,7 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
       <div className="flex flex-1 flex-col gap-3 p-3 sm:p-4">
         <div className="hidden flex-wrap gap-1.5 sm:flex">
           {specialisms.slice(0, 3).map((s) => (
-            <span key={s} className="rounded-full bg-paper px-2.5 py-1 text-xs font-semibold">{s}</span>
+            <span key={s} className="rounded-full bg-soft px-2.5 py-1 text-xs font-medium">{s}</span>
           ))}
         </div>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-1">

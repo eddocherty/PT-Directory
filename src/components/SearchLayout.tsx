@@ -13,11 +13,11 @@ export function SearchLayout({
     (filters.online ? 1 : 0) + (filters.homeVisits ? 1 : 0) + (filters.maxPrice ? 1 : 0) + (filters.gender ? 1 : 0);
   return (
     <>
-      <section className="bg-ink text-paper">
+      <section className="border-b border-line bg-soft text-ink">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:py-14">
-          <p className="eyebrow text-paper/50">{eyebrow}</p>
+          <p className="eyebrow text-accent">{eyebrow}</p>
           <h1 className="display mt-3 text-4xl sm:text-5xl">{title}</h1>
-          <p className="mt-3 text-paper/70">{subtitle}</p>
+          <p className="mt-3 text-muted">{subtitle}</p>
         </div>
       </section>
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 lg:grid-cols-[300px_1fr]">

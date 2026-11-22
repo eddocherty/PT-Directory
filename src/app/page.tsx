@@ -20,17 +20,18 @@ export default async function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden bg-ink text-paper">
-        <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[36rem] w-[36rem] rounded-full bg-accent blur-3xl opacity-50" />
+      <section className="relative overflow-hidden bg-soft text-ink">
+        <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[36rem] w-[36rem] rounded-full bg-zap blur-3xl" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-40 right-1/4 h-80 w-80 rounded-full bg-accent/15 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20">
-          <p className="eyebrow text-paper/50">The UK’s personal trainer directory</p>
+          <p className="eyebrow text-accent">The UK’s personal trainer directory</p>
           <h1 className="display mt-5 text-5xl sm:text-7xl lg:text-8xl">
-            Find your<br /><span className="text-paper/45">trainer.</span>
+            Find your<br /><span className="text-accent">trainer.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-paper/75">
+          <p className="mt-6 max-w-xl text-lg text-muted">
             Real coaches near you, whatever you’re training for. Compare specialisms, reviews and prices, then message them for free.
           </p>
-          <form action="/trainers" className="mt-8 flex max-w-3xl flex-col gap-2 rounded-3xl bg-paper p-2 text-ink sm:flex-row sm:rounded-full">
+          <form action="/trainers" className="mt-8 flex max-w-3xl flex-col gap-2 rounded-3xl border border-line bg-paper p-2 text-ink shadow-sm sm:flex-row sm:rounded-full">
             <input name="location" placeholder="Postcode or town" aria-label="Postcode or town" className="flex-1 rounded-full px-5 py-3 text-base outline-none" />
             <select name="goal" defaultValue="" aria-label="Goal" className="rounded-full bg-soft px-5 py-3 text-base outline-none sm:w-56">
               <option value="">Any goal</option>
@@ -39,9 +40,9 @@ export default async function Home() {
             <button className="btn px-7 text-base">Search</button>
           </form>
           <div className="mt-6 flex flex-wrap items-center gap-2 text-xs font-medium">
-            <span className="text-paper/50">Popular:</span>
+            <span className="text-muted">Popular:</span>
             {["weight-loss", "muscle-gain", "pre-post-natal", "rehab"].map((g) => (
-              <Link key={g} href={`/trainers?goal=${g}`} className="rounded-full border border-paper/20 px-3 py-1 text-paper/80 hover:border-paper hover:text-paper">
+              <Link key={g} href={`/trainers?goal=${g}`} className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">
                 {FITNESS_GOALS.find((x) => x.slug === g)?.name}
               </Link>
             ))}
@@ -61,7 +62,7 @@ export default async function Home() {
               key={s.slug}
               href={`/trainers?style=${s.slug}`}
               className={`group flex aspect-[4/3] md:aspect-[16/9] flex-col justify-between rounded-3xl p-5 transition hover:-translate-y-1 ${
-                ["bg-ink text-paper", "bg-soft", "bg-soft", "bg-soft", "bg-soft", "bg-accent text-paper"][i]
+                ["bg-accent text-paper", "bg-soft", "bg-zap", "bg-soft", "bg-zap", "bg-soft"][i]
               }`}
             >
               <span className="eyebrow opacity-70">{TRAINING_STYLES.find((x) => x.slug === s.slug)?.name}</span>
@@ -120,11 +121,11 @@ export default async function Home() {
       </section>
 
       {/* Trainer CTA */}
-      <section className="bg-ink text-paper">
+      <section className="bg-accent text-paper">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-4 py-14 md:flex-row md:items-center">
           <div>
             <h2 className="display text-4xl sm:text-5xl">Are you a PT?</h2>
-            <p className="mt-2 max-w-lg text-lg text-paper/70">Claim your free profile, add your photos and specialisms, and start getting enquiries.</p>
+            <p className="mt-2 max-w-lg text-lg text-paper/85">Claim your free profile, add your photos and specialisms, and start getting enquiries.</p>
           </div>
           <Link href="/for-trainers" className="btn-light text-base">Claim your profile</Link>
         </div>

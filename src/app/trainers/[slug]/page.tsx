@@ -38,38 +38,38 @@ export default async function TrainerPage({ params }: Props) {
   return (
     <>
       {/* Hero */}
-      <section className="bg-ink text-paper">
+      <section className="bg-soft text-ink">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_1fr] md:items-end md:py-14">
           <div className="relative">
             <Avatar t={t} className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
             {t.free_consultation && (
-              <span className="absolute left-4 top-4 rounded-full bg-paper px-3 py-1.5 text-xs font-semibold text-ink">
+              <span className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-paper">
                 Free consultation
               </span>
             )}
           </div>
           <div className="flex flex-col gap-5">
-            <Link href="/trainers" className="text-sm text-paper/60 hover:text-paper">← All trainers</Link>
+            <Link href="/trainers" className="text-sm text-muted hover:text-ink">← All trainers</Link>
             <div>
               <h1 className="display text-5xl sm:text-6xl">{t.name}</h1>
-              <p className="mt-3 text-lg text-paper/80">{where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
+              <p className="mt-3 text-lg text-muted">{where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
             </div>
             {t.review_count > 0 && t.rating_avg != null && (
               <a href="#reviews" className="flex items-center gap-2 text-sm">
                 <Stars value={t.rating_avg} size="text-xl" />
                 <span className="font-bold">{t.rating_avg.toFixed(1)}</span>
-                <span className="text-paper/60 underline">{t.review_count} reviews</span>
+                <span className="text-muted underline">{t.review_count} reviews</span>
               </a>
             )}
             {t.headline && <p className="max-w-xl text-xl font-semibold">{t.headline}</p>}
             <div className="flex flex-wrap gap-2">
-              {t.styles.map((s) => <span key={s} className="rounded-full bg-paper/10 px-3 py-1 text-xs font-semibold">{nameFor(TRAINING_STYLES, s)}</span>)}
+              {t.styles.map((s) => <span key={s} className="rounded-full bg-paper px-3 py-1 text-xs font-semibold">{nameFor(TRAINING_STYLES, s)}</span>)}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <a href="#contact" className="btn-light">Contact {first}</a>
-              <span className="text-sm text-paper/70"><strong className="text-paper">{price(t)}</strong> per session</span>
+              <a href="#contact" className="btn">Contact {first}</a>
+              <span className="text-sm text-muted"><strong className="text-ink">{price(t)}</strong> per session</span>
             </div>
-            {t.is_sample && <p className="text-xs italic text-paper/50">Example listing, not a real trainer.</p>}
+            {t.is_sample && <p className="text-xs italic text-muted">Example listing, not a real trainer.</p>}
           </div>
         </div>
       </section>

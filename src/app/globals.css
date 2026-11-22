@@ -2,13 +2,13 @@
 
 :root {
   --ink: #111214;
-  --paper: #fafaf8;
-  --soft: #f1f0ec;
+  --paper: #ffffff;
+  --soft: #f4f5f1;
   --line: #e2e0da;
   --muted: #6b6b68;
-  --accent: #2f4a3f;      /* deep moss: the one accent, used sparingly */
+  --accent: #1f7a5a;      /* fresh green: the one accent */
   --accent-ink: #ffffff;
-  --zap: #c9d6c2;         /* pale sage, for small highlights on dark */
+  --zap: #dff2e7;         /* pale mint, for soft highlights */
   --star: #b8962e;
 }
 
