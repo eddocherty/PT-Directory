@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { NextResponse } from "next/server";
 import { getProduct } from "@/lib/products";
-import { getStripe, ORDER_ID, SESSION_ID } from "@/lib/stripe";
+import { checkOrder, getStripe } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -22,13 +22,9 @@ export async function GET(req: Request) {
 
   let slug: string | undefined;
   try {
-    if (SESSION_ID.test(sessionId)) {
-      const s = await stripe.checkout.sessions.retrieve(sessionId);
-      if (s.payment_status === "paid") slug = s.metadata?.product;
-    } else if (ORDER_ID.test(order)) {
-      const res = await stripe.paymentIntents.search({ query: `metadata['order']:'${order}' AND status:'succeeded'`, limit: 1 });
-      slug = res.data[0]?.metadata?.product;
-    }
+    const res = await checkOrder(stripe, { sessionId, order });
+    if (res.status === "non-uk") return fail("Sorry, our plans are only available to UK customers. Your payment has been refunded in full.", 403);
+    if (res.status === "ok") slug = res.slug;
   } catch (e) {
     console.error("Stripe lookup failed", e);
     return fail("We couldn't check your order just now. Please try again in a minute.", 502);

@@ -16,6 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const ERRORS: Record<string, string> = {
+  uk: "Sorry, our plans are only available to UK customers.",
   consent: "Please tick the box to confirm you’d like your download straight away.",
   "not-ready": "Checkout isn’t switched on just yet. Please check back soon.",
   stripe: "Sorry, we couldn’t start checkout. Please try again in a moment.",
@@ -58,6 +59,10 @@ export default async function ProductPage({ params, searchParams }: Props) {
                   I’d like my download straight away. I understand that once the download is available I lose my 14-day right to cancel.{" "}
                   <Link href="/shop/terms" className="underline">Shop terms</Link>
                 </span>
+              </label>
+              <label className="mt-3 flex items-start gap-3 text-sm">
+                <input type="checkbox" name="uk" value="yes" required className="mt-1 h-4 w-4 accent-[var(--accent)]" />
+                <span>I’m buying from the UK. Plans are for UK customers only.</span>
               </label>
               {error && ERRORS[error] && <p className="mt-3 text-sm font-semibold text-red-700">{ERRORS[error]}</p>}
               <button className="btn mt-5 w-full text-base sm:w-auto">Buy now with secure checkout</button>
