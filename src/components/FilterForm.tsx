@@ -19,7 +19,7 @@ function Pills({ name, options, selected }: { name: string; options: Option[]; s
       {options.map((o) => (
         <label key={o.slug} className="cursor-pointer">
           <input type="checkbox" name={name} value={o.slug} defaultChecked={selected?.includes(o.slug)} className="peer sr-only" />
-          <span className="inline-block rounded-full border-2 border-line px-3 py-1 text-xs font-semibold transition peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-accent hover:border-ink">
+          <span className="inline-block rounded-full border border-line px-3 py-1 text-xs font-medium transition peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-accent hover:border-ink">
             {o.name}
           </span>
         </label>
@@ -30,11 +30,11 @@ function Pills({ name, options, selected }: { name: string; options: Option[]; s
 
 function Section({ title, open = false, count, children }: { title: string; open?: boolean; count?: number; children: React.ReactNode }) {
   return (
-    <details open={open} className="group border-t-2 border-line py-4">
-      <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-extrabold uppercase tracking-wide">
+    <details open={open} className="group border-t border-line py-4">
+      <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold">
         <span>
           {title}
-          {count ? <span className="ml-2 rounded-full bg-accent px-2 py-0.5 text-[10px] text-accent-ink">{count}</span> : null}
+          {count ? <span className="ml-2 rounded-full bg-ink px-2 py-0.5 text-[10px] text-paper">{count}</span> : null}
         </span>
         <span className="text-lg transition group-open:rotate-45">+</span>
       </summary>
@@ -69,8 +69,8 @@ export function FilterForm({ action = "/trainers", values, hideLocation = false 
       </Section>
       <Section title="Sessions & price" count={(values.online ? 1 : 0) + (values.homeVisits ? 1 : 0) + (values.maxPrice ? 1 : 0)}>
         <div className="flex flex-col gap-2">
-          <label className="flex items-center gap-2"><input type="checkbox" name="online" value="1" defaultChecked={values.online} className="h-4 w-4 accent-accent" /> Online coaching</label>
-          <label className="flex items-center gap-2"><input type="checkbox" name="home" value="1" defaultChecked={values.homeVisits} className="h-4 w-4 accent-accent" /> Home visits</label>
+          <label className="flex items-center gap-2"><input type="checkbox" name="online" value="1" defaultChecked={values.online} className="h-4 w-4 accent-ink" /> Online coaching</label>
+          <label className="flex items-center gap-2"><input type="checkbox" name="home" value="1" defaultChecked={values.homeVisits} className="h-4 w-4 accent-ink" /> Home visits</label>
           <select name="maxPrice" defaultValue={values.maxPrice ? String(values.maxPrice) : ""} className="input mt-1" aria-label="Max price">
             <option value="">Any price</option>
             {[30, 40, 50, 60, 80].map((p) => <option key={p} value={p}>Up to £{p} a session</option>)}
@@ -87,7 +87,7 @@ export function FilterForm({ action = "/trainers", values, hideLocation = false 
         </div>
       </Section>
 
-      <div className="sticky bottom-0 flex gap-2 border-t-2 border-line bg-paper py-4">
+      <div className="sticky bottom-0 flex gap-2 border-t border-line bg-paper py-4">
         <button type="submit" className="btn flex-1">Show trainers</button>
         <a href={action} className="btn-ghost px-4">Clear</a>
       </div>

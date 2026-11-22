@@ -16,7 +16,7 @@ export function Avatar({ t, className = "" }: { t: { name: string; image_url: st
     // eslint-disable-next-line @next/next/no-img-element
     <img src={t.image_url} alt={t.name} className={`object-cover ${className}`} loading="lazy" />
   ) : (
-    <div className={`flex items-center justify-center bg-ink display text-5xl text-zap ${className}`}>{initials(t.name)}</div>
+    <div className={`flex items-center justify-center bg-ink display text-5xl text-paper/60 ${className}`}>{initials(t.name)}</div>
   );
 }
 
@@ -28,12 +28,12 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
         <Avatar t={t} className="h-full w-full transition duration-500 group-hover:scale-105" />
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-2 sm:p-3">
           {t.review_count > 0 && t.rating_avg != null && (
-            <span className="rounded-full bg-paper px-2.5 py-1 text-xs font-bold">
+            <span className="rounded-full bg-paper/90 px-2.5 py-1 text-xs font-semibold backdrop-blur">
               <span className="text-star">★</span> {t.rating_avg.toFixed(1)} <span className="font-normal text-muted">({t.review_count})</span>
             </span>
           )}
           {t.free_consultation && (
-            <span className="rounded-full bg-zap px-2.5 py-1 text-xs font-bold text-ink">Free consult</span>
+            <span className="rounded-full bg-ink/80 px-2.5 py-1 text-xs font-medium text-paper backdrop-blur">Free consult</span>
           )}
         </div>
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent p-3 pt-16 text-paper sm:p-4">
@@ -51,8 +51,8 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
           ))}
         </div>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-1">
-          <span className="text-sm font-extrabold">{price(t)}</span>
-          <span className="hidden text-xs font-bold uppercase tracking-wider text-accent group-hover:underline sm:inline">View profile →</span>
+          <span className="text-sm font-semibold">{price(t)}</span>
+          <span className="hidden text-xs font-semibold text-muted group-hover:text-ink sm:inline">View profile →</span>
         </div>
         {t.is_sample && <span className="text-[11px] italic text-muted">Example listing</span>}
       </div>

@@ -10,7 +10,7 @@ export function Results({
   if (!trainers.length)
     return (
       <div className="rounded-3xl bg-soft p-10 text-center">
-        <p className="display text-3xl">No match… yet</p>
+        <p className="display text-3xl">No match yet</p>
         <p className="mt-2 text-sm text-muted">Try a wider radius, or take off a filter or two.</p>
         <Link href={basePath} className="btn-dark mt-5">Reset filters</Link>
       </div>

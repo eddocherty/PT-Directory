@@ -43,16 +43,16 @@ export default async function TrainerPage({ params }: Props) {
           <div className="relative">
             <Avatar t={t} className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
             {t.free_consultation && (
-              <span className="absolute left-4 top-4 rounded-full bg-zap px-3 py-1.5 text-xs font-extrabold uppercase text-ink">
+              <span className="absolute left-4 top-4 rounded-full bg-paper px-3 py-1.5 text-xs font-semibold text-ink">
                 Free consultation
               </span>
             )}
           </div>
           <div className="flex flex-col gap-5">
-            <Link href="/trainers" className="eyebrow text-paper/60 hover:text-zap">← All trainers</Link>
+            <Link href="/trainers" className="text-sm text-paper/60 hover:text-paper">← All trainers</Link>
             <div>
-              <h1 className="display text-5xl sm:text-7xl">{t.name}</h1>
-              <p className="mt-3 text-lg text-paper/80">📍 {where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
+              <h1 className="display text-5xl sm:text-6xl">{t.name}</h1>
+              <p className="mt-3 text-lg text-paper/80">{where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
             </div>
             {t.review_count > 0 && t.rating_avg != null && (
               <a href="#reviews" className="flex items-center gap-2 text-sm">
@@ -66,7 +66,7 @@ export default async function TrainerPage({ params }: Props) {
               {t.styles.map((s) => <span key={s} className="rounded-full bg-paper/10 px-3 py-1 text-xs font-semibold">{nameFor(TRAINING_STYLES, s)}</span>)}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <a href="#contact" className="btn">Contact {first}</a>
+              <a href="#contact" className="btn-light">Contact {first}</a>
               <span className="text-sm text-paper/70"><strong className="text-paper">{price(t)}</strong> per session</span>
             </div>
             {t.is_sample && <p className="text-xs italic text-paper/50">Example listing, not a real trainer.</p>}
@@ -95,7 +95,7 @@ export default async function TrainerPage({ params }: Props) {
               <div>
                 <p className="eyebrow mb-2 text-muted">Helps you with</p>
                 <div className="flex flex-wrap gap-2">
-                  {t.goals.map((g) => <Link key={g} href={`/trainers?goal=${g}`} className="chip hover:bg-zap">{nameFor(FITNESS_GOALS, g)}</Link>)}
+                  {t.goals.map((g) => <Link key={g} href={`/trainers?goal=${g}`} className="chip hover:bg-line">{nameFor(FITNESS_GOALS, g)}</Link>)}
                 </div>
               </div>
             </div>
@@ -106,7 +106,7 @@ export default async function TrainerPage({ params }: Props) {
               <H2>Sports &amp; hobbies</H2>
               <div className="flex flex-wrap gap-3">
                 {t.sports.map((s) => (
-                  <Link key={s} href={`/trainers?sport=${s}`} className="rounded-2xl border-2 border-ink px-4 py-3 text-sm font-extrabold uppercase tracking-wide hover:bg-ink hover:text-paper">
+                  <Link key={s} href={`/trainers?sport=${s}`} className="rounded-full border border-ink/20 px-4 py-2 text-sm font-medium hover:border-ink">
                     {nameFor(SPORTS, s)}
                   </Link>
                 ))}
@@ -120,8 +120,8 @@ export default async function TrainerPage({ params }: Props) {
               ["Online", t.online],
               ["Home visits", t.home_visits],
             ].map(([label, on]) => (
-              <div key={label as string} className={`rounded-2xl p-4 ${on ? "bg-ink text-paper" : "bg-soft text-muted line-through"}`}>
-                <p className="display text-xl">{label as string}</p>
+              <div key={label as string} className={`rounded-2xl p-4 ${on ? "bg-soft" : "bg-soft text-muted/60"}`}>
+                <p className="font-semibold">{on ? "✓" : "✗"} {label as string}</p>
               </div>
             ))}
           </section>
@@ -149,12 +149,12 @@ export default async function TrainerPage({ params }: Props) {
                 <figure key={r.id} className="rounded-2xl bg-soft p-5">
                   <Stars value={r.rating} />
                   {r.body && <blockquote className="mt-2 text-sm leading-relaxed">“{r.body}”</blockquote>}
-                  <figcaption className="mt-3 text-xs font-bold uppercase tracking-wider">{r.author_name}</figcaption>
+                  <figcaption className="mt-3 text-xs font-semibold text-muted">{r.author_name}</figcaption>
                 </figure>
               ))}
             </div>
-            <details className="mt-6 rounded-2xl border-2 border-line p-5">
-              <summary className="cursor-pointer font-extrabold uppercase tracking-wide">Write a review</summary>
+            <details className="mt-6 rounded-2xl border border-line p-5">
+              <summary className="cursor-pointer font-semibold">Write a review</summary>
               <div className="mt-4"><ReviewForm slug={t.slug} firstName={first} /></div>
             </details>
           </section>
@@ -162,7 +162,7 @@ export default async function TrainerPage({ params }: Props) {
 
         <aside className="lg:sticky lg:top-24 lg:self-start" id="contact">
           <div className="scroll-mt-24 rounded-3xl bg-soft p-6">
-            <p className="eyebrow text-accent">Get started</p>
+            <p className="eyebrow text-muted">Get started</p>
             <p className="display mt-1 text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">
               {price(t)} per session{t.price_to && t.price_to !== t.price_from ? ` (up to £${t.price_to})` : ""}.
@@ -183,7 +183,7 @@ export default async function TrainerPage({ params }: Props) {
       </div>
 
       {/* Mobile sticky contact bar */}
-      <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t-2 border-line bg-paper px-4 py-3 lg:hidden">
+      <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">
         <span className="text-sm"><strong>{price(t)}</strong> / session</span>
         <a href="#contact" className="btn py-2.5">Contact {first}</a>
       </div>

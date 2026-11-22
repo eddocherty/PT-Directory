@@ -8,7 +8,7 @@ export function EnquiryForm({ slug, firstName, freeConsult }: { slug: string; fi
   const [state, action, pending] = useActionState<RequestState, FormData>(sendEnquiryAction, {});
   if (state.ok)
     return (
-      <div className="rounded-2xl bg-zap p-5 text-ink">
+      <div className="rounded-2xl bg-soft p-5">
         <p className="display text-2xl">Message sent!</p>
         <p className="mt-1 text-sm">{firstName} will get back to you by email. Time to get those trainers on.</p>
       </div>
@@ -29,7 +29,7 @@ export function EnquiryForm({ slug, firstName, freeConsult }: { slug: string; fi
         </select>
       </div>
       <textarea name="message" rows={4} className="input" placeholder={`Tell ${firstName} a bit about you and what you want to achieve`} />
-      {state.error && <p className="font-semibold text-accent">{state.error}</p>}
+      {state.error && <p className="font-semibold text-red-700">{state.error}</p>}
       <button disabled={pending} className="btn">
         {pending ? "Sending…" : freeConsult ? `Book a free consultation` : `Message ${firstName}`}
       </button>

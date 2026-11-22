@@ -15,17 +15,17 @@ export function SearchLayout({
     <>
       <section className="bg-ink text-paper">
         <div className="mx-auto max-w-7xl px-4 py-10 sm:py-14">
-          <p className="eyebrow text-zap">{eyebrow}</p>
-          <h1 className="display mt-2 text-4xl sm:text-6xl">{title}</h1>
+          <p className="eyebrow text-paper/50">{eyebrow}</p>
+          <h1 className="display mt-3 text-4xl sm:text-5xl">{title}</h1>
           <p className="mt-3 text-paper/70">{subtitle}</p>
         </div>
       </section>
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 lg:grid-cols-[300px_1fr]">
         <aside>
           {/* Mobile: collapsible. Desktop: always open (details forced open via lg:block on content). */}
-          <details className="group rounded-3xl border-2 border-line p-4 lg:hidden">
-            <summary className="flex cursor-pointer list-none items-center justify-between font-extrabold uppercase tracking-wide">
-              Filters {active > 0 && <span className="rounded-full bg-accent px-2 py-0.5 text-xs text-accent-ink">{active}</span>}
+          <details className="group rounded-3xl border border-line p-4 lg:hidden">
+            <summary className="flex cursor-pointer list-none items-center justify-between font-semibold">
+              Filters {active > 0 && <span className="rounded-full bg-ink px-2 py-0.5 text-xs text-paper">{active}</span>}
               <span className="text-xl transition group-open:rotate-45">+</span>
             </summary>
             <div className="mt-4"><FilterForm action={action} values={filters} hideLocation={hideLocation} /></div>

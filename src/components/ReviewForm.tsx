@@ -25,7 +25,7 @@ export function ReviewForm({ slug, firstName }: { slug: string; firstName: strin
         <input name="email" type="email" required placeholder="Email (not shown)" className="input" aria-label="Email" />
       </div>
       <textarea name="body" rows={3} className="input" placeholder="What was it like?" />
-      {state.error && <p className="font-semibold text-accent">{state.error}</p>}
+      {state.error && <p className="font-semibold text-red-700">{state.error}</p>}
       <button disabled={pending} className="btn-dark self-start">{pending ? "Sending…" : "Post review"}</button>
     </form>
   );

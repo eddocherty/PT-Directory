@@ -9,7 +9,7 @@ export function RequestForm({
   const [state, action, pending] = useActionState<RequestState, FormData>(sendListingRequest, {});
   if (state.ok)
     return (
-      <p className="rounded-2xl bg-zap p-4 text-sm">
+      <p className="rounded-2xl bg-soft p-4 text-sm">
         Thanks. We’ve got your request and will reply by email, usually within 2 working days.
       </p>
     );
@@ -33,7 +33,7 @@ export function RequestForm({
         Anything else we should know?
         <textarea name="message" rows={4} className="input" />
       </label>
-      {state.error && <p className="font-semibold text-accent">{state.error}</p>}
+      {state.error && <p className="font-semibold text-red-700">{state.error}</p>}
       <button disabled={pending} className="btn self-start">{pending ? "Sending…" : cta}</button>
     </form>
   );

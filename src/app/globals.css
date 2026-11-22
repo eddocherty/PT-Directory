@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #0b0b0c;
-  --paper: #ffffff;
-  --soft: #f3f3f0;
-  --line: #e4e4df;
-  --muted: #5f6066;
-  --accent: #ff4f1f;      /* energetic orange */
+  --ink: #111214;
+  --paper: #fafaf8;
+  --soft: #f1f0ec;
+  --line: #e2e0da;
+  --muted: #6b6b68;
+  --accent: #2f4a3f;      /* deep moss: the one accent, used sparingly */
   --accent-ink: #ffffff;
-  --zap: #d8ff3c;         /* lime highlight, used on dark only */
-  --star: #ffb000;
+  --zap: #c9d6c2;         /* pale sage, for small highlights on dark */
+  --star: #b8962e;
 }
 
 @theme inline {
@@ -33,30 +33,31 @@ body {
   font-family: var(--font-body), system-ui, sans-serif;
 }
 
-/* Heavy, italic, uppercase display type */
+/* Tight, confident display type */
 .display {
   font-family: var(--font-display), var(--font-body), sans-serif;
-  font-weight: 900;
-  font-style: italic;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-  line-height: 0.92;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
 }
 .eyebrow {
   @apply text-xs font-bold uppercase tracking-[0.18em];
 }
 
 .input {
-  @apply w-full rounded-xl border-2 border-line bg-paper px-4 py-2.5 text-sm outline-none transition focus:border-ink;
+  @apply w-full rounded-xl border border-line bg-paper px-4 py-2.5 text-sm outline-none transition focus:border-ink;
 }
 .btn {
-  @apply inline-flex items-center justify-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-accent-ink transition hover:-translate-y-0.5 hover:shadow-[0_6px_0_0_var(--ink)] active:translate-y-0 active:shadow-none disabled:opacity-60;
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-semibold text-paper transition hover:bg-accent disabled:opacity-60;
+}
+.btn-light {
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-paper px-6 py-3 text-sm font-semibold text-ink transition hover:bg-zap;
 }
 .btn-dark {
-  @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-extrabold uppercase tracking-wide text-paper transition hover:bg-accent;
+  @apply inline-flex items-center justify-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-semibold text-paper transition hover:bg-accent;
 }
 .btn-ghost {
-  @apply inline-flex items-center justify-center gap-2 rounded-full border-2 border-ink px-6 py-3 text-sm font-extrabold uppercase tracking-wide transition hover:bg-ink hover:text-paper;
+  @apply inline-flex items-center justify-center gap-2 rounded-full border border-ink px-6 py-3 text-sm font-semibold transition hover:bg-ink hover:text-paper;
 }
 .chip {
   @apply inline-block rounded-full bg-soft px-3 py-1 text-xs font-semibold;
