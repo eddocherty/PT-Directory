@@ -34,7 +34,6 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <div className="flex items-center gap-6 text-sm font-medium">
               <Link href="/trainers?online=1" className="text-muted hover:text-ink">Online</Link>
               <Link href="/locations" className="hidden text-muted hover:text-ink sm:inline">Locations</Link>
-              <Link href="/for-trainers" className="hidden text-muted hover:text-ink sm:inline">For trainers</Link>
               <Link href="/trainers" className="btn px-4 py-2">Find a trainer</Link>
             </div>
           </nav>
@@ -55,9 +54,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/trainers?online=1" className="text-paper/70 hover:text-paper">Online coaching</Link>
             </div>
             <div className="flex flex-col gap-2 text-sm">
-              <p className="eyebrow text-paper/50">Trainers</p>
-              <Link href="/for-trainers" className="text-paper/70 hover:text-paper">Claim your profile</Link>
-              <Link href="/remove" className="text-paper/70 hover:text-paper">Remove a listing</Link>
+              <p className="eyebrow text-paper/50">Your data</p>
+              <Link href="/remove" className="text-paper/70 hover:text-paper">Remove or correct a listing</Link>
               <Link href="/privacy" className="text-paper/70 hover:text-paper">Privacy</Link>
             </div>
           </div>

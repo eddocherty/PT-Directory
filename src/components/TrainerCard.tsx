@@ -13,7 +13,7 @@ export function price(t: { price_from: number | null; price_to: number | null })
 }
 
 // No-photo state: a monogram on a brand-blue gradient with a faint line icon for the trainer's main style.
-// Real listings have no photos until the trainer claims them (we never copy photos from their sites).
+// Real listings have no photos (we never copy photos from trainers' own sites).
 const PALETTES = [
   "from-[#2457c5] to-[#163a8a]",
   "from-[#3b6fe0] to-[#1f4bb0]",
@@ -99,6 +99,12 @@ export function Avatar({
   );
 }
 
+export function milesAway(d: number) {
+  if (d < 1) return "Under 1 mile away";
+  const n = d < 10 ? Math.round(d * 10) / 10 : Math.round(d);
+  return `${n} ${n === 1 ? "mile" : "miles"} away`;
+}
+
 export function TrainerCard({ t }: { t: TrainerSummary }) {
   const specialisms = [...t.styles.map((s) => nameFor(TRAINING_STYLES, s)), ...t.goals.map((g) => nameFor(FITNESS_GOALS, g))];
   return (
@@ -106,6 +112,7 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
       <div className="relative aspect-[4/5] overflow-hidden">
         <Avatar t={t} className="h-full w-full transition duration-500 group-hover:scale-105" />
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-2 sm:p-3">
+
           {t.review_count > 0 && t.rating_avg != null && (
             <span className="rounded-full bg-paper/90 px-2.5 py-1 text-xs font-semibold backdrop-blur">
               <span className="text-star">★</span> {t.rating_avg.toFixed(1)} <span className="font-normal text-muted">({t.review_count})</span>
@@ -119,8 +126,15 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
           <h3 className="display text-lg sm:text-2xl">{t.name}</h3>
           <p className="mt-1 text-xs font-medium text-paper/85 sm:text-sm">
             {t.city ?? "UK"}
-            {t.distance_miles != null && ` · ${t.distance_miles.toFixed(1)} mi away`}
           </p>
+          {t.distance_miles != null && (
+            <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-paper px-2 py-0.5 text-[11px] font-semibold text-ink sm:text-xs">
+              <svg viewBox="0 0 16 16" className="h-3 w-3 text-accent" fill="currentColor" aria-hidden>
+                <path d="M8 1a5 5 0 0 0-5 5c0 3.6 5 9 5 9s5-5.4 5-9a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z" />
+              </svg>
+              {milesAway(t.distance_miles)}
+            </p>
+          )}
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-3 p-3 sm:p-4">

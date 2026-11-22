@@ -1,4 +1,4 @@
-import { FITNESS_GOALS, GENDERS, RADII, SPORTS, TRAINING_STYLES, type Option } from "@/lib/taxonomy";
+import { FITNESS_GOALS, GENDERS, SPORTS, TRAINING_STYLES, type Option } from "@/lib/taxonomy";
 
 type Values = {
   location?: string;
@@ -28,9 +28,9 @@ function Pills({ name, options, selected }: { name: string; options: Option[]; s
   );
 }
 
-function Section({ title, open = false, count, children }: { title: string; open?: boolean; count?: number; children: React.ReactNode }) {
+function Section({ title, open = false, first = false, count, children }: { title: string; open?: boolean; first?: boolean; count?: number; children: React.ReactNode }) {
   return (
-    <details open={open} className="group border-t border-line py-4">
+    <details open={open} className={`group py-4 ${first ? "" : "border-t border-line"}`}>
       <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold">
         <span>
           {title}
@@ -47,18 +47,11 @@ function Section({ title, open = false, count, children }: { title: string; open
 export function FilterForm({ action = "/trainers", values, hideLocation = false }: { action?: string; values: Values; hideLocation?: boolean }) {
   return (
     <form action={action} className="flex flex-col text-sm">
-      {!hideLocation && (
-        <div className="flex flex-col gap-2 pb-4">
-          <label className="eyebrow" htmlFor="f-location">Where?</label>
-          <input id="f-location" name="location" defaultValue={values.location} placeholder="Postcode or town" className="input" />
-          <select name="radius" defaultValue={String(values.radius ?? 25)} className="input" aria-label="Distance">
-            {RADII.map((r) => <option key={r} value={r}>Within {r} miles</option>)}
-          </select>
-        </div>
-      )}
-      {hideLocation && <input type="hidden" name="radius" value={values.radius ?? 25} />}
+      {/* Where + how far live in the bar above the results; carry them through here. */}
+      {!hideLocation && values.location && <input type="hidden" name="location" value={values.location} />}
+      <input type="hidden" name="radius" value={values.radius ?? 25} />
 
-      <Section title="Training style" open count={values.styles?.length}>
+      <Section title="Training style" open first count={values.styles?.length}>
         <Pills name="style" options={TRAINING_STYLES} selected={values.styles} />
       </Section>
       <Section title="Your goal" open count={values.goals?.length}>
@@ -89,7 +82,7 @@ export function FilterForm({ action = "/trainers", values, hideLocation = false 
 
       <div className="sticky bottom-0 flex gap-2 border-t border-line bg-paper py-4">
         <button type="submit" className="btn flex-1">Show trainers</button>
-        <a href={action} className="btn-ghost px-4">Clear</a>
+        <a href={values.location ? `${action}?location=${encodeURIComponent(values.location)}&radius=${values.radius ?? 25}` : action} className="btn-ghost px-4">Clear</a>
       </div>
     </form>
   );

@@ -53,17 +53,6 @@ export default async function TrainerPage({ params }: Props) {
                 Free consultation
               </span>
             )}
-            {direct && !t.image_url && (
-              <div className="mt-3 flex flex-col gap-3 rounded-2xl bg-paper p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between md:absolute md:inset-x-3 md:bottom-3 md:mt-0 md:bg-paper/95 md:shadow-lg md:backdrop-blur">
-                <div>
-                  <p className="text-sm font-semibold">Is this you, {first}?</p>
-                  <p className="text-xs text-muted">Claim your free listing to add photos, prices and take enquiries.</p>
-                </div>
-                <Link href={`/for-trainers?listing=${t.slug}`} className="btn shrink-0 justify-center px-4 py-2 text-sm">
-                  Claim listing
-                </Link>
-              </div>
-            )}
           </div>
           <div className="flex flex-col gap-5">
             <Link href="/trainers" className="text-sm text-muted hover:text-ink">← All trainers</Link>
@@ -187,7 +176,7 @@ export default async function TrainerPage({ params }: Props) {
             </p>
             {direct ? (
               <>
-                <p className="mb-4 text-sm">This profile hasn’t been claimed yet, so get in touch with {first} directly.</p>
+                <p className="mb-4 text-sm">Get in touch with {first} directly through their website.</p>
                 {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" className="btn w-full justify-center">Visit {first}’s website</a>}
               </>
             ) : (
@@ -205,8 +194,8 @@ export default async function TrainerPage({ params }: Props) {
             </p>
           )}
           <p className="mt-4 px-2 text-xs text-muted">
-            Is this you? <Link href={`/for-trainers?listing=${t.slug}`} className="underline">Claim or edit this profile</Link> or{" "}
-            <Link href={`/remove?listing=${t.slug}`} className="underline">ask us to remove it</Link>.
+            Is this your listing?{" "}
+            <Link href={`/remove?listing=${t.slug}`} className="underline hover:text-ink">Request removal or a correction</Link>.
           </p>
         </aside>
       </div>

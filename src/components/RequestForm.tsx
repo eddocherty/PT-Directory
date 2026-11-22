@@ -5,7 +5,7 @@ import { sendListingRequest, type RequestState } from "@/app/actions";
 
 export function RequestForm({
   kind, listing, cta,
-}: { kind: "claim" | "removal" | "correction"; listing?: string; cta: string }) {
+}: { kind: "removal" | "correction"; listing?: string; cta: string }) {
   const [state, action, pending] = useActionState<RequestState, FormData>(sendListingRequest, {});
   if (state.ok)
     return (
@@ -30,7 +30,7 @@ export function RequestForm({
         <input name="email" type="email" required className="input" />
       </label>
       <label className="flex flex-col gap-1">
-        Anything else we should know?
+        {kind === "correction" ? "What needs correcting?" : "Anything else we should know?"}
         <textarea name="message" rows={4} className="input" />
       </label>
       {state.error && <p className="font-semibold text-red-700">{state.error}</p>}
