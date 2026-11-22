@@ -27,6 +27,12 @@ Until Supabase env vars are set, the site runs on the fictional sample listings 
 | `/for-trainers` | Claim or add a profile |
 | `/remove` | Opt-out request |
 | `/privacy` | Draft UK GDPR privacy notice. Get it reviewed before launch. |
+| `/shop`, `/shop/[slug]` | Downloadable training plans, sold through Stripe Checkout |
+| `/shop/thanks`, `/api/download` | Post-payment download. Every request is checked with Stripe first. |
+
+## Shop
+
+Plans are defined in `src/lib/products.ts` (prices in pence). The PDFs are stored encrypted in `private/plans/` because this repo is public; see the README there. Vercel needs `STRIPE_SECRET_KEY` (a restricted key is best) and `PLANS_KEY`. After changing either, redeploy.
 
 Claim, removal and correction requests land in the `listing_requests` table, which only the service role can read. To remove a trainer, set `trainers.status = 'removed'`. The import script never re-adds a removed slug.
 
