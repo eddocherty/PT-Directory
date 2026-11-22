@@ -13,7 +13,7 @@ type Values = {
   q?: string;
 };
 
-function Pills({ name, options, selected }: { name: string; options: Option[]; selected?: string[] }) {
+export function Pills({ name, options, selected }: { name: string; options: Option[]; selected?: string[] }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {options.map((o) => (
