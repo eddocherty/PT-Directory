@@ -114,9 +114,6 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
               <span className="text-star">★</span> {t.rating_avg.toFixed(1)} <span className="font-normal text-muted">({t.review_count})</span>
             </span>
           )}
-          {t.free_consultation && (
-            <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-paper">Free consult</span>
-          )}
         </div>
         <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent p-3 pt-16 text-paper sm:p-4">
           <h3 className="display text-lg sm:text-2xl">{t.name}</h3>
