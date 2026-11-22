@@ -8,51 +8,54 @@ export function initials(name: string) {
 
 export function price(t: { price_from: number | null; price_to: number | null }) {
   if (t.price_from == null) return "Price on request";
-  return t.price_to && t.price_to !== t.price_from ? `£${t.price_from}–£${t.price_to}` : `From £${t.price_from}`;
+  return `From £${t.price_from}`;
+}
+
+export function Avatar({ t, className = "" }: { t: { name: string; image_url: string | null }; className?: string }) {
+  return t.image_url ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={t.image_url} alt={t.name} className={`object-cover ${className}`} loading="lazy" />
+  ) : (
+    <div className={`flex items-center justify-center bg-zap display text-5xl text-accent ${className}`}>{initials(t.name)}</div>
+  );
 }
 
 export function TrainerCard({ t }: { t: TrainerSummary }) {
+  const specialisms = [...t.styles.map((s) => nameFor(TRAINING_STYLES, s)), ...t.goals.map((g) => nameFor(FITNESS_GOALS, g))];
   return (
-    <Link
-      href={`/trainers/${t.slug}`}
-      className="flex flex-col gap-3 rounded-xl border border-line bg-surface p-4 transition hover:border-brand"
-    >
-      <div className="flex items-start gap-3">
-        {t.image_url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={t.image_url} alt="" className="h-14 w-14 rounded-full object-cover" />
-        ) : (
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-brand-soft font-bold text-brand">
-            {initials(t.name)}
-          </div>
-        )}
-        <div className="min-w-0">
-          <h3 className="truncate font-semibold">{t.name}</h3>
-          {t.business_name && <p className="truncate text-sm text-muted">{t.business_name}</p>}
-          <p className="text-sm text-muted">
-            {[t.postcode_district, t.city].filter(Boolean).join(", ")}
-            {t.distance_miles != null && ` · ${t.distance_miles.toFixed(1)} mi`}
+    <Link href={`/trainers/${t.slug}`} className="group flex flex-col overflow-hidden rounded-3xl border border-line bg-paper transition hover:-translate-y-1 hover:shadow-lg">
+      <div className="relative aspect-[4/5] overflow-hidden">
+        <Avatar t={t} className="h-full w-full transition duration-500 group-hover:scale-105" />
+        <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-2 sm:p-3">
+          {t.review_count > 0 && t.rating_avg != null && (
+            <span className="rounded-full bg-paper/90 px-2.5 py-1 text-xs font-semibold backdrop-blur">
+              <span className="text-star">★</span> {t.rating_avg.toFixed(1)} <span className="font-normal text-muted">({t.review_count})</span>
+            </span>
+          )}
+          {t.free_consultation && (
+            <span className="rounded-full bg-accent px-2.5 py-1 text-xs font-medium text-paper">Free consult</span>
+          )}
+        </div>
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 via-ink/40 to-transparent p-3 pt-16 text-paper sm:p-4">
+          <h3 className="display text-lg sm:text-2xl">{t.name}</h3>
+          <p className="mt-1 text-xs font-medium text-paper/85 sm:text-sm">
+            {t.city ?? "UK"}
+            {t.distance_miles != null && ` · ${t.distance_miles.toFixed(1)} mi away`}
           </p>
         </div>
       </div>
-      {t.headline && <p className="line-clamp-2 text-sm">{t.headline}</p>}
-      <div className="flex flex-wrap gap-1.5">
-        {t.styles.slice(0, 3).map((s) => (
-          <span key={s} className="chip">{nameFor(TRAINING_STYLES, s)}</span>
-        ))}
-        {t.goals.slice(0, 2).map((g) => (
-          <span key={g} className="rounded-full border border-line px-2.5 py-0.5 text-xs text-muted">
-            {nameFor(FITNESS_GOALS, g)}
-          </span>
-        ))}
+      <div className="flex flex-1 flex-col gap-3 p-3 sm:p-4">
+        <div className="hidden flex-wrap gap-1.5 sm:flex">
+          {specialisms.slice(0, 3).map((s) => (
+            <span key={s} className="rounded-full bg-soft px-2.5 py-1 text-xs font-medium">{s}</span>
+          ))}
+        </div>
+        <div className="mt-auto flex flex-wrap items-center justify-between gap-1">
+          <span className="text-sm font-semibold">{price(t)}</span>
+          <span className="hidden text-xs font-semibold text-muted group-hover:text-ink sm:inline">View profile →</span>
+        </div>
+        {t.is_sample && <span className="text-[11px] italic text-muted">Example listing</span>}
       </div>
-      <div className="mt-auto flex items-center justify-between text-sm">
-        <span className="font-semibold">{price(t)}</span>
-        <span className="text-muted">
-          {[t.in_person && "In person", t.online && "Online", t.home_visits && "Home visits"].filter(Boolean).join(" · ")}
-        </span>
-      </div>
-      {t.is_sample && <span className="text-xs text-muted italic">Example listing</span>}
     </Link>
   );
 }

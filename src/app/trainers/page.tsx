@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { FilterForm } from "@/components/FilterForm";
-import { Results } from "@/components/Results";
+import { SearchLayout } from "@/components/SearchLayout";
 import { parseFilters, type RawParams } from "@/lib/filters";
 import { geocodeUk } from "@/lib/geocode";
 import { searchTrainers } from "@/lib/trainers";
@@ -12,22 +11,23 @@ export default async function TrainersPage({ searchParams }: { searchParams: Pro
   const f = parseFilters(params);
   const geo = f.location ? await geocodeUk(f.location) : null;
   const { trainers, total } = await searchTrainers({ ...f, lat: geo?.lat, lng: geo?.lng });
+  const subtitle = [
+    `${total} ${total === 1 ? "trainer" : "trainers"}`,
+    geo && `within ${f.radius} miles`,
+    geo && f.online && "plus online coaches anywhere",
+    f.location && !geo && `we couldn’t find “${f.location}”, so showing everywhere`,
+  ].filter(Boolean).join(" · ");
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[280px_1fr]">
-      <aside><FilterForm values={f} /></aside>
-      <section className="flex flex-col gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">
-            Personal trainers{geo ? ` within ${f.radius} miles of ${geo.label}` : " in the UK"}
-          </h1>
-          <p className="text-sm text-muted">
-            {total} {total === 1 ? "trainer" : "trainers"} found
-            {f.location && !geo && ` · we couldn't find "${f.location}", so we're showing everywhere`}
-          </p>
-        </div>
-        <Results trainers={trainers} total={total} page={f.page ?? 1} params={params} basePath="/trainers" />
-      </section>
-    </div>
+    <SearchLayout
+      eyebrow="Find your trainer"
+      title={geo ? `Trainers near ${geo.label}` : "Trainers across the UK"}
+      subtitle={subtitle}
+      filters={f}
+      action="/trainers"
+      trainers={trainers}
+      total={total}
+      params={params}
+    />
   );
 }

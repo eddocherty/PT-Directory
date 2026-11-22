@@ -1,97 +1,95 @@
-import { FITNESS_GOALS, GENDERS, RADII, TRAINING_STYLES } from "@/lib/taxonomy";
+import { FITNESS_GOALS, GENDERS, RADII, SPORTS, TRAINING_STYLES, type Option } from "@/lib/taxonomy";
 
-type Props = {
-  action?: string;
-  values: {
-    location?: string;
-    radius?: number;
-    styles?: string[];
-    goals?: string[];
-    online?: boolean;
-    homeVisits?: boolean;
-    maxPrice?: number;
-    gender?: string;
-    q?: string;
-  };
+type Values = {
+  location?: string;
+  radius?: number;
+  styles?: string[];
+  goals?: string[];
+  sports?: string[];
+  online?: boolean;
+  homeVisits?: boolean;
+  maxPrice?: number;
+  gender?: string;
+  q?: string;
 };
 
-/** Plain GET form so filtering works without client JavaScript and every result page has a shareable URL. */
-export function FilterForm({ action = "/trainers", values }: Props) {
+function Pills({ name, options, selected }: { name: string; options: Option[]; selected?: string[] }) {
   return (
-    <form action={action} className="flex flex-col gap-5 rounded-xl border border-line bg-surface p-4 text-sm">
-      <label className="flex flex-col gap-1">
-        <span className="font-semibold">Postcode or town</span>
-        <input name="location" defaultValue={values.location} placeholder="e.g. M4 or Leeds" className="input" />
-      </label>
-      <label className="flex flex-col gap-1">
-        <span className="font-semibold">Within</span>
-        <select name="radius" defaultValue={String(values.radius ?? 25)} className="input">
-          {RADII.map((r) => (
-            <option key={r} value={r}>{r} miles</option>
-          ))}
-        </select>
-      </label>
-
-      <fieldset className="flex flex-col gap-1.5">
-        <legend className="mb-1 font-semibold">Training style</legend>
-        {TRAINING_STYLES.map((s) => (
-          <label key={s.slug} className="flex items-center gap-2">
-            <input type="checkbox" name="style" value={s.slug} defaultChecked={values.styles?.includes(s.slug)} className="accent-brand" />
-            {s.name}
-          </label>
-        ))}
-      </fieldset>
-
-      <fieldset className="flex flex-col gap-1.5">
-        <legend className="mb-1 font-semibold">Fitness goal</legend>
-        {FITNESS_GOALS.map((g) => (
-          <label key={g.slug} className="flex items-center gap-2">
-            <input type="checkbox" name="goal" value={g.slug} defaultChecked={values.goals?.includes(g.slug)} className="accent-brand" />
-            {g.name}
-          </label>
-        ))}
-      </fieldset>
-
-      <fieldset className="flex flex-col gap-1.5">
-        <legend className="mb-1 font-semibold">Sessions</legend>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="online" value="1" defaultChecked={values.online} className="accent-brand" />
-          Online coaching
+    <div className="flex flex-wrap gap-1.5">
+      {options.map((o) => (
+        <label key={o.slug} className="cursor-pointer">
+          <input type="checkbox" name={name} value={o.slug} defaultChecked={selected?.includes(o.slug)} className="peer sr-only" />
+          <span className="inline-block rounded-full border border-line px-3 py-1 text-xs font-medium transition peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-accent hover:border-ink">
+            {o.name}
+          </span>
         </label>
-        <label className="flex items-center gap-2">
-          <input type="checkbox" name="home" value="1" defaultChecked={values.homeVisits} className="accent-brand" />
-          Home visits
-        </label>
-      </fieldset>
+      ))}
+    </div>
+  );
+}
 
-      <label className="flex flex-col gap-1">
-        <span className="font-semibold">Max price per session</span>
-        <select name="maxPrice" defaultValue={values.maxPrice ? String(values.maxPrice) : ""} className="input">
-          <option value="">Any</option>
-          {[30, 40, 50, 60, 80].map((p) => (
-            <option key={p} value={p}>Up to £{p}</option>
-          ))}
-        </select>
-      </label>
+function Section({ title, open = false, count, children }: { title: string; open?: boolean; count?: number; children: React.ReactNode }) {
+  return (
+    <details open={open} className="group border-t border-line py-4">
+      <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold">
+        <span>
+          {title}
+          {count ? <span className="ml-2 rounded-full bg-ink px-2 py-0.5 text-[10px] text-paper">{count}</span> : null}
+        </span>
+        <span className="text-lg transition group-open:rotate-45">+</span>
+      </summary>
+      <div className="mt-3">{children}</div>
+    </details>
+  );
+}
 
-      <label className="flex flex-col gap-1">
-        <span className="font-semibold">Trainer gender</span>
-        <select name="gender" defaultValue={values.gender ?? ""} className="input">
-          <option value="">Any</option>
-          {GENDERS.map((g) => (
-            <option key={g.slug} value={g.slug}>{g.name}</option>
-          ))}
-        </select>
-      </label>
+/** Plain GET form: works without client JS and every result page has a shareable URL. */
+export function FilterForm({ action = "/trainers", values, hideLocation = false }: { action?: string; values: Values; hideLocation?: boolean }) {
+  return (
+    <form action={action} className="flex flex-col text-sm">
+      {!hideLocation && (
+        <div className="flex flex-col gap-2 pb-4">
+          <label className="eyebrow" htmlFor="f-location">Where?</label>
+          <input id="f-location" name="location" defaultValue={values.location} placeholder="Postcode or town" className="input" />
+          <select name="radius" defaultValue={String(values.radius ?? 25)} className="input" aria-label="Distance">
+            {RADII.map((r) => <option key={r} value={r}>Within {r} miles</option>)}
+          </select>
+        </div>
+      )}
+      {hideLocation && <input type="hidden" name="radius" value={values.radius ?? 25} />}
 
-      <label className="flex flex-col gap-1">
-        <span className="font-semibold">Name or keyword</span>
-        <input name="q" defaultValue={values.q} className="input" />
-      </label>
+      <Section title="Training style" open count={values.styles?.length}>
+        <Pills name="style" options={TRAINING_STYLES} selected={values.styles} />
+      </Section>
+      <Section title="Your goal" open count={values.goals?.length}>
+        <Pills name="goal" options={FITNESS_GOALS} selected={values.goals} />
+      </Section>
+      <Section title="Sports & hobbies" count={values.sports?.length}>
+        <Pills name="sport" options={SPORTS} selected={values.sports} />
+      </Section>
+      <Section title="Sessions & price" count={(values.online ? 1 : 0) + (values.homeVisits ? 1 : 0) + (values.maxPrice ? 1 : 0)}>
+        <div className="flex flex-col gap-2">
+          <label className="flex items-center gap-2"><input type="checkbox" name="online" value="1" defaultChecked={values.online} className="h-4 w-4 accent-ink" /> Online coaching</label>
+          <label className="flex items-center gap-2"><input type="checkbox" name="home" value="1" defaultChecked={values.homeVisits} className="h-4 w-4 accent-ink" /> Home visits</label>
+          <select name="maxPrice" defaultValue={values.maxPrice ? String(values.maxPrice) : ""} className="input mt-1" aria-label="Max price">
+            <option value="">Any price</option>
+            {[30, 40, 50, 60, 80].map((p) => <option key={p} value={p}>Up to £{p} a session</option>)}
+          </select>
+        </div>
+      </Section>
+      <Section title="Trainer" count={(values.gender ? 1 : 0) + (values.q ? 1 : 0)}>
+        <div className="flex flex-col gap-2">
+          <select name="gender" defaultValue={values.gender ?? ""} className="input" aria-label="Trainer gender">
+            <option value="">Any gender</option>
+            {GENDERS.map((g) => <option key={g.slug} value={g.slug}>{g.name}</option>)}
+          </select>
+          <input name="q" defaultValue={values.q} placeholder="Name or keyword" className="input" />
+        </div>
+      </Section>
 
-      <div className="flex gap-2">
+      <div className="sticky bottom-0 flex gap-2 border-t border-line bg-paper py-4">
         <button type="submit" className="btn flex-1">Show trainers</button>
-        <a href={action} className="rounded-lg border border-line px-3 py-2 text-center hover:border-brand">Clear</a>
+        <a href={action} className="btn-ghost px-4">Clear</a>
       </div>
     </form>
   );

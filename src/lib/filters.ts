@@ -17,6 +17,7 @@ export function parseFilters(p: RawParams): SearchFilters & { location?: string 
     radius: num(p.radius) ?? 25,
     styles: list(p.style),
     goals: list(p.goal),
+    sports: list(p.sport),
     online: one(p.online) === "1" ? true : undefined,
     homeVisits: one(p.home) === "1" ? true : undefined,
     maxPrice: num(p.maxPrice),

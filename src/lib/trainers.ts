@@ -22,8 +22,14 @@ export type TrainerSummary = {
   claimed: boolean;
   styles: string[];
   goals: string[];
+  sports: string[];
+  free_consultation: boolean;
+  rating_avg: number | null;
+  review_count: number;
   distance_miles: number | null;
 };
+
+export type Review = { id: string; author_name: string; rating: number; body: string | null; created_at: string };
 
 export type Trainer = TrainerSummary & {
   bio: string | null;
@@ -35,6 +41,8 @@ export type Trainer = TrainerSummary & {
   instagram: string | null;
   source: string;
   source_url: string | null;
+  photos: string[];
+  reviews: Review[];
 };
 
 export type SearchFilters = {
@@ -44,6 +52,7 @@ export type SearchFilters = {
   city?: string;
   styles?: string[];
   goals?: string[];
+  sports?: string[];
   online?: boolean;
   homeVisits?: boolean;
   maxPrice?: number;
@@ -57,6 +66,7 @@ export const PAGE_SIZE = 24;
 type SampleRow = (typeof sample)[number];
 
 function fromSample(r: SampleRow, distance: number | null = null): Trainer {
+  const reviews = r.reviews.map((v, i) => ({ ...v, id: `${r.slug}-${i}`, created_at: "2026-11-01T00:00:00Z" }));
   return {
     id: r.slug,
     slug: r.slug,
@@ -73,7 +83,13 @@ function fromSample(r: SampleRow, distance: number | null = null): Trainer {
     price_from: r.price_from,
     price_to: r.price_to,
     gender: r.gender,
-    image_url: null,
+    image_url: r.image_url,
+    photos: [],
+    sports: r.sports,
+    free_consultation: r.free_consultation,
+    reviews,
+    review_count: reviews.length,
+    rating_avg: reviews.length ? Math.round((reviews.reduce((a, v) => a + v.rating, 0) / reviews.length) * 10) / 10 : null,
     is_sample: true,
     claimed: false,
     styles: r.styles,
@@ -104,6 +120,7 @@ function searchSample(f: SearchFilters): { trainers: TrainerSummary[]; total: nu
       if (f.gender && t.gender !== f.gender) return false;
       if (f.styles?.length && !t.styles.some((s) => f.styles!.includes(s))) return false;
       if (f.goals?.length && !t.goals.some((g) => f.goals!.includes(g))) return false;
+      if (f.sports?.length && !t.sports.some((g) => f.sports!.includes(g))) return false;
       if (f.q) {
         const q = f.q.toLowerCase();
         if (![t.name, t.business_name, t.headline].some((v) => v?.toLowerCase().includes(q))) return false;
@@ -129,6 +146,7 @@ export async function searchTrainers(f: SearchFilters): Promise<{ trainers: Trai
     p_city: f.city ?? null,
     p_styles: f.styles?.length ? f.styles : null,
     p_goals: f.goals?.length ? f.goals : null,
+    p_sports: f.sports?.length ? f.sports : null,
     p_online: f.online ?? null,
     p_home_visits: f.homeVisits ?? null,
     p_max_price: f.maxPrice ?? null,
@@ -156,8 +174,22 @@ export async function getTrainer(slug: string): Promise<Trainer | null> {
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) return null;
+  const { data: reviews } = await db
+    .from("reviews")
+    .select("id, author_name, rating, body, created_at")
+    .eq("trainer_id", data.id)
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .limit(50);
+  const list = (reviews ?? []) as Review[];
   return {
     ...data,
+    sports: data.sports ?? [],
+    photos: data.photos ?? [],
+    free_consultation: data.free_consultation ?? false,
+    reviews: list,
+    review_count: list.length,
+    rating_avg: list.length ? Math.round((list.reduce((a, v) => a + v.rating, 0) / list.length) * 10) / 10 : null,
     claimed: data.claimed_by != null,
     styles: (data.trainer_styles ?? []).map((s: { style_slug: string }) => s.style_slug),
     goals: (data.trainer_goals ?? []).map((g: { goal_slug: string }) => g.goal_slug),
@@ -187,6 +219,52 @@ export async function submitListingRequest(req: {
     message: [req.trainer_slug && !trainer_id ? `Listing: ${req.trainer_slug}` : null, req.message]
       .filter(Boolean)
       .join("\n") || null,
+  });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function featuredTrainers(limit = 4): Promise<TrainerSummary[]> {
+  let trainers: TrainerSummary[] = [];
+  try {
+    ({ trainers } = await searchTrainers({}));
+  } catch (e) {
+    // Never let the home page fail (or a build break) because the database is unreachable.
+    console.error("featuredTrainers:", e);
+  }
+  return [...trainers]
+    .sort((a, b) => (b.rating_avg ?? 0) - (a.rating_avg ?? 0) || b.review_count - a.review_count)
+    .slice(0, limit);
+}
+
+async function trainerId(slug: string) {
+  const db = getSupabase();
+  if (!db) return null;
+  const { data } = await db.from("trainers").select("id").eq("slug", slug).maybeSingle();
+  return (data?.id as string) ?? null;
+}
+
+export async function sendEnquiry(e: {
+  slug: string; name: string; email: string; phone?: string; goal?: string; message?: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const db = getSupabase();
+  if (!db) return { ok: false, error: "The database isn’t connected yet." };
+  const id = await trainerId(e.slug);
+  if (!id) return { ok: false, error: "We couldn’t find that trainer." };
+  const { error } = await db.from("enquiries").insert({
+    trainer_id: id, name: e.name, email: e.email, phone: e.phone || null, goal: e.goal || null, message: e.message || null,
+  });
+  return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+export async function submitReview(r: {
+  slug: string; author_name: string; author_email: string; rating: number; body?: string;
+}): Promise<{ ok: boolean; error?: string }> {
+  const db = getSupabase();
+  if (!db) return { ok: false, error: "The database isn’t connected yet." };
+  const id = await trainerId(r.slug);
+  if (!id) return { ok: false, error: "We couldn’t find that trainer." };
+  const { error } = await db.from("reviews").insert({
+    trainer_id: id, author_name: r.author_name, author_email: r.author_email, rating: r.rating, body: r.body || null,
   });
   return error ? { ok: false, error: error.message } : { ok: true };
 }

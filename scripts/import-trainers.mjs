@@ -25,7 +25,8 @@ const blocked = new Set((removed ?? []).map((r) => r.slug));
 let ok = 0, skipped = 0, failed = 0;
 for (const r of rows) {
   if (blocked.has(r.slug)) { skipped++; continue; }
-  const { styles = [], goals = [], lat, lng, ...fields } = r;
+  const { styles = [], goals = [], lat, lng, ...rest } = r;
+  const { reviews, ...fields } = rest; void reviews;
   const record = {
     ...fields,
     location: lat != null && lng != null ? `SRID=4326;POINT(${lng} ${lat})` : null,

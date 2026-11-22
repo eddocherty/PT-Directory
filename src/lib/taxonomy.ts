@@ -60,3 +60,24 @@ export const CITIES: City[] = [
 
 export const nameFor = (list: Option[], slug: string) =>
   list.find((o) => o.slug === slug)?.name ?? slug;
+
+export const SPORTS: Option[] = [
+  { slug: "running", name: "Running" },
+  { slug: "marathon", name: "Marathon" },
+  { slug: "triathlon", name: "Triathlon" },
+  { slug: "hyrox", name: "HYROX" },
+  { slug: "cycling", name: "Cycling" },
+  { slug: "swimming", name: "Swimming" },
+  { slug: "football", name: "Football" },
+  { slug: "rugby", name: "Rugby" },
+  { slug: "golf", name: "Golf" },
+  { slug: "tennis", name: "Tennis" },
+  { slug: "boxing", name: "Boxing" },
+  { slug: "martial-arts", name: "Martial arts" },
+  { slug: "climbing", name: "Climbing" },
+  { slug: "skiing", name: "Skiing" },
+  { slug: "surfing", name: "Surfing" },
+  { slug: "powerlifting-comp", name: "Competitive powerlifting" },
+  { slug: "bodybuilding-comp", name: "Bodybuilding shows" },
+  { slug: "crossfit-comp", name: "CrossFit competitions" },
+];
