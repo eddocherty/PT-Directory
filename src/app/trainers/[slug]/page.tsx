@@ -27,10 +27,16 @@ function H2({ children }: { children: React.ReactNode }) {
 export default async function TrainerPage({ params }: Props) {
   const t = await getTrainer((await params).slug);
   if (!t) notFound();
-  const first = t.name.split(" ")[0];
+  // Sole traders read "Contact Nate"; studios and gyms keep their full name ("Contact Gym 72").
+  const isPerson = !!t.business_name && t.business_name !== t.name && !/^the\s/i.test(t.name);
+  const first = isPerson ? t.name.split(" ")[0] : t.name;
+  // Real listings nobody has claimed yet: enquiries would have no one to read them, so send people to the trainer directly.
+  const direct = !t.claimed && !t.is_sample;
+  const checked = t.last_verified_at ? new Date(t.last_verified_at).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : null;
+  const sourceLabel = t.source === "osm" ? "OpenStreetMap and their own website" : t.source === "website" ? "their own website" : null;
   const where = [t.city, t.region && t.region !== t.city ? t.region : null].filter(Boolean).join(", ");
   const links = [
-    t.website && { label: "Website", href: t.website },
+    t.website && !direct && { label: "Website", href: t.website },
     t.instagram && { label: "Instagram", href: `https://instagram.com/${t.instagram.replace(/^@/, "")}` },
     t.phone && { label: "Call", href: `tel:${t.phone}` },
   ].filter(Boolean) as { label: string; href: string }[];
@@ -67,7 +73,7 @@ export default async function TrainerPage({ params }: Props) {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <a href="#contact" className="btn">Contact {first}</a>
-              <span className="text-sm text-muted"><strong className="text-ink">{price(t)}</strong> per session</span>
+              <span className="text-sm text-muted"><strong className="text-ink">{price(t)}</strong>{t.price_from != null && " per session"}</span>
             </div>
             {t.is_sample && <p className="text-xs italic text-muted">Example listing, not a real trainer.</p>}
           </div>
@@ -165,16 +171,28 @@ export default async function TrainerPage({ params }: Props) {
             <p className="eyebrow text-muted">Get started</p>
             <p className="display mt-1 text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">
-              {price(t)} per session{t.price_to && t.price_to !== t.price_from ? ` (up to £${t.price_to})` : ""}.
+              {price(t)}{t.price_from != null && " per session"}{t.price_to && t.price_to !== t.price_from ? ` (up to £${t.price_to})` : ""}.
               {t.free_consultation && " First consultation is free."}
             </p>
-            <EnquiryForm slug={t.slug} firstName={first} freeConsult={t.free_consultation} />
+            {direct ? (
+              <>
+                <p className="mb-4 text-sm">This profile hasn’t been claimed yet, so get in touch with {first} directly.</p>
+                {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" className="btn w-full justify-center">Visit {first}’s website</a>}
+              </>
+            ) : (
+              <EnquiryForm slug={t.slug} firstName={first} freeConsult={t.free_consultation} />
+            )}
             {links.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" className="btn-ghost px-4 py-2 text-xs">{l.label}</a>)}
               </div>
             )}
           </div>
+          {direct && sourceLabel && (
+            <p className="mt-4 px-2 text-xs text-muted">
+              Details from {sourceLabel}{t.source === "osm" && " (© OpenStreetMap contributors, ODbL)"}{checked && `, checked ${checked}`}.
+            </p>
+          )}
           <p className="mt-4 px-2 text-xs text-muted">
             Is this you? <Link href={`/for-trainers?listing=${t.slug}`} className="underline">Claim or edit this profile</Link> or{" "}
             <Link href={`/remove?listing=${t.slug}`} className="underline">ask us to remove it</Link>.

@@ -39,8 +39,13 @@ export default async function Home() {
             </select>
             <button className="btn px-7 text-base">Search</button>
           </form>
+          <Link href="/trainers?online=1" className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-paper hover:opacity-90">
+            Or train online with a UK coach, wherever you live →
+          </Link>
           <div className="mt-6 flex flex-wrap items-center gap-2 text-xs font-medium">
             <span className="text-muted">Popular:</span>
+            <Link href="/trainers?style=pilates" className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">Pilates</Link>
+            <Link href="/trainers?style=bootcamp" className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">Bootcamps</Link>
             {["weight-loss", "muscle-gain", "pre-post-natal", "rehab"].map((g) => (
               <Link key={g} href={`/trainers?goal=${g}`} className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">
                 {FITNESS_GOALS.find((x) => x.slug === g)?.name}
