@@ -24,7 +24,7 @@ export default async function Home() {
         <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[36rem] w-[36rem] rounded-full bg-zap blur-3xl" />
         <div aria-hidden className="pointer-events-none absolute -bottom-40 right-1/4 h-80 w-80 rounded-full bg-accent/15 blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20">
-          <p className="eyebrow text-accent">The UK’s personal trainer directory</p>
+          <p className="eyebrow text-accent">Independent trainers, near you</p>
           <h1 className="display mt-5 text-5xl sm:text-7xl lg:text-8xl">
             Find your<br /><span className="text-accent">trainer.</span>
           </h1>

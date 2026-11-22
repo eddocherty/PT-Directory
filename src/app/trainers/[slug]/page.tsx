@@ -47,11 +47,22 @@ export default async function TrainerPage({ params }: Props) {
       <section className="bg-soft text-ink">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_1fr] md:items-end md:py-14">
           <div className="relative">
-            <Avatar t={t} className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
+            <Avatar t={t} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
             {t.free_consultation && (
-              <span className="absolute left-4 top-4 rounded-full bg-accent px-3 py-1.5 text-xs font-semibold text-paper">
+              <span className="absolute left-4 top-4 rounded-full bg-paper px-3 py-1.5 text-xs font-semibold text-accent">
                 Free consultation
               </span>
+            )}
+            {direct && !t.image_url && (
+              <div className="mt-3 flex flex-col gap-3 rounded-2xl bg-paper p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between md:absolute md:inset-x-3 md:bottom-3 md:mt-0 md:bg-paper/95 md:shadow-lg md:backdrop-blur">
+                <div>
+                  <p className="text-sm font-semibold">Is this you, {first}?</p>
+                  <p className="text-xs text-muted">Claim your free listing to add photos, prices and take enquiries.</p>
+                </div>
+                <Link href={`/for-trainers?listing=${t.slug}`} className="btn shrink-0 justify-center px-4 py-2 text-sm">
+                  Claim listing
+                </Link>
+              </div>
             )}
           </div>
           <div className="flex flex-col gap-5">

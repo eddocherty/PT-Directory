@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Inter, Inter_Tight } from "next/font/google";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import { Logo } from "@/components/Logo";
 import "./globals.css";
 
@@ -10,9 +10,18 @@ const body = Inter({ variable: "--font-body", subsets: ["latin"] });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: `${SITE_NAME}: find a personal trainer near you`, template: `%s | ${SITE_NAME}` },
+  title: { default: `${SITE_NAME}: independent personal trainers near you`, template: `%s | ${SITE_NAME}` },
   description:
-    "Search personal trainers across the UK by location, training style and fitness goal. Compare reviews, prices and specialisms.",
+    "Train Local helps you find independent personal trainers, Pilates instructors and small studios near you, or online. Compare specialisms, prices and reviews.",
+  applicationName: SITE_NAME,
+  openGraph: {
+    siteName: SITE_NAME,
+    title: `${SITE_NAME}: ${TAGLINE}`,
+    description: "Find independent personal trainers, Pilates instructors and small studios near you, or online.",
+    locale: "en_GB",
+    type: "website",
+  },
+  twitter: { card: "summary", title: `${SITE_NAME}: ${TAGLINE}` },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -36,7 +45,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <div>
               <Logo light />
               <p className="mt-3 max-w-sm text-sm text-paper/60">
-                The UK’s directory of personal trainers. Find someone who gets your goals, then go and smash them.
+                {TAGLINE} Find someone who gets your goals, then go and smash them.
               </p>
             </div>
             <div className="flex flex-col gap-2 text-sm">
