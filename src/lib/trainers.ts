@@ -41,6 +41,8 @@ export type Trainer = TrainerSummary & {
   instagram: string | null;
   source: string;
   source_url: string | null;
+  source_licence: string | null;
+  last_verified_at: string | null;
   photos: string[];
   reviews: Review[];
 };
@@ -102,6 +104,8 @@ function fromSample(r: SampleRow, distance: number | null = null): Trainer {
     instagram: null,
     source: r.source,
     source_url: null,
+    source_licence: null,
+    last_verified_at: null,
     distance_miles: distance,
   };
 }
