@@ -13,6 +13,9 @@ export default function ShopTerms() {
       <h2>What you’re buying</h2>
       <p>Our plans and guides are digital PDF downloads for your personal use. Prices are in pounds sterling. Payment is taken securely by Stripe. We never see or store your card details.</p>
 
+      <h2>UK customers only</h2>
+      <p>Our plans are sold to customers with a UK billing address only. If a payment comes from outside the UK, we refund it in full automatically and no download is provided.</p>
+
       <h2>Getting your download</h2>
       <p>Straight after payment you’ll see a download button. Your receipt email also includes a link so you can download it again later. If anything goes wrong, email <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> with your receipt and we’ll help.</p>
 

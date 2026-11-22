@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getProduct } from "@/lib/products";
 import { CONTACT_EMAIL } from "@/lib/site";
-import { SESSION_ID, getStripe } from "@/lib/stripe";
+import { checkOrder, getStripe } from "@/lib/stripe";
 
 export const metadata: Metadata = { title: "Thank you", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -12,16 +12,30 @@ export default async function Thanks({ searchParams }: { searchParams: Promise<{
   const stripe = getStripe();
   let product;
   let email: string | null | undefined;
-  if (stripe && SESSION_ID.test(session_id)) {
+  let nonUk = false;
+  if (stripe && session_id) {
     try {
-      const s = await stripe.checkout.sessions.retrieve(session_id);
-      if (s.payment_status === "paid") {
-        product = getProduct(s.metadata?.product ?? "");
-        email = s.customer_details?.email;
-      }
+      const res = await checkOrder(stripe, { sessionId: session_id });
+      if (res.status === "ok") product = getProduct(res.slug);
+      nonUk = res.status === "non-uk";
+      if (res.status !== "not-found") email = res.email;
     } catch (e) {
       console.error("Stripe lookup failed", e);
     }
+  }
+
+  if (nonUk) {
+    return (
+      <div className="mx-auto max-w-2xl px-4 py-20 text-center">
+        <h1 className="display text-4xl">Sorry, UK customers only</h1>
+        <p className="mt-4 text-muted">
+          Our plans are only available to buyers with a UK billing address, so we’ve refunded your payment in full.
+          It usually shows on your statement within 5 to 10 working days.
+          Questions? Email <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+        </p>
+        <Link href="/trainers?online=1" className="btn mt-8">Find an online coach instead</Link>
+      </div>
+    );
   }
 
   if (!product) {

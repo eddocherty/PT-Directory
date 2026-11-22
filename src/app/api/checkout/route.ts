@@ -16,6 +16,7 @@ export async function POST(req: Request) {
 
   if (!product) return NextResponse.redirect(`${origin}/shop`, 303);
   if (form.get("consent") !== "yes") return back("consent");
+  if (form.get("uk") !== "yes") return back("uk");
   const stripe = getStripe();
   if (!stripe) return back("not-ready");
 
@@ -46,9 +47,11 @@ export async function POST(req: Request) {
           metadata: { product: product.slug, order },
         },
       },
+      // UK only: we check the billing country after payment and refund anything outside the UK.
+      billing_address_collection: "required",
       allow_promotion_codes: true,
       custom_text: {
-        submit: { message: "Your PDF download starts straight after payment. We also email you a link." },
+        submit: { message: "UK customers only. Your PDF download starts straight after payment, and we email you a link." },
       },
       success_url: `${origin}/shop/thanks?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/shop/${product.slug}`,

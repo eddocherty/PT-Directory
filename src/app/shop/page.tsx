@@ -25,6 +25,7 @@ export default function Shop() {
             <span className="rounded-full border border-line bg-paper px-3 py-1">Instant PDF download</span>
             <span className="rounded-full border border-line bg-paper px-3 py-1">Secure checkout with Stripe</span>
             <span className="rounded-full border border-line bg-paper px-3 py-1">Print it or use it on your phone</span>
+            <span className="rounded-full border border-line bg-paper px-3 py-1">UK customers only</span>
           </div>
         </div>
       </section>
