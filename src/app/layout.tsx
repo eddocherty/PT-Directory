@@ -23,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
             <Link href="/" aria-label="Home"><Logo /></Link>
             <div className="flex items-center gap-6 text-sm font-medium">
+              <Link href="/trainers?online=1" className="text-muted hover:text-ink">Online</Link>
               <Link href="/locations" className="hidden text-muted hover:text-ink sm:inline">Locations</Link>
               <Link href="/for-trainers" className="hidden text-muted hover:text-ink sm:inline">For trainers</Link>
               <Link href="/trainers" className="btn px-4 py-2">Find a trainer</Link>
