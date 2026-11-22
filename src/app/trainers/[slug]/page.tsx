@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { ReviewForm } from "@/components/ReviewForm";
+import { ShopProfileCard } from "@/components/ShopPromo";
 import { Stars } from "@/components/Stars";
 import { Avatar } from "@/components/TrainerCard";
 import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
@@ -187,6 +188,7 @@ export default async function TrainerPage({ params }: Props) {
               </div>
             )}
           </div>
+          <ShopProfileCard goals={t.goals} styles={t.styles} />
           {direct && sourceLabel && (
             <p className="mt-4 px-2 text-xs text-muted">
               Details from {sourceLabel}{t.source === "osm" && " (© OpenStreetMap contributors, ODbL)"}{checked && `, checked ${checked}`}.

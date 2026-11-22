@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Fragment } from "react";
+import { ShopResultsCard } from "./ShopPromo";
 import { TrainerCard } from "./TrainerCard";
 import { PAGE_SIZE, type SearchFilters, type TrainerSummary } from "@/lib/trainers";
 import { toQuery, type RawParams } from "@/lib/filters";
@@ -114,6 +116,7 @@ export function Results({
             <Link href="/locations" className="btn-ghost">Browse by county</Link>
           </div>
         </div>
+        <ShopResultsCard goals={filters.goals} styles={filters.styles} />
       </div>
     );
   }
@@ -122,7 +125,13 @@ export function Results({
     <div className="flex flex-col gap-6">
       {toolbar}
       <div className="grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3">
-        {trainers.map((t) => <TrainerCard key={t.id} t={t} />)}
+        {trainers.map((t, i) => (
+          <Fragment key={t.id}>
+            <TrainerCard t={t} />
+            {/* Low-cost first step, shown once per page after a few trainers */}
+            {i === Math.min(5, trainers.length - 1) && <ShopResultsCard goals={filters.goals} styles={filters.styles} />}
+          </Fragment>
+        ))}
       </div>
       {pages > 1 && (
         <nav className="flex items-center justify-center gap-3 text-sm">

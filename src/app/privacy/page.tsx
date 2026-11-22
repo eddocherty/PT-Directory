@@ -37,6 +37,13 @@ export default function Privacy() {
         When you submit a form we store your name, email and message so we can reply. Searches you make use your
         postcode only to find nearby trainers. We don’t store it against you.
       </p>
+
+      <h2>Shop purchases</h2>
+      <p>
+        If you buy a plan, Stripe processes your name, email address and payment details so we can take payment, send your
+        receipt and let you download your purchase. We never see your full card details. We keep order records as the law
+        requires for tax and accounting.
+      </p>
     </div>
   );
 }

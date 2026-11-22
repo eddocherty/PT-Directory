@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { AllFilters } from "@/components/AllFilters";
+import { ShopBanner } from "@/components/ShopPromo";
+import { FROM_PRICE } from "@/lib/products";
 import { TrainerCard } from "@/components/TrainerCard";
 import { CITIES, FITNESS_GOALS, TRAINING_STYLES } from "@/lib/taxonomy";
 import { featuredTrainers } from "@/lib/trainers";
@@ -43,6 +45,9 @@ export default async function Home() {
           <Link href="/trainers?online=1" className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-paper hover:opacity-90">
             Or train online with a UK coach, wherever you live →
           </Link>
+          <Link href="/shop" className="ml-0 mt-3 inline-flex items-center gap-2 text-sm font-semibold text-ink underline decoration-accent decoration-2 underline-offset-4 hover:text-accent sm:ml-4">
+            Not ready for a PT? Start with a plan from {FROM_PRICE}
+          </Link>
           <div className="mt-6 flex flex-wrap items-center gap-2 text-xs font-medium">
             <span className="text-muted">Popular:</span>
             <Link href="/trainers?style=pilates" className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">Pilates</Link>
@@ -78,6 +83,8 @@ export default async function Home() {
           ))}
         </div>
       </section>
+
+      <ShopBanner />
 
       {/* Featured */}
       {featured.length > 0 && (
