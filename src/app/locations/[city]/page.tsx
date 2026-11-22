@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!city) return {};
   return {
     title: `Personal trainers in ${city.name}`,
-    description: `Compare personal trainers in ${city.name}: reviews, specialisms, prices and online or in-person sessions.`,
+    description: `Compare personal trainers in ${city.name}: reviews, specialisms and online or in-person sessions.`,
   };
 }
 

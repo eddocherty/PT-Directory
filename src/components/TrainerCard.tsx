@@ -7,10 +7,6 @@ export function initials(name: string) {
   return words.map((w) => w[0]).slice(0, 2).join("").toUpperCase() || "PT";
 }
 
-export function price(t: { price_from: number | null; price_to: number | null }) {
-  if (t.price_from == null) return "Price on request";
-  return `From £${t.price_from}`;
-}
 
 // No-photo state: a monogram on a brand-blue gradient with a faint line icon for the trainer's main style.
 // Real listings have no photos (we never copy photos from trainers' own sites).
@@ -143,9 +139,8 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
             <span key={s} className="rounded-full bg-soft px-2.5 py-1 text-xs font-medium">{s}</span>
           ))}
         </div>
-        <div className="mt-auto flex flex-wrap items-center justify-between gap-1">
-          <span className="text-sm font-semibold">{price(t)}</span>
-          <span className="hidden text-xs font-semibold text-muted group-hover:text-ink sm:inline">View profile →</span>
+        <div className="mt-auto flex flex-wrap items-center justify-end gap-1">
+          <span className="text-xs font-semibold text-muted group-hover:text-ink">View profile →</span>
         </div>
         {t.is_sample && <span className="text-[11px] italic text-muted">Example listing</span>}
       </div>

@@ -20,7 +20,6 @@ export function parseFilters(p: RawParams): SearchFilters & { location?: string 
     sports: list(p.sport),
     online: one(p.online) === "1" ? true : undefined,
     homeVisits: one(p.home) === "1" ? true : undefined,
-    maxPrice: num(p.maxPrice),
     gender: one(p.gender),
     q: one(p.q)?.trim(),
     page: num(p.page) ?? 1,

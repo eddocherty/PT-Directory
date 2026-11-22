@@ -8,12 +8,11 @@ type Values = {
   sports?: string[];
   online?: boolean;
   homeVisits?: boolean;
-  maxPrice?: number;
   gender?: string;
   q?: string;
 };
 
-function Pills({ name, options, selected }: { name: string; options: Option[]; selected?: string[] }) {
+export function Pills({ name, options, selected }: { name: string; options: Option[]; selected?: string[] }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {options.map((o) => (
@@ -60,14 +59,10 @@ export function FilterForm({ action = "/trainers", values, hideLocation = false 
       <Section title="Sports & hobbies" count={values.sports?.length}>
         <Pills name="sport" options={SPORTS} selected={values.sports} />
       </Section>
-      <Section title="Sessions & price" count={(values.online ? 1 : 0) + (values.homeVisits ? 1 : 0) + (values.maxPrice ? 1 : 0)}>
+      <Section title="Sessions" count={(values.online ? 1 : 0) + (values.homeVisits ? 1 : 0)}>
         <div className="flex flex-col gap-2">
           <label className="flex items-center gap-2"><input type="checkbox" name="online" value="1" defaultChecked={values.online} className="h-4 w-4 accent-ink" /> Online coaching</label>
           <label className="flex items-center gap-2"><input type="checkbox" name="home" value="1" defaultChecked={values.homeVisits} className="h-4 w-4 accent-ink" /> Home visits</label>
-          <select name="maxPrice" defaultValue={values.maxPrice ? String(values.maxPrice) : ""} className="input mt-1" aria-label="Max price">
-            <option value="">Any price</option>
-            {[30, 40, 50, 60, 80].map((p) => <option key={p} value={p}>Up to £{p} a session</option>)}
-          </select>
         </div>
       </Section>
       <Section title="Trainer" count={(values.gender ? 1 : 0) + (values.q ? 1 : 0)}>

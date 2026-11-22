@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: `${SITE_NAME}: independent personal trainers near you`, template: `%s | ${SITE_NAME}` },
   description:
-    "Train Local helps you find independent personal trainers, Pilates instructors and small studios near you, or online. Compare specialisms, prices and reviews.",
+    "Train Local helps you find independent personal trainers, Pilates instructors and small studios near you, or online. Compare specialisms and reviews.",
   applicationName: SITE_NAME,
   openGraph: {
     siteName: SITE_NAME,

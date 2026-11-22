@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AllFilters } from "@/components/AllFilters";
 import { TrainerCard } from "@/components/TrainerCard";
 import { CITIES, FITNESS_GOALS, TRAINING_STYLES } from "@/lib/taxonomy";
 import { featuredTrainers } from "@/lib/trainers";
@@ -26,10 +27,10 @@ export default async function Home() {
         <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20">
           <p className="eyebrow text-accent">Independent trainers, near you</p>
           <h1 className="display mt-5 text-5xl sm:text-7xl lg:text-8xl">
-            Find your<br /><span className="text-accent">trainer.</span>
+            Training, built<br /><span className="text-accent">around you.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted">
-            Real coaches near you, whatever you’re training for. Compare specialisms, reviews and prices, then message them for free.
+            Personal trainers, Pilates instructors and online coaches who shape every session around your goals. Compare specialisms and reviews, then get in touch when you’re ready.
           </p>
           <form action="/trainers" className="mt-8 flex max-w-3xl flex-col gap-2 rounded-3xl border border-line bg-paper p-2 text-ink shadow-sm sm:flex-row sm:rounded-full">
             <input name="location" placeholder="Postcode or town" aria-label="Postcode or town" className="flex-1 rounded-full px-5 py-3 text-base outline-none" />
@@ -52,6 +53,7 @@ export default async function Home() {
               </Link>
             ))}
           </div>
+          <AllFilters />
         </div>
       </section>
 
@@ -101,7 +103,7 @@ export default async function Home() {
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           {[
             ["01", "Search", "Pop in your postcode and what you want to work on."],
-            ["02", "Compare", "Check specialisms, reviews, prices and what they do for fun."],
+            ["02", "Compare", "Check specialisms, reviews and what they do for fun."],
             ["03", "Message", "Contact trainers for free. Loads offer a free first session."],
           ].map(([n, h, p]) => (
             <div key={n} className="rounded-3xl border border-line p-6">

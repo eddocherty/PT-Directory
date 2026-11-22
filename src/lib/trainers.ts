@@ -57,7 +57,6 @@ export type SearchFilters = {
   sports?: string[];
   online?: boolean;
   homeVisits?: boolean;
-  maxPrice?: number;
   gender?: string;
   q?: string;
   page?: number;
@@ -120,7 +119,6 @@ function searchSample(f: SearchFilters): { trainers: TrainerSummary[]; total: nu
       if (f.city && t.city?.toLowerCase() !== f.city.toLowerCase()) return false;
       if (f.online != null && t.online !== f.online) return false;
       if (f.homeVisits != null && t.home_visits !== f.homeVisits) return false;
-      if (f.maxPrice != null && (t.price_from ?? 0) > f.maxPrice) return false;
       if (f.gender && t.gender !== f.gender) return false;
       if (f.styles?.length && !t.styles.some((s) => f.styles!.includes(s))) return false;
       if (f.goals?.length && !t.goals.some((g) => f.goals!.includes(g))) return false;
@@ -153,7 +151,7 @@ export async function searchTrainers(f: SearchFilters): Promise<{ trainers: Trai
     p_sports: f.sports?.length ? f.sports : null,
     p_online: f.online ?? null,
     p_home_visits: f.homeVisits ?? null,
-    p_max_price: f.maxPrice ?? null,
+    p_max_price: null, // price filtering removed: trainers change prices without telling us
     p_gender: f.gender ?? null,
     p_query: f.q || null,
     p_limit: PAGE_SIZE,

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { ReviewForm } from "@/components/ReviewForm";
 import { Stars } from "@/components/Stars";
-import { Avatar, price } from "@/components/TrainerCard";
+import { Avatar } from "@/components/TrainerCard";
 import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
 import { getTrainer } from "@/lib/trainers";
 
@@ -73,7 +73,6 @@ export default async function TrainerPage({ params }: Props) {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <a href="#contact" className="btn">Contact {first}</a>
-              <span className="text-sm text-muted"><strong className="text-ink">{price(t)}</strong>{t.price_from != null && " per session"}</span>
             </div>
             {t.is_sample && <p className="text-xs italic text-muted">Example listing, not a real trainer.</p>}
           </div>
@@ -171,7 +170,7 @@ export default async function TrainerPage({ params }: Props) {
             <p className="eyebrow text-muted">Get started</p>
             <p className="display mt-1 text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">
-              {price(t)}{t.price_from != null && " per session"}{t.price_to && t.price_to !== t.price_from ? ` (up to £${t.price_to})` : ""}.
+              Ask {first} about prices and availability.
               {t.free_consultation && " First consultation is free."}
             </p>
             {direct ? (
@@ -202,7 +201,7 @@ export default async function TrainerPage({ params }: Props) {
 
       {/* Mobile sticky contact bar */}
       <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">
-        <span className="text-sm"><strong>{price(t)}</strong> / session</span>
+        <span className="text-sm font-semibold">{t.name}</span>
         <a href="#contact" className="btn py-2.5">Contact {first}</a>
       </div>
     </>
