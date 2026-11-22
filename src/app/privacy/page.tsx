@@ -16,7 +16,7 @@ export default function Privacy() {
       <h2>Information about trainers</h2>
       <p>
         We list business information that trainers have made public, such as a business name, the area they work in,
-        the services and prices they advertise, qualifications and business contact details. We collect it from sources
+        the services they advertise, qualifications and business contact details. We collect it from sources
         that permit reuse, such as trainers’ own websites and openly licensed datasets, and we record where each listing
         came from. We do not collect home addresses or information from private social media profiles.
       </p>

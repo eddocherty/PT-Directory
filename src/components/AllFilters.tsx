@@ -29,14 +29,10 @@ export function AllFilters() {
           <Group title="Your goal"><Pills name="goal" options={FITNESS_GOALS} /></Group>
           <Group title="Sports & hobbies"><Pills name="sport" options={SPORTS} /></Group>
           <div className="grid gap-6 sm:grid-cols-2">
-            <Group title="Sessions & price">
+            <Group title="Sessions">
               <div className="flex flex-col gap-2">
                 <label className="flex items-center gap-2"><input type="checkbox" name="online" value="1" className="h-4 w-4 accent-ink" /> Online coaching</label>
                 <label className="flex items-center gap-2"><input type="checkbox" name="home" value="1" className="h-4 w-4 accent-ink" /> Home visits</label>
-                <select name="maxPrice" defaultValue="" className="input mt-1" aria-label="Max price">
-                  <option value="">Any price</option>
-                  {[30, 40, 50, 60, 80].map((p) => <option key={p} value={p}>Up to £{p} a session</option>)}
-                </select>
               </div>
             </Group>
             <Group title="Trainer">

@@ -27,7 +27,6 @@ function activeChips(f: SearchFilters, params: RawParams, base: string): Chip[] 
     ...(f.sports ?? []).map((s) => ({ label: nameOf(SPORTS, s), href: without("sport", s) })),
     ...(f.online ? [{ label: "Online coaching", href: without("online") }] : []),
     ...(f.homeVisits ? [{ label: "Home visits", href: without("home") }] : []),
-    ...(f.maxPrice ? [{ label: `Up to £${f.maxPrice}`, href: without("maxPrice") }] : []),
     ...(f.gender ? [{ label: nameOf(GENDERS, f.gender), href: without("gender") }] : []),
     ...(f.q ? [{ label: `“${f.q}”`, href: without("q") }] : []),
   ];

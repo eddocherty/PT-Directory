@@ -16,7 +16,7 @@ export function SearchLayout({
   origin?: string;
 }) {
   const active = (filters.styles?.length ?? 0) + (filters.goals?.length ?? 0) + (filters.sports?.length ?? 0) +
-    (filters.online ? 1 : 0) + (filters.homeVisits ? 1 : 0) + (filters.maxPrice ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.q ? 1 : 0);
+    (filters.online ? 1 : 0) + (filters.homeVisits ? 1 : 0) + (filters.gender ? 1 : 0) + (filters.q ? 1 : 0);
   const form = <FilterForm action={action} values={filters} hideLocation={hideLocation} />;
   return (
     <>
