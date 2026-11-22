@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { initials, price } from "@/components/TrainerCard";
-import { FITNESS_GOALS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
+import { EnquiryForm } from "@/components/EnquiryForm";
+import { ReviewForm } from "@/components/ReviewForm";
+import { Stars } from "@/components/Stars";
+import { Avatar, price } from "@/components/TrainerCard";
+import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
 import { getTrainer } from "@/lib/trainers";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -17,100 +20,173 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+function H2({ children }: { children: React.ReactNode }) {
+  return <h2 className="display mb-4 text-3xl">{children}</h2>;
+}
+
 export default async function TrainerPage({ params }: Props) {
   const t = await getTrainer((await params).slug);
   if (!t) notFound();
-
-  const contact = [
+  const first = t.name.split(" ")[0];
+  const where = [t.city, t.region && t.region !== t.city ? t.region : null].filter(Boolean).join(", ");
+  const links = [
     t.website && { label: "Website", href: t.website },
-    t.email && { label: "Email", href: `mailto:${t.email}` },
-    t.phone && { label: "Phone", href: `tel:${t.phone}` },
     t.instagram && { label: "Instagram", href: `https://instagram.com/${t.instagram.replace(/^@/, "")}` },
+    t.phone && { label: "Call", href: `tel:${t.phone}` },
   ].filter(Boolean) as { label: string; href: string }[];
 
   return (
-    <div className="mx-auto grid max-w-5xl gap-6 px-4 py-8 md:grid-cols-[1fr_300px]">
-      <article className="flex flex-col gap-6 rounded-xl border border-line bg-surface p-6">
-        <header className="flex items-center gap-4">
-          {t.image_url ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={t.image_url} alt="" className="h-20 w-20 rounded-full object-cover" />
-          ) : (
-            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-brand-soft text-2xl font-bold text-brand">
-              {initials(t.name)}
+    <>
+      {/* Hero */}
+      <section className="bg-ink text-paper">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_1fr] md:items-end md:py-14">
+          <div className="relative">
+            <Avatar t={t} className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
+            {t.free_consultation && (
+              <span className="absolute left-4 top-4 rounded-full bg-zap px-3 py-1.5 text-xs font-extrabold uppercase text-ink">
+                Free consultation
+              </span>
+            )}
+          </div>
+          <div className="flex flex-col gap-5">
+            <Link href="/trainers" className="eyebrow text-paper/60 hover:text-zap">← All trainers</Link>
+            <div>
+              <h1 className="display text-5xl sm:text-7xl">{t.name}</h1>
+              <p className="mt-3 text-lg text-paper/80">📍 {where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
             </div>
+            {t.review_count > 0 && t.rating_avg != null && (
+              <a href="#reviews" className="flex items-center gap-2 text-sm">
+                <Stars value={t.rating_avg} size="text-xl" />
+                <span className="font-bold">{t.rating_avg.toFixed(1)}</span>
+                <span className="text-paper/60 underline">{t.review_count} reviews</span>
+              </a>
+            )}
+            {t.headline && <p className="max-w-xl text-xl font-semibold">{t.headline}</p>}
+            <div className="flex flex-wrap gap-2">
+              {t.styles.map((s) => <span key={s} className="rounded-full bg-paper/10 px-3 py-1 text-xs font-semibold">{nameFor(TRAINING_STYLES, s)}</span>)}
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <a href="#contact" className="btn">Contact {first}</a>
+              <span className="text-sm text-paper/70"><strong className="text-paper">{price(t)}</strong> per session</span>
+            </div>
+            {t.is_sample && <p className="text-xs italic text-paper/50">Example listing, not a real trainer.</p>}
+          </div>
+        </div>
+      </section>
+
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 lg:grid-cols-[1fr_380px]">
+        <div className="flex flex-col gap-12">
+          {t.bio && (
+            <section>
+              <H2>About {first}</H2>
+              <p className="whitespace-pre-line text-base leading-relaxed">{t.bio}</p>
+            </section>
           )}
-          <div>
-            <h1 className="text-2xl font-bold">{t.name}</h1>
-            {t.business_name && <p className="text-muted">{t.business_name}</p>}
-            <p className="text-sm text-muted">{[t.postcode_district, t.city, t.region].filter(Boolean).join(", ")}</p>
-            {t.claimed && <span className="chip mt-1">Verified by trainer</span>}
-            {t.is_sample && <span className="mt-1 block text-xs italic text-muted">Example listing, not a real trainer</span>}
-          </div>
-        </header>
 
-        {t.headline && <p className="text-lg">{t.headline}</p>}
-        {t.bio && <p className="whitespace-pre-line text-sm leading-relaxed">{t.bio}</p>}
-
-        <section>
-          <h2 className="mb-2 font-semibold">Training styles</h2>
-          <div className="flex flex-wrap gap-1.5">
-            {t.styles.map((s) => (
-              <Link key={s} href={`/trainers?style=${s}`} className="chip">{nameFor(TRAINING_STYLES, s)}</Link>
-            ))}
-          </div>
-        </section>
-        <section>
-          <h2 className="mb-2 font-semibold">Helps with</h2>
-          <div className="flex flex-wrap gap-1.5">
-            {t.goals.map((g) => (
-              <Link key={g} href={`/trainers?goal=${g}`} className="rounded-full border border-line px-2.5 py-0.5 text-xs">
-                {nameFor(FITNESS_GOALS, g)}
-              </Link>
-            ))}
-          </div>
-        </section>
-        {t.qualifications.length > 0 && (
           <section>
-            <h2 className="mb-2 font-semibold">Qualifications</h2>
-            <ul className="list-disc pl-5 text-sm">
-              {t.qualifications.map((q) => <li key={q}>{q}</li>)}
-            </ul>
+            <H2>Specialisms</H2>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <div>
+                <p className="eyebrow mb-2 text-muted">Training styles</p>
+                <div className="flex flex-wrap gap-2">
+                  {t.styles.map((s) => <Link key={s} href={`/trainers?style=${s}`} className="chip-ink hover:bg-accent">{nameFor(TRAINING_STYLES, s)}</Link>)}
+                </div>
+              </div>
+              <div>
+                <p className="eyebrow mb-2 text-muted">Helps you with</p>
+                <div className="flex flex-wrap gap-2">
+                  {t.goals.map((g) => <Link key={g} href={`/trainers?goal=${g}`} className="chip hover:bg-zap">{nameFor(FITNESS_GOALS, g)}</Link>)}
+                </div>
+              </div>
+            </div>
           </section>
-        )}
-      </article>
 
-      <aside className="flex flex-col gap-4">
-        <div className="rounded-xl border border-line bg-surface p-5 text-sm">
-          <p className="text-xl font-bold">{price(t)}</p>
-          <p className="text-muted">per session</p>
-          <ul className="mt-3 flex flex-col gap-1">
-            <li>{t.in_person ? "✓" : "✗"} In-person sessions</li>
-            <li>{t.online ? "✓" : "✗"} Online coaching</li>
-            <li>{t.home_visits ? "✓" : "✗"} Home visits</li>
-            {t.years_experience != null && <li>{t.years_experience} years’ experience</li>}
-          </ul>
-          {contact.length > 0 && (
-            <div className="mt-4 flex flex-col gap-2">
-              {contact.map((c) => (
-                <a key={c.label} href={c.href} rel="nofollow noopener" target="_blank" className="btn">{c.label}</a>
+          {t.sports.length > 0 && (
+            <section>
+              <H2>Sports &amp; hobbies</H2>
+              <div className="flex flex-wrap gap-3">
+                {t.sports.map((s) => (
+                  <Link key={s} href={`/trainers?sport=${s}`} className="rounded-2xl border-2 border-ink px-4 py-3 text-sm font-extrabold uppercase tracking-wide hover:bg-ink hover:text-paper">
+                    {nameFor(SPORTS, s)}
+                  </Link>
+                ))}
+              </div>
+            </section>
+          )}
+
+          <section className="grid gap-4 sm:grid-cols-3">
+            {[
+              ["In person", t.in_person],
+              ["Online", t.online],
+              ["Home visits", t.home_visits],
+            ].map(([label, on]) => (
+              <div key={label as string} className={`rounded-2xl p-4 ${on ? "bg-ink text-paper" : "bg-soft text-muted line-through"}`}>
+                <p className="display text-xl">{label as string}</p>
+              </div>
+            ))}
+          </section>
+
+          {(t.qualifications.length > 0 || t.years_experience != null) && (
+            <section>
+              <H2>Qualifications</H2>
+              <ul className="flex flex-col gap-2">
+                {t.years_experience != null && <li className="font-semibold">✓ {t.years_experience} years’ experience</li>}
+                {t.qualifications.map((q) => <li key={q}>✓ {q}</li>)}
+              </ul>
+            </section>
+          )}
+
+          <section id="reviews" className="scroll-mt-24">
+            <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+              <H2>Reviews</H2>
+              {t.rating_avg != null && (
+                <p className="mb-4 flex items-center gap-2"><Stars value={t.rating_avg} size="text-lg" /> <strong>{t.rating_avg.toFixed(1)}</strong> from {t.review_count}</p>
+              )}
+            </div>
+            {t.reviews.length === 0 && <p className="text-muted">No reviews yet. Trained with {first}? Be the first.</p>}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {t.reviews.map((r) => (
+                <figure key={r.id} className="rounded-2xl bg-soft p-5">
+                  <Stars value={r.rating} />
+                  {r.body && <blockquote className="mt-2 text-sm leading-relaxed">“{r.body}”</blockquote>}
+                  <figcaption className="mt-3 text-xs font-bold uppercase tracking-wider">{r.author_name}</figcaption>
+                </figure>
               ))}
             </div>
-          )}
+            <details className="mt-6 rounded-2xl border-2 border-line p-5">
+              <summary className="cursor-pointer font-extrabold uppercase tracking-wide">Write a review</summary>
+              <div className="mt-4"><ReviewForm slug={t.slug} firstName={first} /></div>
+            </details>
+          </section>
         </div>
-        <div className="rounded-xl border border-line bg-surface p-5 text-xs text-muted">
-          {t.source_url ? (
-            <p>Listing compiled from <a href={t.source_url} rel="nofollow noopener" className="underline">public business information</a>.</p>
-          ) : (
-            <p>Listing compiled from public business information.</p>
-          )}
-          <p className="mt-2">
-            Is this you?{" "}
-            <Link href={`/for-trainers?listing=${t.slug}`} className="text-brand underline">Claim or correct this profile</Link>{" "}
-            or <Link href={`/remove?listing=${t.slug}`} className="text-brand underline">ask us to remove it</Link>.
+
+        <aside className="lg:sticky lg:top-24 lg:self-start" id="contact">
+          <div className="scroll-mt-24 rounded-3xl bg-soft p-6">
+            <p className="eyebrow text-accent">Get started</p>
+            <p className="display mt-1 text-3xl">Contact {first}</p>
+            <p className="mb-4 mt-2 text-sm text-muted">
+              {price(t)} per session{t.price_to && t.price_to !== t.price_from ? ` (up to £${t.price_to})` : ""}.
+              {t.free_consultation && " First consultation is free."}
+            </p>
+            <EnquiryForm slug={t.slug} firstName={first} freeConsult={t.free_consultation} />
+            {links.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-2">
+                {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" className="btn-ghost px-4 py-2 text-xs">{l.label}</a>)}
+              </div>
+            )}
+          </div>
+          <p className="mt-4 px-2 text-xs text-muted">
+            Is this you? <Link href={`/for-trainers?listing=${t.slug}`} className="underline">Claim or edit this profile</Link> or{" "}
+            <Link href={`/remove?listing=${t.slug}`} className="underline">ask us to remove it</Link>.
           </p>
-        </div>
-      </aside>
-    </div>
+        </aside>
+      </div>
+
+      {/* Mobile sticky contact bar */}
+      <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t-2 border-line bg-paper px-4 py-3 lg:hidden">
+        <span className="text-sm"><strong>{price(t)}</strong> / session</span>
+        <a href="#contact" className="btn py-2.5">Contact {first}</a>
+      </div>
+    </>
   );
 }

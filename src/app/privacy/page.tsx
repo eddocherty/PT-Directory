@@ -28,8 +28,8 @@ export default function Privacy() {
       <h2>Your rights</h2>
       <p>
         You can ask to see, correct or delete the information we hold about you, or object to us listing you. Use the{" "}
-        <Link href="/remove" className="text-brand underline">removal form</Link> or{" "}
-        <Link href="/for-trainers" className="text-brand underline">claim your profile</Link> to change it. You can also
+        <Link href="/remove" className="text-accent underline">removal form</Link> or{" "}
+        <Link href="/for-trainers" className="text-accent underline">claim your profile</Link> to change it. You can also
         complain to the Information Commissioner’s Office (ico.org.uk).
       </p>
 

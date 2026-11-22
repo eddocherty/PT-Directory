@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { FilterForm } from "@/components/FilterForm";
-import { Results } from "@/components/Results";
+import { SearchLayout } from "@/components/SearchLayout";
 import { parseFilters, type RawParams } from "@/lib/filters";
 import { CITIES } from "@/lib/taxonomy";
 import { searchTrainers } from "@/lib/trainers";
@@ -14,7 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!city) return {};
   return {
     title: `Personal trainers in ${city.name}`,
-    description: `Compare personal trainers in ${city.name}: training styles, goals, prices and online or in-person sessions.`,
+    description: `Compare personal trainers in ${city.name}: reviews, specialisms, prices and online or in-person sessions.`,
   };
 }
 
@@ -24,18 +23,19 @@ export default async function CityPage({ params, searchParams }: Props) {
   if (!city) notFound();
   const sp = await searchParams;
   const f = parseFilters(sp);
-  const { trainers, total } = await searchTrainers({ ...f, lat: city.lat, lng: city.lng, radius: f.radius ?? 15 });
+  const { trainers, total } = await searchTrainers({ ...f, lat: city.lat, lng: city.lng });
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[280px_1fr]">
-      <aside><FilterForm action={`/locations/${city.slug}`} values={{ ...f, location: undefined }} /></aside>
-      <section className="flex flex-col gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">Personal trainers in {city.name}</h1>
-          <p className="text-sm text-muted">{total} {total === 1 ? "trainer" : "trainers"} within {f.radius} miles</p>
-        </div>
-        <Results trainers={trainers} total={total} page={f.page ?? 1} params={sp} basePath={`/locations/${city.slug}`} />
-      </section>
-    </div>
+    <SearchLayout
+      eyebrow={city.region}
+      title={`Personal trainers in ${city.name}`}
+      subtitle={`${total} ${total === 1 ? "trainer" : "trainers"} within ${f.radius} miles`}
+      filters={f}
+      action={`/locations/${city.slug}`}
+      hideLocation
+      trainers={trainers}
+      total={total}
+      params={sp}
+    />
   );
 }
