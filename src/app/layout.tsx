@@ -4,6 +4,8 @@ import { Inter, Inter_Tight } from "next/font/google";
 import { SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import { Logo } from "@/components/Logo";
 import { FROM_PRICE } from "@/lib/products";
+import { Analytics } from "@vercel/analytics/next";
+import { Tracker } from "@/components/Tracker";
 import "./globals.css";
 
 const display = Inter_Tight({ variable: "--font-display", subsets: ["latin"], weight: ["600", "700"] });
@@ -67,6 +69,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             © {new Date().getFullYear()} {SITE_NAME}
           </p>
         </footer>
+        <Tracker />
+        <Analytics />
       </body>
     </html>
   );

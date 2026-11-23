@@ -40,10 +40,10 @@ export default async function TrainerPage({ params }: Props) {
   const sourceLabel = t.source === "osm" ? "OpenStreetMap and their own website" : t.source === "website" ? "their own website" : null;
   const where = [t.city, t.region && t.region !== t.city ? t.region : null].filter(Boolean).join(", ");
   const links = [
-    t.website && !direct && { label: "Website", href: t.website },
-    t.instagram && { label: "Instagram", href: `https://instagram.com/${t.instagram.replace(/^@/, "")}` },
-    t.phone && { label: "Call", href: `tel:${t.phone}` },
-  ].filter(Boolean) as { label: string; href: string }[];
+    t.website && !direct && { label: "Website", href: t.website, track: "website" },
+    t.instagram && { label: "Instagram", href: `https://instagram.com/${t.instagram.replace(/^@/, "")}`, track: "instagram" },
+    t.phone && { label: "Call", href: `tel:${t.phone}`, track: "phone" },
+  ].filter(Boolean) as { label: string; href: string; track: string }[];
 
   return (
     <>
@@ -71,7 +71,7 @@ export default async function TrainerPage({ params }: Props) {
               {t.styles.map((s) => <span key={s} className="rounded-full bg-paper px-3 py-1 text-xs font-semibold">{nameFor(TRAINING_STYLES, s)}</span>)}
             </div>
             <div className="flex flex-wrap items-center gap-3">
-              <a href="#contact" className="btn">Contact {first}</a>
+              <a href="#contact" data-track="contact_button" className="btn">Contact {first}</a>
             </div>
             {t.is_sample && <p className="text-xs italic text-muted">Example listing, not a real trainer.</p>}
           </div>
@@ -174,14 +174,14 @@ export default async function TrainerPage({ params }: Props) {
             {direct ? (
               <>
                 <p className="mb-4 text-sm">Get in touch with {first} directly through their website.</p>
-                {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" className="btn w-full justify-center">Visit {first}’s website</a>}
+                {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" data-track="website" className="btn w-full justify-center">Visit {first}’s website</a>}
               </>
             ) : (
               <EnquiryForm slug={t.slug} firstName={first} />
             )}
             {links.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
-                {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" className="btn-ghost px-4 py-2 text-xs">{l.label}</a>)}
+                {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" data-track={l.track} className="btn-ghost px-4 py-2 text-xs">{l.label}</a>)}
               </div>
             )}
           </div>
@@ -201,7 +201,7 @@ export default async function TrainerPage({ params }: Props) {
       {/* Mobile sticky contact bar */}
       <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">
         <span className="text-sm font-semibold">{t.name}</span>
-        <a href="#contact" className="btn py-2.5">Contact {first}</a>
+        <a href="#contact" data-track="contact_button" className="btn py-2.5">Contact {first}</a>
       </div>
     </>
   );

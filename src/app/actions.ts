@@ -1,6 +1,8 @@
 "use server";
 
+import { headers } from "next/headers";
 import { sendEnquiry, submitListingRequest, submitReview } from "@/lib/trainers";
+import { recordEvent } from "@/lib/analytics";
 
 export type RequestState = { ok?: boolean; error?: string };
 
@@ -28,9 +30,14 @@ export async function sendEnquiryAction(_prev: RequestState, form: FormData): Pr
   const email = str(form, "email", 200);
   if (!name) return { error: "Please tell the trainer your name." };
   if (!EMAIL.test(email)) return { error: "Please enter a valid email address." };
-  return sendEnquiry({
-    slug: str(form, "slug", 200), name, email, phone: str(form, "phone", 40), goal: str(form, "goal", 80), message: str(form, "message"),
+  const slug = str(form, "slug", 200);
+  const result = await sendEnquiry({
+    slug, name, email, phone: str(form, "phone", 40), goal: str(form, "goal", 80), message: str(form, "message"),
   });
+  if (result.ok) {
+    await recordEvent({ kind: "contact", path: `/trainers/${slug}`, trainerSlug: slug, detail: "enquiry", headers: await headers() }).catch(() => {});
+  }
+  return result;
 }
 
 export async function submitReviewAction(_prev: RequestState, form: FormData): Promise<RequestState> {

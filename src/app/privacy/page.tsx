@@ -38,6 +38,15 @@ export default function Privacy() {
         postcode only to find nearby trainers. We don’t store it against you.
       </p>
 
+      <h2>Visitor statistics</h2>
+      <p>
+        We count page visits so we know which pages and trainers people find useful. We don’t use cookies or similar
+        technology for this, and we don’t store IP addresses. We record the page, the website that sent you (if any), your
+        country and device type, and a code made from your connection details that changes every day, so a visit can be
+        counted once per day but can’t be linked to you or followed over time. We also use Vercel Web Analytics, which
+        works the same cookie-free way. Our lawful basis is legitimate interests: running and improving the site.
+      </p>
+
       <h2>Shop purchases</h2>
       <p>
         If you buy a plan, Stripe processes your name, email address and payment details so we can take payment, send your

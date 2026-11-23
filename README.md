@@ -9,7 +9,7 @@ Until Supabase env vars are set, the site runs on the fictional sample listings 
 ## Setup
 
 1. **Database.** In the Supabase SQL editor, run `supabase/migrations/20261122000000_init.sql`. Or run `supabase db push` with the Supabase CLI.
-2. **Env vars.** Copy `.env.example` to `.env.local`, then add the same values in Vercel under Project → Settings → Environment Variables. The service role key is only for the import script. Don't add it to Vercel.
+2. **Env vars.** Copy `.env.example` to `.env.local`, then add the same values in Vercel under Project → Settings → Environment Variables. The service role key (`SUPABASE_SERVICE_ROLE_KEY`) is used server-side only, by the admin area and visitor tracking. Never prefix it with `NEXT_PUBLIC_`.
 3. **Load data.**
    ```bash
    SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-trainers.mjs data/sample-trainers.json
@@ -29,6 +29,12 @@ Until Supabase env vars are set, the site runs on the fictional sample listings 
 | `/privacy` | Draft UK GDPR privacy notice. Get it reviewed before launch. |
 | `/shop`, `/shop/[slug]` | Downloadable training plans, sold through Stripe Checkout |
 | `/shop/thanks`, `/api/download` | Post-payment download. Every request is checked with Stripe first. |
+
+## Admin area
+
+`/admin` is a private dashboard (noindex, signed httpOnly session cookie) with traffic stats, trainer rankings, a filterable client list with CSV export and outreach notes, the outreach-lead pipeline, and removal requests. It needs these Vercel env vars: `ADMIN_USERNAME`, `ADMIN_PASSWORD_HASH` (make one with `node scripts/hash-admin-password.mjs "new password"`), `ADMIN_SESSION_SECRET` and `SUPABASE_SERVICE_ROLE_KEY`. Tables are in `supabase/migrations/20261123000000_admin_analytics.sql`.
+
+Traffic is counted first-party in `analytics_events`, with no cookies and no stored IPs (a daily-rotating visitor hash). Add `data-track="website"` (or `instagram`, `phone`, `email`, `contact_button`) to a link to count clicks on it. Vercel Web Analytics also runs via `<Analytics />`.
 
 ## Shop
 
