@@ -1,12 +1,15 @@
 import "server-only";
-import { createHmac, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { getAdminDb } from "./admin-db";
 
 /**
  * Admin login. Three env vars (set in Vercel, never in the repo):
  *   ADMIN_USERNAME        the admin ID
- *   ADMIN_PASSWORD_HASH   "scrypt:<salt hex>:<hash hex>", made with scripts/hash-admin-password.mjs
+ *   ADMIN_PASSWORD_HASH   "scrypt:<salt hex>:<hash hex>", made with scripts/hash-admin-password.mjs.
+ *                         Once ed changes his password in /admin/password, the hash in the
+ *                         admin_credentials table is used instead and this is only a fallback.
  *   ADMIN_SESSION_SECRET  long random string used to sign the session cookie
  * The session is a signed, httpOnly, secure cookie that lasts 7 days.
  */
@@ -21,18 +24,41 @@ function safeEqual(a: Buffer, b: Buffer): boolean {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-export function checkCredentials(username: string, password: string): boolean {
-  if (!adminConfigured()) return false;
-  const [scheme, saltHex, hashHex] = (process.env.ADMIN_PASSWORD_HASH ?? "").split(":");
+/** The password hash in use: the one ed set in the admin area, else the env var. */
+async function currentPasswordHash(): Promise<string> {
+  const db = getAdminDb();
+  if (db) {
+    const { data, error } = await db.from("admin_credentials").select("password_hash").eq("id", 1).maybeSingle();
+    if (!error && data?.password_hash) return data.password_hash as string;
+  }
+  return process.env.ADMIN_PASSWORD_HASH ?? "";
+}
+
+function passwordMatches(password: string, stored: string): boolean {
+  const [scheme, saltHex, hashHex] = stored.split(":");
   if (scheme !== "scrypt" || !saltHex || !hashHex) return false;
   const expected = Buffer.from(hashHex, "hex");
-  const actual = scryptSync(password, Buffer.from(saltHex, "hex"), expected.length);
+  return safeEqual(scryptSync(password, Buffer.from(saltHex, "hex"), expected.length), expected);
+}
+
+export function hashPassword(password: string): string {
+  const salt = randomBytes(16);
+  return `scrypt:${salt.toString("hex")}:${scryptSync(password, salt, 32).toString("hex")}`;
+}
+
+export async function checkPassword(password: string): Promise<boolean> {
+  return adminConfigured() && passwordMatches(password, await currentPasswordHash());
+}
+
+export async function checkCredentials(username: string, password: string): Promise<boolean> {
+  if (!adminConfigured()) return false;
+  const pwOk = passwordMatches(password, await currentPasswordHash());
   // Check both, always, so timing doesn't reveal which one was wrong.
   const userOk = safeEqual(
     createHmac("sha256", "u").update(username.trim().toLowerCase()).digest(),
     createHmac("sha256", "u").update(process.env.ADMIN_USERNAME!.trim().toLowerCase()).digest(),
   );
-  return safeEqual(actual, expected) && userOk;
+  return pwOk && userOk;
 }
 
 function sign(payload: string): string {

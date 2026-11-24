@@ -35,7 +35,10 @@ export default async function AdminPage({ searchParams }: Props) {
           <p className="eyebrow text-muted">Train Local admin</p>
           <h1 className="display mt-1 text-4xl">Dashboard</h1>
         </div>
-        <form action={logoutAction}><button className="btn-ghost px-4 py-2 text-xs">Log out</button></form>
+        <div className="flex items-center gap-2">
+          <Link href="/admin/password" className="btn-ghost px-4 py-2 text-xs">Change password</Link>
+          <form action={logoutAction}><button className="btn-ghost px-4 py-2 text-xs">Log out</button></form>
+        </div>
       </div>
 
       <nav className="mt-6 flex flex-wrap gap-2 text-sm font-semibold">

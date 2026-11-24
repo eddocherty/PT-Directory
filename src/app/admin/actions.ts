@@ -2,7 +2,7 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { ADMIN_COOKIE, adminConfigured, checkCredentials, makeSessionValue, requireAdmin, sessionCookieOptions } from "@/lib/admin-auth";
+import { ADMIN_COOKIE, adminConfigured, checkCredentials, checkPassword, hashPassword, makeSessionValue, requireAdmin, sessionCookieOptions } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/admin-db";
 
 export type LoginState = { error?: string; username?: string };
@@ -18,7 +18,7 @@ export async function loginAction(_prev: LoginState, form: FormData): Promise<Lo
   if (f && f.until > now && f.count >= 5) return { error: "Too many attempts. Try again in 15 minutes.", username: String(form.get("username") ?? "").slice(0, 100) };
 
   const username = String(form.get("username") ?? "").slice(0, 100);
-  const ok = checkCredentials(username, String(form.get("password") ?? ""));
+  const ok = await checkCredentials(username, String(form.get("password") ?? ""));
   if (!ok) {
     await new Promise((r) => setTimeout(r, 700));
     const cur = f && f.until > now ? f : { count: 0, until: now + 15 * 60_000 };
@@ -65,4 +65,26 @@ export async function saveLeadOutreach(leadId: number, u: OutreachUpdate): Promi
 export async function setRequestStatus(id: string, status: "open" | "done" | "rejected"): Promise<void> {
   await requireAdmin();
   await getAdminDb()?.from("listing_requests").update({ status }).eq("id", id);
+}
+
+export type PasswordState = { ok?: boolean; error?: string };
+
+export async function changePasswordAction(_prev: PasswordState, form: FormData): Promise<PasswordState> {
+  await requireAdmin();
+  const db = getAdminDb();
+  if (!db) return { error: "Database not connected." };
+  const current = String(form.get("current") ?? "");
+  const next = String(form.get("next") ?? "");
+  const confirm = String(form.get("confirm") ?? "");
+  if (!(await checkPassword(current))) {
+    await new Promise((r) => setTimeout(r, 700));
+    return { error: "Your current password isn’t right." };
+  }
+  if (next.length < 10) return { error: "Make the new password at least 10 characters. A short phrase works well." };
+  if (next.length > 200) return { error: "That’s too long. Keep it under 200 characters." };
+  if (next !== confirm) return { error: "The two new passwords don’t match." };
+  if (next === current) return { error: "That’s the same as your current password." };
+  const { error } = await db.from("admin_credentials").upsert({ id: 1, password_hash: hashPassword(next), updated_at: new Date().toISOString() });
+  if (error) return { error: `Couldn’t save it: ${error.message}. Has the password SQL been run in Supabase?` };
+  return { ok: true };
 }
