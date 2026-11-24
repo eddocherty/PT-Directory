@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { Arrow } from "@/components/Arrow";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { LinkList } from "@/components/LinkList";
-import { COUNTIES, allTownStats, countyBySlug, liveTopics } from "@/lib/stats";
+import { COUNTIES, allTownStats, countyBySlug, liveTopics, townIndexable } from "@/lib/stats";
 
 type Props = { params: Promise<{ county: string }> };
 
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!county) return {};
   const stats = await allTownStats();
   const towns = county.towns.map((t) => t.name);
-  const listed = county.towns.some((t) => (stats[t.slug]?.total ?? 0) > 0);
+  const listed = county.towns.some((t) => townIndexable(stats[t.slug]));
   return {
     title: `Personal trainers in ${county.name}`,
     description: `Independent personal trainers across ${county.name}: ${towns.slice(0, 6).join(", ")}${towns.length > 6 ? " and more" : ""}. Pick a town to compare trainers near you.`,

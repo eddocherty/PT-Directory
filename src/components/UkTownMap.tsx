@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CITIES } from "@/lib/taxonomy";
 import type { TownStats } from "@/lib/stats";
+import { BRAND } from "@/brand";
 
 // Equirectangular projection, scaled for the UK's latitude. The outline comes from Natural Earth (public domain),
 // simplified and projected the same way, so the town dots sit in the right places.
@@ -14,7 +15,7 @@ const UK_OUTLINE = "M5.9 58.2L6.6 58.5L7.1 58.3L7.3 57.8L7.5 57.2L8.7 57.2L9.3 5
 /** Every town we cover, as a dot on a UK outline, sized by how many trainers are listed there. Each dot links to its town page. */
 export function UkTownMap({ stats, className = "" }: { stats: Record<string, TownStats>; className?: string }) {
   return (
-    <svg viewBox={`-1 -1 ${W + 2} ${H + 2}`} className={className} role="img" aria-label="Map of the UK towns and cities LocalPT covers">
+    <svg viewBox={`-1 -1 ${W + 2} ${H + 2}`} className={className} role="img" aria-label={`Map of the UK towns and cities ${BRAND.name} covers`}>
       <path d={UK_OUTLINE} className="fill-paper stroke-accent/40" strokeWidth={0.3} strokeLinejoin="round" />
       {CITIES.map((c) => {
         const n = stats[c.slug]?.total ?? 0;

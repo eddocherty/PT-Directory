@@ -3,10 +3,11 @@ import Link from "next/link";
 import { Arrow } from "@/components/Arrow";
 import { PlanCover } from "@/components/PlanCover";
 import { PRODUCTS, formatPrice } from "@/lib/products";
+import { SITE_NAME } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Training plans and guides",
-  description: "Simple, downloadable training plans from LocalPT: beginner gym, postnatal return, dumbbell only, first half marathon and high-protein eating.",
+  description: `Simple, downloadable training plans from ${SITE_NAME}: beginner gym, postnatal return, dumbbell only, first half marathon and high-protein eating.`,
   alternates: { canonical: "/shop" },
 };
 

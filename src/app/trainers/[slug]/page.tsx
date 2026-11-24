@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { JsonLd } from "@/components/JsonLd";
@@ -12,7 +12,8 @@ import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy"
 import { abs } from "@/lib/site";
 import { allTownStats, countySlug, townFor } from "@/lib/stats";
 import { MIN_TRAINERS } from "@/lib/topics";
-import { getTrainer, type Trainer } from "@/lib/trainers";
+import { getTrainer, isThin, type Trainer } from "@/lib/trainers";
+import { CITIES } from "@/lib/taxonomy";
 
 // years_experience was recorded in 2026; show a start year so it never goes stale.
 const EXPERIENCE_BASE_YEAR = 2026;
@@ -28,7 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       t.headline ??
       `${t.name} is an independent trainer${t.city ? ` in ${t.city}` : ""}${t.styles.length ? ` specialising in ${t.styles.slice(0, 3).map((s) => nameFor(TRAINING_STYLES, s).toLowerCase()).join(", ")}` : ""}. See their specialisms and get in touch directly.`,
     alternates: { canonical: `/trainers/${t.slug}` },
-    robots: t.is_sample ? { index: false } : undefined,
+    // Sample listings and profiles with too little detail stay out of Google; town pages cover them.
+    robots: t.is_sample || isThin(t) ? { index: false, follow: true } : undefined,
   };
 }
 
@@ -72,7 +74,13 @@ function H2({ children }: { children: React.ReactNode }) {
 
 export default async function TrainerPage({ params }: Props) {
   const t = await getTrainer((await params).slug);
-  if (!t) notFound();
+  if (!t) {
+    // A removed listing: send old links to its town page rather than an error. Slugs end with the town, e.g. "-leeds".
+    const slug = (await params).slug;
+    const town = [...CITIES].sort((a, b) => b.slug.length - a.slug.length).find((c) => slug.endsWith(`-${c.slug}`));
+    if (town) permanentRedirect(`/locations/${town.slug}`);
+    notFound();
+  }
   const town = townFor(t.city);
   const stats = town ? await allTownStats() : null;
   // Specialism links go to this trainer's town page for it when that page exists, otherwise the UK-wide page.

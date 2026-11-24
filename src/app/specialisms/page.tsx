@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function SpecialismsPage() {
-  const link = (kind: "style" | "goal") => TOPICS.filter((t) => t.kind === kind).map((t) => ({ href: `/specialisms/${t.slug}`, label: t.people }));
+  const link = (kind: "style" | "goal" | "home") => TOPICS.filter((t) => t.kind === kind).map((t) => ({ href: `/specialisms/${t.slug}`, label: t.people }));
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <Breadcrumbs items={[{ name: "Specialisms", href: "/specialisms" }]} />
@@ -18,6 +18,7 @@ export default function SpecialismsPage() {
       <p className="mt-4 max-w-xl text-lg text-muted">Start with how you like to train, or with what you want to work on.</p>
       <LinkList className="mt-12" title="How you train" items={link("style")} />
       <LinkList className="mt-12" title="What you want to work on" items={link("goal")} />
+      <LinkList className="mt-12" title="Where you train" items={[...link("home"), { href: "/online", label: "Online personal trainers" }]} />
     </div>
   );
 }

@@ -68,6 +68,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/specialisms" className="text-paper/70 hover:text-paper">By specialism</Link>
               <Link href="/online" className="text-paper/70 hover:text-paper">Online coaching</Link>
               <Link href="/shop" className="text-paper/70 hover:text-paper">Training plans</Link>
+              <Link href="/guides" className="text-paper/70 hover:text-paper">Choosing a trainer</Link>
             </div>
             <div className="flex flex-col gap-2 text-sm">
               <p className="eyebrow text-paper/50">Your data</p>

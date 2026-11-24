@@ -25,6 +25,10 @@ Until Supabase env vars are set, the site runs on the fictional sample listings 
 | `/trainers/[slug]` | Trainer profile with breadcrumbs, LocalBusiness structured data and a removal link |
 | `/locations`, `/locations/[town]` | Town pages with real counts, specialism links and nearby towns |
 | `/locations/[town]/[specialism]` | Town × specialism landing pages. They exist only with 3+ trainers (`MIN_TRAINERS` in `src/lib/topics.ts`). |
+| `/locations/[city]/[area]` | Neighbourhood pages for London, Manchester and Birmingham (3-mile radius, list in `src/lib/areas.ts`). They share the route with specialisms. |
+| `/locations/[town]/home-visits` | Trainers who come to your home, built like a specialism page |
+| `/guides`, `/guides/[slug]` | Short guides for people choosing a trainer (`src/lib/guides.ts`) |
+| `/badge.svg` | "Find me on LocalPT" badge for listed trainers' own sites |
 | `/counties/[county]` | County hubs linking every town |
 | `/specialisms`, `/specialisms/[specialism]` | UK-wide specialism pages linking each town page |
 | `/online` | Online coaches across the UK |
@@ -37,6 +41,10 @@ Until Supabase env vars are set, the site runs on the fictional sample listings 
 ## Domain and SEO
 
 The site's home is **localpt.co.uk**. Canonical links, the sitemap and structured data use it automatically once it is the project's production domain in Vercel (`VERCEL_PROJECT_PRODUCTION_URL`). From then on, the old `*.vercel.app` address redirects there permanently (see `next.config.ts`). Town and specialism counts are cached for six hours (`src/lib/stats.ts`).
+
+**Renaming the site:** the name, wordmark, tagline and domain all live in `src/brand.ts`. Change that one file and the logo, titles, share images, badge, CSV names and redirects follow.
+
+**What Google sees:** each trainer belongs to the town (and city area) they are nearest to. A town, area or town × specialism page is indexed only when at least 3 trainers belong to it, so towns close together don't compete with the same list. Visitors can still open every page. Profiles with a bio under 80 characters are `noindex` and left out of the sitemap until they have more detail. A removed profile redirects to its town page.
 
 ## Admin area
 
