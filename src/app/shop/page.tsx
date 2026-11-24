@@ -16,9 +16,8 @@ export default function Shop() {
     <>
       <section className="relative overflow-hidden bg-soft">
         <div className="relative mx-auto max-w-7xl px-4 py-14 sm:py-20">
-          <p className="eyebrow text-accent">Plans</p>
-          <h1 className="display mt-4 text-5xl sm:text-7xl">
-            Five plans, written<br /><span className="text-accent">in plain English.</span>
+          <h1 className="display text-5xl sm:text-7xl">
+            Five easy to understand<br /><span className="text-accent">beginner plans</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted">
             Printable PDFs for the gym, the road and the kitchen. Follow one on your own, then find a local trainer when you want a programme made for you.
