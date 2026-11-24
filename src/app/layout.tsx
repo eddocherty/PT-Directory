@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Inter, Schibsted_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import { INDEXABLE, SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import { Logo } from "@/components/Logo";
 import { FROM_PRICE } from "@/lib/products";
@@ -8,8 +8,16 @@ import { Analytics } from "@vercel/analytics/next";
 import { Tracker } from "@/components/Tracker";
 import "./globals.css";
 
-const display = Schibsted_Grotesk({ variable: "--font-display", subsets: ["latin"], weight: ["700", "800"] });
-const body = Inter({ variable: "--font-body", subsets: ["latin"] });
+// Fonts are bundled with the site (src/fonts) rather than fetched from Google at build time.
+const display = localFont({
+  variable: "--font-display",
+  display: "swap",
+  src: [
+    { path: "../fonts/schibsted-grotesk-latin-700-normal.woff2", weight: "700" },
+    { path: "../fonts/schibsted-grotesk-latin-800-normal.woff2", weight: "800" },
+  ],
+});
+const body = localFont({ variable: "--font-body", display: "swap", src: "../fonts/inter-latin-wght-normal.woff2", weight: "100 900" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
