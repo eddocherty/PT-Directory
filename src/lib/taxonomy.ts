@@ -37,7 +37,7 @@ export const GENDERS: Option[] = [
   { slug: "non-binary", name: "Non-binary" },
 ];
 
-export const RADII = [5, 10, 25, 50];
+export const RADII = [3, 5, 10, 25, 50];
 
 export type Nation = "England" | "Scotland" | "Wales" | "Northern Ireland";
 export const NATIONS: Nation[] = ["England", "Scotland", "Wales", "Northern Ireland"];

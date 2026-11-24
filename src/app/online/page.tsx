@@ -4,8 +4,8 @@ import { LinkList, LinkSections } from "@/components/LinkList";
 import { SearchLayout } from "@/components/SearchLayout";
 import { parseFilters, type RawParams } from "@/lib/filters";
 import { abs } from "@/lib/site";
-import { TOPICS } from "@/lib/topics";
-import { searchTrainers } from "@/lib/trainers";
+import { TOPICS, topicParam } from "@/lib/topics";
+import { cachedSearch } from "@/lib/trainers";
 
 type Props = { searchParams: Promise<RawParams> };
 
@@ -23,7 +23,7 @@ export default async function OnlinePage({ searchParams }: Props) {
   const sp = await searchParams;
   const forced: RawParams = { ...sp, online: "1" };
   const f = parseFilters(forced);
-  const { trainers, total } = await searchTrainers(f);
+  const { trainers, total } = await cachedSearch(f);
   return (
     <>
       <SearchLayout
@@ -37,7 +37,8 @@ export default async function OnlinePage({ searchParams }: Props) {
         params={forced}
         footer={
           <LinkSections>
-            <LinkList title="Online coaching by specialism" items={TOPICS.map((t) => ({ href: `/trainers?online=1&${t.kind}=${t.slug}`, label: t.people }))} />
+            <LinkList title="Online coaching by specialism" items={TOPICS.filter((t) => t.kind !== "home").map((t) => ({ href: `/trainers?online=1&${topicParam(t).join("=")}`, label: t.people }))} />
+            <LinkList title="Not sure?" items={[{ href: "/guides/online-vs-in-person-personal-training", label: "Online or in-person personal training?" }]} />
           </LinkSections>
         }
       />

@@ -5,9 +5,10 @@ import { LinkList, LinkSections } from "@/components/LinkList";
 import { SearchLayout } from "@/components/SearchLayout";
 import { parseFilters, type RawParams } from "@/lib/filters";
 import { abs } from "@/lib/site";
-import { allTownStats, countySlug, describeTown, liveTopics, nearbyTowns } from "@/lib/stats";
+import { areasIn } from "@/lib/areas";
+import { allAreaStats, allTownStats, areaKey, countySlug, describeTown, liveTopics, nearbyTowns, townIndexable } from "@/lib/stats";
 import { CITIES } from "@/lib/taxonomy";
-import { searchTrainers } from "@/lib/trainers";
+import { cachedSearch } from "@/lib/trainers";
 
 type Props = { params: Promise<{ city: string }>; searchParams: Promise<RawParams> };
 
@@ -27,7 +28,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
       : `Independent personal trainers near ${city.name}, ${city.county}, plus UK online coaches.`,
     alternates: { canonical: `/locations/${city.slug}` },
     // Filtered views and empty towns are for visitors, not for Google.
-    robots: hasFilters(await searchParams) || !n ? { index: false, follow: true } : undefined,
+    robots: hasFilters(await searchParams) || !townIndexable(s) ? { index: false, follow: true } : undefined,
   };
 }
 
@@ -38,12 +39,15 @@ export default async function CityPage({ params, searchParams }: Props) {
   const sp = await searchParams;
   const f = parseFilters(sp);
   const [{ trainers, total }, stats] = await Promise.all([
-    searchTrainers({ ...f, lat: city.lat, lng: city.lng }),
+    cachedSearch({ ...f, lat: city.lat, lng: city.lng }),
     allTownStats(),
   ]);
   const s = stats[city.slug];
   const topics = s ? liveTopics(s) : [];
   const nearby = nearbyTowns(city, stats);
+  const cityAreas = areasIn(city.slug);
+  const areaStats = cityAreas.length ? await allAreaStats() : {};
+  const areas = cityAreas.filter((x) => (areaStats[areaKey(x)]?.total ?? 0) > 0);
 
   return (
     <>
@@ -63,6 +67,12 @@ export default async function CityPage({ params, searchParams }: Props) {
         origin={city.name}
         footer={
           <LinkSections>
+            {areas.length > 0 && (
+              <LinkList
+                title={`Areas of ${city.name}`}
+                items={areas.map((x) => ({ href: `/locations/${city.slug}/${x.slug}`, label: x.name, count: areaStats[areaKey(x)]?.total }))}
+              />
+            )}
             <LinkList
               title={`Specialisms in ${city.name}`}
               items={topics.map((x) => ({ href: `/locations/${city.slug}/${x.topic.slug}`, label: x.topic.people, count: x.count }))}

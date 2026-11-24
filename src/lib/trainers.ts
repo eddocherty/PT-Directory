@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import sample from "../../data/sample-trainers.json";
 import { getSupabase } from "./supabase";
 import { milesBetween } from "./geocode";
@@ -272,16 +273,28 @@ export async function submitReview(r: {
   return error ? { ok: false, error: error.message } : { ok: true };
 }
 
-/** Every published, real trainer's slug, for the sitemap. */
+/** Too little written about a trainer for the profile to be worth a place in Google on its own. */
+export const isThin = (t: { bio: string | null }) => (t.bio?.trim().length ?? 0) < 80;
+
+/** Every published, real trainer's slug, for the sitemap. Thin profiles are left out. */
 export async function publishedTrainerSlugs(): Promise<{ slug: string; updated_at: string | null }[]> {
   const db = getSupabase();
   if (!db) return [];
   const { data, error } = await db
     .from("trainers")
-    .select("slug, updated_at")
+    .select("slug, updated_at, bio")
     .eq("status", "published")
     .eq("is_sample", false)
     .limit(5000);
   if (error) throw new Error(error.message);
-  return (data ?? []) as { slug: string; updated_at: string | null }[];
+  return ((data ?? []) as { slug: string; updated_at: string | null; bio: string | null }[])
+    .filter((t) => !isThin(t))
+    .map(({ slug, updated_at }) => ({ slug, updated_at }));
 }
+
+/** Landing-page searches, cached for an hour so town and specialism pages load fast. Keyed by the filters. */
+export const cachedSearch = unstable_cache(
+  (f: SearchFilters) => searchTrainers(f),
+  ["landing-search-v1"],
+  { revalidate: 3600 },
+);

@@ -1,5 +1,7 @@
 "use client";
 
+import { BRAND } from "@/brand";
+
 import { Fragment, useMemo, useState } from "react";
 import type { AdminTrainer } from "@/lib/admin-data";
 import { saveTrainerOutreach } from "@/app/admin/actions";
@@ -53,7 +55,7 @@ export function TrainerTable({ trainers, statuses }: { trainers: AdminTrainer[];
   }, [base]);
 
   const exportCsv = () =>
-    downloadCsv(`train-local-trainers-${new Date().toISOString().slice(0, 10)}.csv`,
+    downloadCsv(`${BRAND.slug}-trainers-${new Date().toISOString().slice(0, 10)}.csv`,
       ["Name", "Business", "Town", "County", "Postcode district", "Specialisms", "Online", "Website", "Email", "Phone", "Instagram", "Profile", "Listing status", "Profile views", "Contact clicks", "Outreach status", "Last contacted", "Notes"],
       filtered.map((t) => [t.name, t.business_name, t.city, t.county, t.postcode_district, t.styles.map((s) => nameFor(TRAINING_STYLES, s)).join("; "),
         t.online ? "Yes" : "No", t.website, t.email, t.phone, t.instagram, `${location.origin}/trainers/${t.slug}`, t.status, t.views, t.contacts, t.outreach_status, t.last_contacted, t.notes]));

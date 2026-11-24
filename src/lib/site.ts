@@ -1,10 +1,12 @@
-export const SITE_NAME = "LocalPT";
-export const TAGLINE = "Independent trainers, near you.";
+import { BRAND } from "@/brand";
+
+export const SITE_NAME = BRAND.name;
+export const TAGLINE = BRAND.tagline;
 
 /** The site's real home. Every canonical link, the sitemap and structured data point here once the domain is attached. */
-export const CANONICAL_HOST = "localpt.co.uk";
+export const CANONICAL_HOST = BRAND.domain;
 
-// Vercel sets VERCEL_PROJECT_PRODUCTION_URL to the project's production domain. Until localpt.co.uk is
+// Vercel sets VERCEL_PROJECT_PRODUCTION_URL to the project's production domain. Until BRAND.domain is
 // attached it is the *.vercel.app address, so canonical links keep pointing at an address that works.
 const prodHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
 export const CUSTOM_DOMAIN_LIVE = !!prodHost && !prodHost.endsWith(".vercel.app");

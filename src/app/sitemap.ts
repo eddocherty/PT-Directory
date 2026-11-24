@@ -1,7 +1,9 @@
 import type { MetadataRoute } from "next";
 import { PRODUCTS } from "@/lib/products";
 import { abs } from "@/lib/site";
-import { COUNTIES, allTownStats, liveTopics } from "@/lib/stats";
+import { AREAS } from "@/lib/areas";
+import { GUIDES } from "@/lib/guides";
+import { COUNTIES, allAreaStats, allTownStats, areaIndexable, areaKey, liveTopics, townIndexable, townTopicIndexable } from "@/lib/stats";
 import { CITIES } from "@/lib/taxonomy";
 import { TOPICS } from "@/lib/topics";
 import { publishedTrainerSlugs } from "@/lib/trainers";
@@ -10,8 +12,9 @@ export const revalidate = 21600;
 
 /** Every page worth indexing. Towns with no trainers and specialism pages under three trainers are left out. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [stats, trainers] = await Promise.all([
+  const [stats, areaStats, trainers] = await Promise.all([
     allTownStats(),
+    allAreaStats(),
     publishedTrainerSlugs().catch((e) => {
       console.error("sitemap trainers", e);
       return [];
@@ -30,12 +33,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     page("/locations", 0.8),
     page("/specialisms", 0.7),
     ...TOPICS.map((t) => page(`/specialisms/${t.slug}`, 0.7)),
-    ...COUNTIES.filter((c) => c.towns.some((t) => (stats[t.slug]?.total ?? 0) > 0)).map((c) => page(`/counties/${c.slug}`, 0.6)),
-    ...CITIES.filter((c) => (stats[c.slug]?.total ?? 0) > 0).flatMap((c) => [
+    ...COUNTIES.filter((c) => c.towns.some((t) => townIndexable(stats[t.slug]))).map((c) => page(`/counties/${c.slug}`, 0.6)),
+    ...CITIES.filter((c) => townIndexable(stats[c.slug])).flatMap((c) => [
       page(`/locations/${c.slug}`, 0.9),
-      ...liveTopics(stats[c.slug]).map((x) => page(`/locations/${c.slug}/${x.topic.slug}`, 0.7)),
+      ...liveTopics(stats[c.slug])
+        .filter((x) => townTopicIndexable(stats[c.slug], x.topic.slug))
+        .map((x) => page(`/locations/${c.slug}/${x.topic.slug}`, 0.7)),
     ]),
+    ...AREAS.filter((a) => areaIndexable(areaStats[areaKey(a)])).map((a) => page(`/locations/${a.city}/${a.slug}`, 0.7)),
     ...trainers.map((t) => page(`/trainers/${t.slug}`, 0.5, t.updated_at)),
+    page("/guides", 0.6),
+    ...GUIDES.map((g) => page(`/guides/${g.slug}`, 0.6, g.updated)),
     page("/shop", 0.6),
     ...PRODUCTS.map((p) => page(`/shop/${p.slug}`, 0.5)),
     page("/privacy", 0.1),

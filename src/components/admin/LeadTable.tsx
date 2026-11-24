@@ -1,5 +1,7 @@
 "use client";
 
+import { BRAND } from "@/brand";
+
 import { Fragment, useMemo, useState } from "react";
 import type { Lead } from "@/lib/admin-data";
 import { saveLeadOutreach } from "@/app/admin/actions";
@@ -48,7 +50,7 @@ export function LeadTable({ leads, statuses }: { leads: Lead[]; statuses: string
   }, [base]);
 
   const exportCsv = () =>
-    downloadCsv(`train-local-outreach-${new Date().toISOString().slice(0, 10)}.csv`,
+    downloadCsv(`${BRAND.slug}-outreach-${new Date().toISOString().slice(0, 10)}.csv`,
       ["List", "Trainer / business", "Area", "Area confirmed?", "Specialism", "Facebook", "Instagram", "Website", "Contact route", "Outreach status", "Last contacted", "Notes"],
       filtered.map((l) => [l.list_city, l.name, l.area, l.area_confirmed, l.specialism, l.facebook_url, l.instagram_url, l.website, l.contact_route, l.status, l.last_contacted, l.notes]));
 
@@ -57,7 +59,7 @@ export function LeadTable({ leads, statuses }: { leads: Lead[]; statuses: string
       <div className="rounded-3xl bg-paper p-5 text-sm">
         <p className="display text-2xl">Outreach pipeline</p>
         <p className="mt-1 text-muted">
-          Trainers found on public Facebook and Instagram pages who aren’t on LocalPT yet. This list is private to you:
+          Trainers found on public Facebook and Instagram pages who aren’t on {BRAND.name} yet. This list is private to you:
           don’t list anyone until they’ve said yes. Open a trainer to log notes. “Message” opens a Messenger chat with their page.
         </p>
       </div>
