@@ -2,11 +2,12 @@
 
 import { Fragment, useActionState } from "react";
 import { submitReviewAction, type RequestState } from "@/app/actions";
+import { StarIcon } from "./Stars";
 
 export function ReviewForm({ slug, firstName }: { slug: string; firstName: string }) {
   const [state, action, pending] = useActionState<RequestState, FormData>(submitReviewAction, {});
   if (state.ok)
-    return <p className="rounded-2xl bg-soft p-4 text-sm">Thanks! Your review will appear once we’ve checked it.</p>;
+    return <p className="rounded-2xl bg-soft p-4 text-sm">Thank you. Your review will appear once we’ve checked it.</p>;
   return (
     <form action={action} className="flex flex-col gap-3 text-sm">
       <input type="hidden" name="slug" value={slug} />
@@ -16,7 +17,7 @@ export function ReviewForm({ slug, firstName }: { slug: string; firstName: strin
         {[5, 4, 3, 2, 1].map((n) => (
           <Fragment key={n}>
             <input type="radio" id={`star-${n}`} name="rating" value={n} className="sr-only" required />
-            <label htmlFor={`star-${n}`} className="cursor-pointer" aria-label={`${n} stars`}>★</label>
+            <label htmlFor={`star-${n}`} className="cursor-pointer" aria-label={`${n} stars`}><StarIcon /></label>
           </Fragment>
         ))}
       </div>

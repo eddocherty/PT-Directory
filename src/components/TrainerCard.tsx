@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { TrainerSummary } from "@/lib/trainers";
+import { Arrow } from "./Arrow";
+import { StarIcon } from "./Stars";
 import { FITNESS_GOALS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
 
 export function initials(name: string) {
@@ -8,14 +10,9 @@ export function initials(name: string) {
 }
 
 
-// No-photo state: a monogram on a brand-blue gradient with a faint line icon for the trainer's main style.
+// No-photo state: initials on cobalt, over a faint contour map unique to each trainer, plus a line icon for their main style.
 // Real listings have no photos (we never copy photos from trainers' own sites).
-const PALETTES = [
-  "from-[#2457c5] to-[#163a8a]",
-  "from-[#3b6fe0] to-[#1f4bb0]",
-  "from-[#1c3f94] to-[#0f2559]",
-  "from-[#2f63d6] to-[#5b8df0]",
-];
+const PALETTES = ["bg-[#2457c5]", "bg-[#1f4bb0]", "bg-[#1c3f94]", "bg-[#2f63d6]"];
 
 type IconKind = "weights" | "flow" | "energy" | "run" | "box";
 function iconFor(styles: string[] = []): IconKind {
@@ -63,31 +60,31 @@ export function Avatar({
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={t.image_url} alt={t.name} className={`object-cover ${className}`} loading="lazy" />;
   }
-  const palette = PALETTES[hash(t.name) % PALETTES.length];
+  const h = hash(t.name);
+  const palette = PALETTES[h % PALETTES.length];
+  // A faint contour map, different for every trainer, so no two cards look the same.
+  const cx = 20 + (h % 60);
+  const cy = 15 + ((h >> 6) % 50);
+  const tilt = (h >> 12) % 180;
   return (
     <div
       role="img"
       aria-label={`${t.name} (no photo yet)`}
-      className={`relative overflow-hidden bg-gradient-to-br ${palette} text-paper ${className}`}
+      className={`relative overflow-hidden ${palette} text-paper ${className}`}
     >
-      {/* soft light blobs */}
-      <div className="absolute -left-1/4 -top-1/4 h-3/4 w-3/4 rounded-full bg-white/10 blur-2xl" />
-      <div className="absolute -bottom-1/3 -right-1/4 h-3/4 w-3/4 rounded-full bg-[#9fc0ff]/20 blur-2xl" />
-      {/* faint dot grid */}
-      <div
-        className="absolute inset-0 opacity-[0.12]"
-        style={{ backgroundImage: "radial-gradient(currentColor 1px, transparent 1px)", backgroundSize: "18px 18px" }}
-      />
+      <svg viewBox="0 0 100 125" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full text-white/[0.13]" aria-hidden>
+        <g fill="none" stroke="currentColor" strokeWidth={0.5} transform={`rotate(${tilt} ${cx} ${cy})`}>
+          {[8, 15, 23, 32, 42, 53, 65, 78, 92].map((r, i) => (
+            <ellipse key={r} cx={cx + i * 0.8} cy={cy + i * 1.1} rx={r * 1.25} ry={r * (0.7 + ((h >> i) % 3) * 0.08)} />
+          ))}
+        </g>
+      </svg>
       {/* style icon, oversized and faint */}
-      <div className="absolute -bottom-[8%] -right-[8%] w-[62%] text-white/15">
+      <div className="absolute -bottom-[8%] -right-[8%] w-[56%] text-white/15">
         <StyleIcon kind={iconFor(t.styles)} />
       </div>
       <div className={`absolute inset-0 flex items-center justify-center ${size === "card" ? "pb-[22%]" : ""}`}>
-        <span
-          className={`display flex aspect-square items-center justify-center rounded-full bg-white/12 ring-1 ring-white/30 backdrop-blur-sm ${
-            size === "hero" ? "w-[46%] text-7xl sm:text-8xl" : "w-[52%] text-4xl sm:text-5xl"
-          }`}
-        >
+        <span className={`display leading-none ${size === "hero" ? "text-8xl sm:text-9xl" : "text-5xl sm:text-6xl"}`}>
           {initials(t.name)}
         </span>
       </div>
@@ -111,7 +108,7 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
 
           {t.review_count > 0 && t.rating_avg != null && (
             <span className="rounded-full bg-paper/90 px-2.5 py-1 text-xs font-semibold backdrop-blur">
-              <span className="text-star">★</span> {t.rating_avg.toFixed(1)} <span className="font-normal text-muted">({t.review_count})</span>
+              <StarIcon className="mr-0.5 inline h-3 w-3 -translate-y-px text-star" />{t.rating_avg.toFixed(1)} <span className="font-normal text-muted">({t.review_count})</span>
             </span>
           )}
         </div>
@@ -137,7 +134,7 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
           ))}
         </div>
         <div className="mt-auto flex flex-wrap items-center justify-end gap-1">
-          <span className="text-xs font-semibold text-muted group-hover:text-ink">View profile →</span>
+          <span className="inline-flex items-center gap-1 text-xs font-semibold text-muted group-hover:text-ink">View profile <Arrow className="h-3 w-3" /></span>
         </div>
         {t.is_sample && <span className="text-[11px] italic text-muted">Example listing</span>}
       </div>

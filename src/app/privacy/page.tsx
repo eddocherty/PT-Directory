@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Privacy notice" };
+export const metadata: Metadata = { title: "Privacy notice", alternates: { canonical: "/privacy" } };
 
 export default function Privacy() {
   return (

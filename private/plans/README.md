@@ -1,6 +1,6 @@
 # Shop plan PDFs (encrypted)
 
-These are the paid Train Local plans, encrypted with AES-256-GCM because this repository is public.
+These are the paid LocalPT plans, encrypted with AES-256-GCM because this repository is public.
 `/api/download` decrypts them with the `PLANS_KEY` env var, only after Stripe confirms payment.
 
 The plan source and the build script live in the project files (`shop-plans/src/build.mjs`), not in this repo.

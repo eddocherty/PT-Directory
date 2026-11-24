@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Arrow } from "./Arrow";
 import { Fragment } from "react";
 import { ShopResultsCard } from "./ShopPromo";
 import { TrainerCard } from "./TrainerCard";
@@ -135,9 +136,9 @@ export function Results({
       </div>
       {pages > 1 && (
         <nav className="flex items-center justify-center gap-3 text-sm">
-          {page > 1 && <Link className="btn-ghost" href={`${basePath}?${toQuery(params, { page: String(page - 1) })}`}>{origin ? "← Closer" : "← Prev"}</Link>}
+          {page > 1 && <Link className="btn-ghost" href={`${basePath}?${toQuery(params, { page: String(page - 1) })}`}><Arrow dir="left" />{origin ? "Closer" : "Previous"}</Link>}
           <span className="font-bold">Page {page} of {pages}</span>
-          {page < pages && <Link className="btn-ghost" href={`${basePath}?${toQuery(params, { page: String(page + 1) })}`}>{origin ? "Further away →" : "Next →"}</Link>}
+          {page < pages && <Link className="btn-ghost" href={`${basePath}?${toQuery(params, { page: String(page + 1) })}`}>{origin ? "Further away" : "Next"}<Arrow /></Link>}
         </nav>
       )}
     </div>

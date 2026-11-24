@@ -57,7 +57,7 @@ export function LeadTable({ leads, statuses }: { leads: Lead[]; statuses: string
       <div className="rounded-3xl bg-paper p-5 text-sm">
         <p className="display text-2xl">Outreach pipeline</p>
         <p className="mt-1 text-muted">
-          Trainers found on public Facebook and Instagram pages who aren’t on Train Local yet. This list is private to you:
+          Trainers found on public Facebook and Instagram pages who aren’t on LocalPT yet. This list is private to you:
           don’t list anyone until they’ve said yes. Open a trainer to log notes. “Message” opens a Messenger chat with their page.
         </p>
       </div>

@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { EnquiryForm } from "@/components/EnquiryForm";
+import { JsonLd } from "@/components/JsonLd";
 import { ReviewForm } from "@/components/ReviewForm";
 import { ShopProfileCard } from "@/components/ShopPromo";
 import { Stars } from "@/components/Stars";
 import { Avatar } from "@/components/TrainerCard";
 import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
-import { getTrainer } from "@/lib/trainers";
+import { abs } from "@/lib/site";
+import { allTownStats, countySlug, townFor } from "@/lib/stats";
+import { MIN_TRAINERS } from "@/lib/topics";
+import { getTrainer, type Trainer } from "@/lib/trainers";
 
 // years_experience was recorded in 2026; show a start year so it never goes stale.
 const EXPERIENCE_BASE_YEAR = 2026;
@@ -19,8 +24,45 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!t) return {};
   return {
     title: `${t.name}, personal trainer${t.city ? ` in ${t.city}` : ""}`,
-    description: t.headline ?? undefined,
+    description:
+      t.headline ??
+      `${t.name} is an independent trainer${t.city ? ` in ${t.city}` : ""}${t.styles.length ? ` specialising in ${t.styles.slice(0, 3).map((s) => nameFor(TRAINING_STYLES, s).toLowerCase()).join(", ")}` : ""}. See their specialisms and get in touch directly.`,
+    alternates: { canonical: `/trainers/${t.slug}` },
     robots: t.is_sample ? { index: false } : undefined,
+  };
+}
+
+/** LocalBusiness data for Google: only facts shown on the page, and reviews only when real ones exist. */
+function businessData(t: Trainer) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": abs(`/trainers/${t.slug}#business`),
+    name: t.business_name || t.name,
+    url: abs(`/trainers/${t.slug}`),
+    ...(t.headline ? { description: t.headline } : {}),
+    address: {
+      "@type": "PostalAddress",
+      ...(t.city ? { addressLocality: t.city } : {}),
+      ...(t.region ? { addressRegion: t.region } : {}),
+      addressCountry: "GB",
+    },
+    ...(t.online ? { areaServed: { "@type": "Country", name: "United Kingdom" } } : t.city ? { areaServed: t.city } : {}),
+    ...(t.phone ? { telephone: t.phone } : {}),
+    ...(t.website ? { sameAs: [t.website] } : {}),
+    knowsAbout: [...t.styles.map((s) => nameFor(TRAINING_STYLES, s)), ...t.goals.map((g) => nameFor(FITNESS_GOALS, g))],
+    ...(t.review_count > 0 && t.rating_avg != null
+      ? {
+          aggregateRating: { "@type": "AggregateRating", ratingValue: t.rating_avg, reviewCount: t.review_count, bestRating: 5, worstRating: 1 },
+          review: t.reviews.slice(0, 5).map((r) => ({
+            "@type": "Review",
+            author: { "@type": "Person", name: r.author_name },
+            reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5 },
+            ...(r.body ? { reviewBody: r.body } : {}),
+            datePublished: r.created_at.slice(0, 10),
+          })),
+        }
+      : {}),
   };
 }
 
@@ -31,6 +73,11 @@ function H2({ children }: { children: React.ReactNode }) {
 export default async function TrainerPage({ params }: Props) {
   const t = await getTrainer((await params).slug);
   if (!t) notFound();
+  const town = townFor(t.city);
+  const stats = town ? await allTownStats() : null;
+  // Specialism links go to this trainer's town page for it when that page exists, otherwise the UK-wide page.
+  const topicHref = (slug: string) =>
+    town && (stats?.[town.slug]?.topics[slug] ?? 0) >= MIN_TRAINERS ? `/locations/${town.slug}/${slug}` : `/specialisms/${slug}`;
   // Sole traders read "Contact Nate"; studios and gyms keep their full name ("Contact Gym 72").
   const isPerson = !!t.business_name && t.business_name !== t.name && !/^the\s/i.test(t.name);
   const first = isPerson ? t.name.split(" ")[0] : t.name;
@@ -54,7 +101,17 @@ export default async function TrainerPage({ params }: Props) {
             <Avatar t={t} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
           </div>
           <div className="flex flex-col gap-5">
-            <Link href="/trainers" className="text-sm text-muted hover:text-ink">← All trainers</Link>
+            <Breadcrumbs
+              items={[
+                ...(town
+                  ? [
+                      { name: town.county, href: `/counties/${countySlug(town.county)}` },
+                      { name: town.name, href: `/locations/${town.slug}` },
+                    ]
+                  : [{ name: "Trainers", href: "/trainers" }]),
+                { name: t.name, href: `/trainers/${t.slug}` },
+              ]}
+            />
             <div>
               <h1 className="display text-5xl sm:text-6xl">{t.name}</h1>
               <p className="mt-3 text-lg text-muted">{where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
@@ -93,13 +150,13 @@ export default async function TrainerPage({ params }: Props) {
               <div>
                 <p className="eyebrow mb-2 text-muted">Training styles</p>
                 <div className="flex flex-wrap gap-2">
-                  {t.styles.map((s) => <Link key={s} href={`/trainers?style=${s}`} className="chip-ink hover:bg-accent">{nameFor(TRAINING_STYLES, s)}</Link>)}
+                  {t.styles.map((s) => <Link key={s} href={topicHref(s)} className="chip-ink hover:bg-accent">{nameFor(TRAINING_STYLES, s)}</Link>)}
                 </div>
               </div>
               <div>
                 <p className="eyebrow mb-2 text-muted">Helps you with</p>
                 <div className="flex flex-wrap gap-2">
-                  {t.goals.map((g) => <Link key={g} href={`/trainers?goal=${g}`} className="chip hover:bg-line">{nameFor(FITNESS_GOALS, g)}</Link>)}
+                  {t.goals.map((g) => <Link key={g} href={topicHref(g)} className="chip hover:bg-line">{nameFor(FITNESS_GOALS, g)}</Link>)}
                 </div>
               </div>
             </div>
@@ -118,24 +175,28 @@ export default async function TrainerPage({ params }: Props) {
             </section>
           )}
 
-          <section className="grid gap-4 sm:grid-cols-3">
-            {[
-              ["In person", t.in_person],
-              ["Online", t.online],
-              ["Home visits", t.home_visits],
-            ].map(([label, on]) => (
-              <div key={label as string} className={`rounded-2xl p-4 ${on ? "bg-soft" : "bg-soft text-muted/60"}`}>
-                <p className="font-semibold">{on ? "✓" : "✗"} {label as string}</p>
-              </div>
-            ))}
+          <section>
+            <H2>How they train</H2>
+            <dl className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+              {([
+                ["In person", t.in_person],
+                ["Online", t.online],
+                ["Home visits", t.home_visits],
+              ] as const).map(([label, on]) => (
+                <div key={label} className="bg-paper p-4">
+                  <dt className="text-xs font-semibold uppercase tracking-wider text-muted">{label}</dt>
+                  <dd className={`mt-1 font-semibold ${on ? "text-ink" : "text-muted"}`}>{on ? "Yes" : "No"}</dd>
+                </div>
+              ))}
+            </dl>
           </section>
 
           {(t.qualifications.length > 0 || t.years_experience != null) && (
             <section>
               <H2>Qualifications</H2>
               <ul className="flex flex-col gap-2">
-                {t.years_experience != null && <li className="font-semibold">✓ Training clients since {EXPERIENCE_BASE_YEAR - t.years_experience}</li>}
-                {t.qualifications.map((q) => <li key={q}>✓ {q}</li>)}
+                {t.years_experience != null && <li className="border-l-2 border-accent pl-3 font-semibold">Training clients since {EXPERIENCE_BASE_YEAR - t.years_experience}</li>}
+                {t.qualifications.map((q) => <li key={q} className="border-l-2 border-line pl-3">{q}</li>)}
               </ul>
             </section>
           )}
@@ -147,7 +208,7 @@ export default async function TrainerPage({ params }: Props) {
                 <p className="mb-4 flex items-center gap-2"><Stars value={t.rating_avg} size="text-lg" /> <strong>{t.rating_avg.toFixed(1)}</strong> from {t.review_count}</p>
               )}
             </div>
-            {t.reviews.length === 0 && <p className="text-muted">No reviews yet. Trained with {first}? Be the first.</p>}
+            {t.reviews.length === 0 && <p className="text-muted">No reviews yet. If you’ve trained with {first}, you can write one below.</p>}
             <div className="grid gap-4 sm:grid-cols-2">
               {t.reviews.map((r) => (
                 <figure key={r.id} className="rounded-2xl bg-soft p-5">
@@ -166,8 +227,7 @@ export default async function TrainerPage({ params }: Props) {
 
         <aside className="lg:sticky lg:top-24 lg:self-start" id="contact">
           <div className="scroll-mt-24 rounded-3xl bg-soft p-6">
-            <p className="eyebrow text-muted">Get started</p>
-            <p className="display mt-1 text-3xl">Contact {first}</p>
+            <p className="display text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">
               Ask {first} about prices and availability.
             </p>
@@ -197,6 +257,16 @@ export default async function TrainerPage({ params }: Props) {
           </p>
         </aside>
       </div>
+
+      {town && (
+        <section className="border-t border-line">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-10">
+            <p className="display text-2xl">More independent trainers near {town.name}</p>
+            <Link href={`/locations/${town.slug}`} className="btn-ghost">See trainers in {town.name}</Link>
+          </div>
+        </section>
+      )}
+      {!t.is_sample && <JsonLd data={businessData(t)} />}
 
       {/* Mobile sticky contact bar */}
       <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">

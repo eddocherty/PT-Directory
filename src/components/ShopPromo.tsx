@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Arrow } from "./Arrow";
 import { PlanCover } from "./PlanCover";
 import { FROM_PRICE, PRODUCTS, formatPrice, pickPlan } from "@/lib/products";
 
@@ -7,13 +8,11 @@ export function ShopBanner() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16">
       <div className="relative overflow-hidden rounded-[2rem] bg-zap p-6 sm:p-10 lg:p-12">
-        <div aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-paper/60 blur-2xl" />
         <div className="relative grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
           <div>
-            <p className="eyebrow text-accent">Not ready for a PT yet?</p>
-            <h2 className="display mt-3 text-4xl sm:text-5xl">Test the waters<br />from {FROM_PRICE}.</h2>
+            <h2 className="display text-4xl sm:text-5xl">Not ready for a PT?<br />Start with a plan from {FROM_PRICE}.</h2>
             <p className="mt-4 max-w-md text-muted">
-              Start with a simple, printable plan made by Train Local. Build the habit at your own pace, then find a local trainer when you’re ready to go further.
+              Five printable plans, from your first eight weeks in the gym to a first half marathon. Use one on your own for a while, and come back for a trainer when you want someone in your corner.
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/shop" className="btn">See the plans</Link>
@@ -47,9 +46,9 @@ export function ShopResultsCard({ goals, styles }: { goals?: string[]; styles?: 
       <div className="min-w-0 flex-1">
         <p className="eyebrow text-accent">Not ready to book a trainer?</p>
         <p className="display mt-1 text-xl sm:text-2xl">Try our {p.short.toLowerCase()} first, for just {formatPrice(p.price)}</p>
-        <p className="mt-1 hidden text-sm text-muted sm:block">A low-cost way to test the waters. Come back for a PT when you’re ready for the next level.</p>
+        <p className="mt-1 hidden text-sm text-muted sm:block">A printable plan to follow on your own first. Instant PDF download.</p>
       </div>
-      <span className="hidden shrink-0 text-sm font-semibold text-accent sm:inline">Take a look →</span>
+      <span className="hidden shrink-0 text-sm font-semibold text-accent sm:inline"><Arrow className="h-4 w-4" /></span>
     </Link>
   );
 }
@@ -62,7 +61,7 @@ export function ShopProfileCard({ goals, styles }: { goals?: string[]; styles?: 
       <div className="w-14 shrink-0"><PlanCover p={p} className="rounded-md" /></div>
       <div className="min-w-0">
         <p className="text-xs font-semibold text-accent">Not ready to commit yet?</p>
-        <p className="mt-0.5 text-sm font-semibold">Test the waters with our {p.short.toLowerCase()}, {formatPrice(p.price)}</p>
+        <p className="mt-0.5 text-sm font-semibold">Or start on your own with our {p.short.toLowerCase()}, {formatPrice(p.price)}</p>
         <p className="mt-0.5 text-xs text-muted">Instant PDF. Plans from {FROM_PRICE}.</p>
       </div>
     </Link>

@@ -32,7 +32,7 @@ export default async function AdminPage({ searchParams }: Props) {
     <div className="mx-auto max-w-7xl px-4 py-8">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow text-muted">Train Local admin</p>
+          <p className="eyebrow text-muted">LocalPT admin</p>
           <h1 className="display mt-1 text-4xl">Dashboard</h1>
         </div>
         <div className="flex items-center gap-2">
@@ -191,7 +191,7 @@ async function Body({ tab, days, href }: { tab: string; days: number; href: (p: 
         <Table title="Countries" head={["Country", "Views"]} rows={dash.countries.map((r) => [r.country, fmt(r.views)])} />
       </div>
       <p className="text-xs text-muted">
-        Counted by Train Local itself, with no cookies and no IP addresses stored. Bots and your own visits while logged in are left out.
+        Counted by LocalPT itself, with no cookies and no IP addresses stored. Bots and your own visits while logged in are left out.
         Vercel’s Analytics tab shows a second, independent count.
       </p>
     </section>

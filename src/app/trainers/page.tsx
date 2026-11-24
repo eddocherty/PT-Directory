@@ -4,9 +4,20 @@ import { parseFilters, type RawParams } from "@/lib/filters";
 import { geocodeUk } from "@/lib/geocode";
 import { searchTrainers } from "@/lib/trainers";
 
-export const metadata: Metadata = { title: "Find a personal trainer" };
+type Props = { searchParams: Promise<RawParams> };
 
-export default async function TrainersPage({ searchParams }: { searchParams: Promise<RawParams> }) {
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const sp = await searchParams;
+  return {
+    title: "Find an independent personal trainer",
+    description: "Search independent personal trainers, Pilates instructors and small studios across the UK by postcode, specialism and goal.",
+    alternates: { canonical: "/trainers" },
+    // Search results change with every filter, so only the plain page is indexed. Town and specialism pages cover the rest.
+    robots: Object.keys(sp).length ? { index: false, follow: true } : undefined,
+  };
+}
+
+export default async function TrainersPage({ searchParams }: Props) {
   const params = await searchParams;
   const f = parseFilters(params);
   const geo = f.location ? await geocodeUk(f.location) : null;
@@ -19,7 +30,6 @@ export default async function TrainersPage({ searchParams }: { searchParams: Pro
 
   return (
     <SearchLayout
-      eyebrow="Find your trainer"
       title={geo ? `Trainers near ${geo.label}` : "Trainers across the UK"}
       subtitle={subtitle}
       filters={f}

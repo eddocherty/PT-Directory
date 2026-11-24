@@ -1,25 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Arrow } from "@/components/Arrow";
 import { PlanCover } from "@/components/PlanCover";
 import { PRODUCTS, formatPrice } from "@/lib/products";
 
 export const metadata: Metadata = {
   title: "Training plans and guides",
-  description: "Simple, downloadable training plans from Train Local: beginner gym, postnatal return, dumbbell only, first half marathon and high-protein eating.",
+  description: "Simple, downloadable training plans from LocalPT: beginner gym, postnatal return, dumbbell only, first half marathon and high-protein eating.",
+  alternates: { canonical: "/shop" },
 };
 
 export default function Shop() {
   return (
     <>
       <section className="relative overflow-hidden bg-soft">
-        <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[30rem] w-[30rem] rounded-full bg-zap blur-3xl" />
         <div className="relative mx-auto max-w-7xl px-4 py-14 sm:py-20">
-          <p className="eyebrow text-accent">Train Local shop</p>
+          <p className="eyebrow text-accent">Plans</p>
           <h1 className="display mt-4 text-5xl sm:text-7xl">
-            Start strong.<br /><span className="text-accent">Then go further.</span>
+            Five plans, written<br /><span className="text-accent">in plain English.</span>
           </h1>
           <p className="mt-6 max-w-xl text-lg text-muted">
-            Simple, printable plans to get you moving with confidence. When you’re ready for the next level, a local personal trainer can take it from there.
+            Printable PDFs for the gym, the road and the kitchen. Follow one on your own, then find a local trainer when you want a programme made for you.
           </p>
           <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
             <span className="rounded-full border border-line bg-paper px-3 py-1">Instant PDF download</span>
@@ -42,7 +43,7 @@ export default function Shop() {
               <p className="mt-1 text-sm text-muted">{p.description}</p>
               <p className="mt-3 flex items-center justify-between">
                 <span className="text-lg font-semibold">{formatPrice(p.price)}</span>
-                <span className="text-sm font-semibold text-accent">See what’s inside →</span>
+                <span className="text-sm font-semibold text-accent"><span className="inline-flex items-center gap-1">See what’s inside <Arrow /></span></span>
               </p>
             </Link>
           ))}

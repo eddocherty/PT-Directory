@@ -5,29 +5,45 @@ import { FROM_PRICE } from "@/lib/products";
 import { TrainerCard } from "@/components/TrainerCard";
 import { CITIES, FITNESS_GOALS, TRAINING_STYLES } from "@/lib/taxonomy";
 import { featuredTrainers } from "@/lib/trainers";
+import { Arrow } from "@/components/Arrow";
+import { JsonLd } from "@/components/JsonLd";
+import { UkTownMap } from "@/components/UkTownMap";
+import { SITE_NAME, TAGLINE, abs } from "@/lib/site";
+import { allTownStats, ukCounts } from "@/lib/stats";
+import { topicBySlug } from "@/lib/topics";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 // Refresh featured trainers every 5 minutes rather than freezing them at build time.
 export const revalidate = 300;
 
-const STYLE_TILES = [
-  { slug: "strength", line: "Get strong" },
-  { slug: "hiit", line: "Sweat it out" },
-  { slug: "boxing", line: "Throw hands" },
-  { slug: "yoga", line: "Find your flow" },
-  { slug: "running", line: "Go further" },
-  { slug: "pilates", line: "Core power" },
-];
+const STYLE_TILES = ["strength", "pilates", "boxing", "yoga", "running", "bootcamp"];
+const GOAL_LIST = ["weight-loss", "muscle-gain", "pre-post-natal", "rehab", "older-adults", "confidence", "sports-performance", "general-fitness"];
 
 export default async function Home() {
-  const featured = await featuredTrainers(4);
+  const [featured, stats, uk] = await Promise.all([featuredTrainers(4), allTownStats(), ukCounts()]);
+  const townsCovered = CITIES.filter((c) => (stats[c.slug]?.total ?? 0) > 0).length;
   return (
     <>
       {/* Hero */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            { "@type": "Organization", "@id": abs("/#org"), name: SITE_NAME, url: abs("/"), logo: abs("/icon.svg"), slogan: TAGLINE },
+            { "@type": "WebSite", "@id": abs("/#site"), name: SITE_NAME, url: abs("/"), publisher: { "@id": abs("/#org") }, inLanguage: "en-GB" },
+          ],
+        }}
+      />
       <section className="relative overflow-hidden bg-soft text-ink">
-        <div aria-hidden className="pointer-events-none absolute -right-40 -top-40 h-[36rem] w-[36rem] rounded-full bg-zap blur-3xl" />
-        <div aria-hidden className="pointer-events-none absolute -bottom-40 right-1/4 h-80 w-80 rounded-full bg-accent/15 blur-3xl" />
-        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20">
-          <p className="eyebrow text-accent">Independent trainers, near you</p>
+        <UkTownMap stats={stats} className="absolute top-8 hidden h-[calc(100%-4rem)] lg:right-[3%] lg:block xl:right-[7%]" />
+        <div className="pointer-events-none relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20 [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_form]:pointer-events-auto">
+          {uk.total > 0 && (
+            <p className="text-sm font-semibold text-accent">
+              <span className="tabular-nums">{uk.total}</span> independent trainers in <span className="tabular-nums">{townsCovered}</span> UK towns and cities
+            </p>
+          )}
           <h1 className="display mt-5 text-5xl sm:text-7xl lg:text-8xl">
             Training, built<br /><span className="text-accent">around you.</span>
           </h1>
@@ -42,18 +58,18 @@ export default async function Home() {
             </select>
             <button className="btn px-7 text-base">Search</button>
           </form>
-          <Link href="/trainers?online=1" className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-paper hover:opacity-90">
-            Or train online with a UK coach, wherever you live →
+          <Link href="/online" className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-paper hover:opacity-90">
+            Or train online with a UK coach, wherever you live <Arrow />
           </Link>
           <Link href="/shop" className="ml-0 mt-3 inline-flex items-center gap-2 text-sm font-semibold text-ink underline decoration-accent decoration-2 underline-offset-4 hover:text-accent sm:ml-4">
             Not ready for a PT? Start with a plan from {FROM_PRICE}
           </Link>
           <div className="mt-6 flex flex-wrap items-center gap-2 text-xs font-medium">
             <span className="text-muted">Popular:</span>
-            <Link href="/trainers?style=pilates" className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">Pilates</Link>
-            <Link href="/trainers?style=bootcamp" className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">Bootcamps</Link>
+            <Link href="/specialisms/pilates" className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">Pilates</Link>
+            <Link href="/specialisms/bootcamp" className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">Bootcamps</Link>
             {["weight-loss", "muscle-gain", "pre-post-natal", "rehab"].map((g) => (
-              <Link key={g} href={`/trainers?goal=${g}`} className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">
+              <Link key={g} href={`/specialisms/${g}`} className="rounded-full border border-line bg-paper px-3 py-1 hover:border-ink">
                 {FITNESS_GOALS.find((x) => x.slug === g)?.name}
               </Link>
             ))}
@@ -65,35 +81,42 @@ export default async function Home() {
       {/* Styles */}
       <section className="mx-auto max-w-7xl px-4 py-16">
         <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-          <h2 className="display text-4xl sm:text-5xl">Train your way</h2>
-          <Link href="/trainers" className="btn-ghost">All styles</Link>
+          <h2 className="display text-4xl sm:text-5xl">How do you like to train?</h2>
+          <Link href="/specialisms" className="btn-ghost">All specialisms</Link>
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
-          {STYLE_TILES.map((s, i) => (
-            <Link
-              key={s.slug}
-              href={`/trainers?style=${s.slug}`}
-              className={`group flex aspect-[4/3] md:aspect-[16/9] flex-col justify-between rounded-3xl p-5 transition hover:-translate-y-1 ${
-                ["bg-accent text-paper", "bg-soft", "bg-zap", "bg-soft", "bg-zap", "bg-soft"][i]
-              }`}
-            >
-              <span className="eyebrow opacity-70">{TRAINING_STYLES.find((x) => x.slug === s.slug)?.name}</span>
-              <span className="display text-2xl sm:text-4xl">{s.line} <span className="inline-block transition group-hover:translate-x-2">→</span></span>
-            </Link>
-          ))}
+          {STYLE_TILES.map((slug, i) => {
+            const topic = topicBySlug(slug)!;
+            const n = uk.topics[slug] ?? 0;
+            return (
+              <Link
+                key={slug}
+                href={`/specialisms/${slug}`}
+                className={`group flex aspect-[4/3] md:aspect-[16/9] flex-col justify-between rounded-3xl p-5 transition hover:-translate-y-1 ${
+                  i === 0 ? "bg-accent text-paper" : i % 2 ? "bg-soft" : "bg-zap"
+                }`}
+              >
+                <span className="text-sm font-medium opacity-70">{n > 0 ? `${n} trainers` : ""}</span>
+                <span className="flex items-end justify-between gap-3">
+                  <span className="display text-2xl sm:text-4xl">{TRAINING_STYLES.find((x) => x.slug === slug)?.name ?? topic.name}</span>
+                  <Arrow className="mb-1 h-5 w-5 transition group-hover:translate-x-1" />
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
       <ShopBanner />
 
       {/* Featured */}
-      {featured.length > 0 && (
+      {/* Only shown once enough trainers have real reviews, so the heading is always true. */}
+      {featured.length >= 4 && (
         <section className="bg-soft">
           <div className="mx-auto max-w-7xl px-4 py-16">
             <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
               <div>
-                <p className="eyebrow text-accent">Top rated</p>
-                <h2 className="display mt-1 text-4xl sm:text-5xl">Trainers people love</h2>
+                <h2 className="display text-4xl sm:text-5xl">Highest rated</h2>
               </div>
               <Link href="/trainers" className="btn-dark">See all trainers</Link>
             </div>
@@ -104,21 +127,26 @@ export default async function Home() {
         </section>
       )}
 
-      {/* How it works */}
+      {/* Goals */}
       <section className="mx-auto max-w-7xl px-4 py-16">
-        <h2 className="display text-4xl sm:text-5xl">Three steps. Zero faff.</h2>
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {[
-            ["01", "Search", "Pop in your postcode and what you want to work on."],
-            ["02", "Compare", "Check specialisms, reviews and what they do for fun."],
-            ["03", "Message", "Get in touch with trainers directly. It’s free to message them."],
-          ].map(([n, h, p]) => (
-            <div key={n} className="rounded-3xl border border-line p-6">
-              <p className="text-sm font-semibold text-muted">{n}</p>
-              <p className="display mt-3 text-2xl">{h}</p>
-              <p className="mt-2 text-muted">{p}</p>
-            </div>
-          ))}
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
+          <div>
+            <h2 className="display text-4xl sm:text-5xl">What do you want to work on?</h2>
+            <p className="mt-4 max-w-sm text-muted">Every trainer lists the goals they help with. Pick yours to see who specialises in it.</p>
+          </div>
+          <ul className="grid gap-x-8 sm:grid-cols-2">
+            {GOAL_LIST.map((slug) => {
+              const topic = topicBySlug(slug)!;
+              return (
+                <li key={slug}>
+                  <Link href={`/specialisms/${slug}`} className="group flex items-baseline justify-between gap-4 border-b border-line py-4 hover:border-accent">
+                    <span className="text-lg font-semibold group-hover:text-accent">{topic.name}</span>
+                    <span className="text-sm tabular-nums text-muted">{uk.topics[slug] || ""}</span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </section>
 
@@ -129,10 +157,11 @@ export default async function Home() {
           {CITIES.filter((c) => c.popular).map((c) => (
             <Link key={c.slug} href={`/locations/${c.slug}`} className="rounded-full border border-line px-4 py-2 text-sm font-medium hover:border-ink">
               {c.name}
+              {stats[c.slug]?.total ? <span className="ml-2 tabular-nums text-muted">{stats[c.slug].total}</span> : null}
             </Link>
           ))}
           <Link href="/locations" className="rounded-full bg-ink px-4 py-2 text-sm font-semibold text-paper hover:bg-accent">
-            All {CITIES.length} towns by county →
+            All {CITIES.length} towns by county
           </Link>
         </div>
       </section>

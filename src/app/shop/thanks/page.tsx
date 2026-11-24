@@ -33,7 +33,7 @@ export default async function Thanks({ searchParams }: { searchParams: Promise<{
           It usually shows on your statement within 5 to 10 working days.
           Questions? Email <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
         </p>
-        <Link href="/trainers?online=1" className="btn mt-8">Find an online coach instead</Link>
+        <Link href="/online" className="btn mt-8">Find an online coach instead</Link>
       </div>
     );
   }
@@ -67,9 +67,9 @@ export default async function Thanks({ searchParams }: { searchParams: Promise<{
       </section>
       <section className="mx-auto max-w-3xl px-4 py-12">
         <div className="rounded-3xl bg-accent p-8 text-paper">
-          <h2 className="display text-3xl">Ready for the next level?</h2>
+          <h2 className="display text-3xl">Want someone in your corner?</h2>
           <p className="mt-2 text-paper/80">Work through your plan, then find a local personal trainer to build on it with a programme made just for you.</p>
-          <Link href={`/trainers${product.goal ? `?goal=${product.goal}` : ""}`} className="btn-light mt-5">Find a local PT</Link>
+          <Link href={product.goal ? `/specialisms/${product.goal}` : "/trainers"} className="btn-light mt-5">Find a local PT</Link>
         </div>
       </section>
     </>

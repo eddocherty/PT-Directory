@@ -109,7 +109,7 @@ function fromSample(r: SampleRow, distance: number | null = null): Trainer {
   };
 }
 
-function searchSample(f: SearchFilters): { trainers: TrainerSummary[]; total: number } {
+function searchSample(f: SearchFilters, limit = PAGE_SIZE): { trainers: TrainerSummary[]; total: number } {
   const origin = f.lat != null && f.lng != null ? { lat: f.lat, lng: f.lng } : null;
   const radius = f.radius ?? 25;
   let rows = sample
@@ -133,12 +133,12 @@ function searchSample(f: SearchFilters): { trainers: TrainerSummary[]; total: nu
     (a, b) => (a.distance_miles ?? Infinity) - (b.distance_miles ?? Infinity) || a.name.localeCompare(b.name),
   );
   const page = Math.max(1, f.page ?? 1);
-  return { trainers: rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE), total: rows.length };
+  return { trainers: rows.slice((page - 1) * limit, page * limit), total: rows.length };
 }
 
-export async function searchTrainers(f: SearchFilters): Promise<{ trainers: TrainerSummary[]; total: number }> {
+export async function searchTrainers(f: SearchFilters, limit = PAGE_SIZE): Promise<{ trainers: TrainerSummary[]; total: number }> {
   const db = getSupabase();
-  if (!db) return searchSample(f);
+  if (!db) return searchSample(f, limit);
 
   const page = Math.max(1, f.page ?? 1);
   const { data, error } = await db.rpc("search_trainers", {
@@ -154,8 +154,8 @@ export async function searchTrainers(f: SearchFilters): Promise<{ trainers: Trai
     p_max_price: null, // price filtering removed: trainers change prices without telling us
     p_gender: f.gender ?? null,
     p_query: f.q || null,
-    p_limit: PAGE_SIZE,
-    p_offset: (page - 1) * PAGE_SIZE,
+    p_limit: limit,
+    p_offset: (page - 1) * limit,
   });
   if (error) throw new Error(`search_trainers failed: ${error.message}`);
   const rows = (data ?? []) as (TrainerSummary & { total_count: number })[];
@@ -228,12 +228,13 @@ export async function submitListingRequest(req: {
 export async function featuredTrainers(limit = 4): Promise<TrainerSummary[]> {
   let trainers: TrainerSummary[] = [];
   try {
-    ({ trainers } = await searchTrainers({}));
+    ({ trainers } = await searchTrainers({}, 2000));
   } catch (e) {
     // Never let the home page fail (or a build break) because the database is unreachable.
     console.error("featuredTrainers:", e);
   }
   return [...trainers]
+    .filter((t) => t.review_count > 0 && t.rating_avg != null)
     .sort((a, b) => (b.rating_avg ?? 0) - (a.rating_avg ?? 0) || b.review_count - a.review_count)
     .slice(0, limit);
 }
@@ -269,4 +270,18 @@ export async function submitReview(r: {
     trainer_id: id, author_name: r.author_name, author_email: r.author_email, rating: r.rating, body: r.body || null,
   });
   return error ? { ok: false, error: error.message } : { ok: true };
+}
+
+/** Every published, real trainer's slug, for the sitemap. */
+export async function publishedTrainerSlugs(): Promise<{ slug: string; updated_at: string | null }[]> {
+  const db = getSupabase();
+  if (!db) return [];
+  const { data, error } = await db
+    .from("trainers")
+    .select("slug, updated_at")
+    .eq("status", "published")
+    .eq("is_sample", false)
+    .limit(5000);
+  if (error) throw new Error(error.message);
+  return (data ?? []) as { slug: string; updated_at: string | null }[];
 }

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { RequestForm } from "@/components/RequestForm";
 import { PageHeader } from "@/components/PageHeader";
 
-export const metadata: Metadata = { title: "Remove or correct a listing" };
+export const metadata: Metadata = { title: "Remove or correct a listing", alternates: { canonical: "/remove" }, robots: { index: false, follow: true } };
 
 export default async function Remove({ searchParams }: { searchParams: Promise<{ listing?: string; type?: string }> }) {
   const { listing, type } = await searchParams;

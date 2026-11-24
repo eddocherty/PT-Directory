@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
 
-export const metadata: Metadata = { title: "Shop terms" };
+export const metadata: Metadata = { title: "Shop terms", alternates: { canonical: "/shop/terms" } };
 
 export default function ShopTerms() {
   return (
