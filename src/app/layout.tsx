@@ -77,7 +77,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/shop/terms" className="text-paper/70 hover:text-paper">Shop terms</Link>
             </div>
           </div>
-          <p className="border-t border-paper/10 px-4 py-4 text-center text-xs text-paper/40">
+          <p className="border-t border-paper/10 px-4 py-4 text-center text-xs text-paper/70">
             © {new Date().getFullYear()} {SITE_NAME}
           </p>
         </footer>

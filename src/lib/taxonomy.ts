@@ -110,6 +110,7 @@ export const CITIES: City[] = [
   { slug: "southend-on-sea", name: "Southend-on-Sea", county: "Essex", nation: "England", lat: 51.5447, lng: 0.7087 },
   { slug: "st-albans", name: "St Albans", county: "Hertfordshire", nation: "England", lat: 51.7534, lng: -0.3315 },
   { slug: "st-asaph", name: "St Asaph", county: "Denbighshire", nation: "Wales", lat: 53.2522, lng: -3.4369 },
+  { slug: "st-davids", name: "St Davids", county: "Pembrokeshire", nation: "Wales", lat: 51.8812, lng: -5.266 },
   { slug: "stirling", name: "Stirling", county: "Stirling", nation: "Scotland", lat: 56.1199, lng: -4.0127 },
   { slug: "stockport", name: "Stockport", county: "Greater Manchester", nation: "England", lat: 53.4195, lng: -2.1819 },
   { slug: "stoke-on-trent", name: "Stoke-on-Trent", county: "Staffordshire", nation: "England", lat: 53.0132, lng: -2.1808 },

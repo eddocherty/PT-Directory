@@ -175,6 +175,220 @@ export const GUIDES: Guide[] = [
       { href: "/specialisms/confidence", label: "Trainers who work well with beginners" },
     ],
   },
+  {
+    slug: "how-to-choose-a-postnatal-personal-trainer",
+    title: "How to choose a postnatal personal trainer",
+    summary: "The qualifications, questions and warning signs to look for when you pick a trainer to help you get back to exercise after having a baby.",
+    updated: "2026-11-24",
+    sections: [
+      {
+        heading: "Start with your postnatal check",
+        body: [
+          "Before you book anyone, have your six to eight week check with your GP and mention any leaking, heaviness, pain or a gap down the middle of your stomach. A trainer is not the right person to clear you to exercise. Their job is to build on the go-ahead from your GP, midwife or a women's health physiotherapist.",
+        ],
+      },
+      {
+        heading: "The qualification to ask about",
+        body: [
+          "General personal training courses cover pregnancy only briefly. Look for a specific pre and postnatal exercise qualification, usually a Level 3 course from a recognised awarding body, taken on top of their main personal training qualification. Ask what it was called and roughly when they did it.",
+          "Some trainers have also done extra courses on the pelvic floor, abdominal separation or return to running after birth. These are useful, but they don't replace a physiotherapist if you have symptoms.",
+        ],
+      },
+      {
+        heading: "What a good first session looks like",
+        body: [
+          "Expect plenty of questions: what kind of birth you had, how you are sleeping, whether you are feeding, and any symptoms you have noticed. A good trainer will usually start with breathing, pelvic floor and gentle strength work, then build up slowly over weeks and months.",
+          "They should be happy to work around naps, feeds and cancelled sessions. Ask whether you can bring your baby, train at home, or join a buggy or small group class if that suits you better.",
+        ],
+      },
+      {
+        heading: "Signs to keep looking",
+        body: [
+          "Be wary of anyone promising to get your body back by a deadline, pushing very low calorie diets while you are recovering or feeding, or putting you straight back on running, jumping or heavy lifting without checking how your body is coping. If something leaks, aches or bulges during a session, a good trainer will stop, change the exercise and suggest you speak to a physiotherapist.",
+        ],
+      },
+      {
+        heading: "Questions to ask before you book",
+        body: [
+          "What pre and postnatal qualification do you hold? How do you check how my pelvic floor and stomach are coping? How would you progress me from the basics back to the training I used to do? Do you ever refer clients to a physiotherapist, and who do you work with locally?",
+        ],
+      },
+    ],
+    related: [
+      { href: "/specialisms/pre-post-natal", label: "Pre and postnatal trainers across the UK" },
+      { href: "/guides/pre-and-postnatal-personal-training", label: "Pre and postnatal training: what it is and when to start" },
+    ],
+  },
+  {
+    slug: "reformer-vs-mat-pilates",
+    title: "Reformer or mat Pilates: which should you choose?",
+    summary: "How reformer and mat Pilates differ, what each one is good for, and how to pick a class or instructor if you are new to Pilates.",
+    updated: "2026-11-24",
+    sections: [
+      {
+        heading: "Same method, different equipment",
+        body: [
+          "Both come from the exercises Joseph Pilates developed in the early 1900s. Mat Pilates uses your body weight on a mat, sometimes with small equipment such as bands, balls or rings. Reformer Pilates uses a sliding carriage with springs and straps, so the instructor can make an exercise lighter or heavier by changing the springs.",
+        ],
+      },
+      {
+        heading: "What reformer is good for",
+        body: [
+          "The springs can support you as well as add resistance, which helps people who find some mat exercises hard to control. It often feels more like a strength workout, and many people like the variety. Classes are usually smaller because of the number of machines, and they tend to cost more per session.",
+        ],
+      },
+      {
+        heading: "What mat is good for",
+        body: [
+          "Mat work can be done anywhere, including at home between classes. It can be harder than it looks, because nothing is helping you. Classes are often bigger and cheaper, and they are widely run in community halls and leisure centres, so they are easier to fit around the week.",
+        ],
+      },
+      {
+        heading: "Classical, contemporary and studio equipment",
+        body: [
+          "Classical studios teach Joseph Pilates' original order of exercises, often on several pieces of equipment such as the tower, Cadillac and Wunda Chair. Contemporary classes adapt the method using modern exercise science. Neither is better. It comes down to the teaching and how you feel after a few sessions.",
+        ],
+      },
+      {
+        heading: "If you are new, injured or pregnant",
+        body: [
+          "Many reformer studios ask beginners to do an introduction or a private session first, which is worth doing. If you have an injury, a long-term condition or are pregnant, tell the instructor before you start. Some studios work alongside physiotherapists, and one-to-one sessions are often a better place to begin than a busy class.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/specialisms/pilates", label: "Pilates instructors across the UK" },
+      { href: "/specialisms/flexibility", label: "Trainers for flexibility" },
+    ],
+  },
+  {
+    slug: "what-happens-in-a-personal-training-session",
+    title: "What happens in a personal training session?",
+    summary: "What to expect from your first session with a personal trainer, what a normal session looks like, and what to wear and bring.",
+    updated: "2026-11-24",
+    sections: [
+      {
+        heading: "Before the first session",
+        body: [
+          "Most trainers will send you a health questionnaire, often called a PAR-Q, asking about medical conditions, injuries and medication. Answer it honestly. If you have a heart condition, high blood pressure, are pregnant or have had recent surgery, the trainer may ask you to check with your GP before you start.",
+        ],
+      },
+      {
+        heading: "The first session",
+        body: [
+          "The first session is usually lighter than people expect. You will talk about your goals, your week and what has or hasn't worked before. Then the trainer will watch you move: squatting, lunging, pushing, pulling and balancing. Some will take measurements, but you can say no to anything you aren't comfortable with.",
+        ],
+      },
+      {
+        heading: "A normal session",
+        body: [
+          "Most sessions last 45 to 60 minutes. A typical session starts with a warm-up, moves on to the main strength or fitness work, and finishes with a cool-down or some stretching. The trainer should explain why each exercise is there and adjust it if something hurts or feels too easy.",
+          "Over the weeks, a good trainer will keep a record of what you lifted or did, so they can make it a little harder as you get stronger.",
+        ],
+      },
+      {
+        heading: "What to wear and bring",
+        body: [
+          "Wear comfortable clothes you can move in and trainers with a flat, grippy sole. Bring a water bottle and a small towel. Eat something light an hour or two before if you can, and tell the trainer if you feel dizzy or unwell at any point.",
+        ],
+      },
+      {
+        heading: "Feeling sore afterwards",
+        body: [
+          "It is normal to feel stiff a day or two after your first few sessions, especially in your legs. That usually eases within a few days and gets less as your body adapts. Sharp pain, or pain in a joint that doesn't go away, is different, so mention it to your trainer.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/guides/questions-to-ask-a-personal-trainer", label: "Questions to ask before your first session" },
+      { href: "/specialisms/confidence", label: "Trainers who work well with beginners" },
+    ],
+  },
+  {
+    slug: "how-often-should-you-see-a-personal-trainer",
+    title: "How often should you see a personal trainer?",
+    summary: "How many sessions a week make sense for different goals and budgets, and how to keep progressing between sessions.",
+    updated: "2026-11-24",
+    sections: [
+      {
+        heading: "What the guidelines say",
+        body: [
+          "NHS guidance for adults is at least 150 minutes of moderate activity a week, such as brisk walking, plus strength exercises on at least two days a week. A trainer doesn't have to supply all of that. Their sessions can be the backbone, with walking and some work on your own filling the rest.",
+        ],
+      },
+      {
+        heading: "Once a week",
+        body: [
+          "One session a week works well if you also train on your own. The trainer checks your technique, sets your plan for the week and makes things harder over time. It is the most common choice for people fitting training around work and family.",
+        ],
+      },
+      {
+        heading: "Twice or three times a week",
+        body: [
+          "Two or three sessions suit people who are brand new to exercise, coming back from an injury, or working towards a date such as a wedding, a race or an operation. You get more coaching and more accountability, though it costs more, so it is common to do this for a few months and then drop back.",
+        ],
+      },
+      {
+        heading: "Every few weeks",
+        body: [
+          "If you already train regularly, a session every two to four weeks can be enough to review your technique and update your programme. Online coaching, where a coach writes your plan and checks in each week, is another way to keep support going for less money.",
+        ],
+      },
+      {
+        heading: "Small group sessions",
+        body: [
+          "Small group personal training, usually with two to eight people, gives you a coach and a set time to turn up, at a lower price per session than one-to-one. It suits people who like company and don't need a fully individual plan.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/guides/online-vs-in-person-personal-training", label: "Online or in-person personal training?" },
+      { href: "/specialisms/general-fitness", label: "Trainers for general fitness" },
+    ],
+  },
+  {
+    slug: "personal-training-for-over-50s",
+    title: "Personal training for over-50s: what to look for",
+    summary: "Why strength and balance work matters more as you get older, what a good trainer for over-50s does, and the questions to ask.",
+    updated: "2026-11-24",
+    sections: [
+      {
+        heading: "Why strength matters more with age",
+        body: [
+          "From middle age, people slowly lose muscle and bone strength unless they work to keep it. NHS guidance says older adults should do activities that build strength and improve balance and flexibility on at least two days a week, alongside regular moderate activity. It is never too late to start, and people often notice a difference within a few weeks.",
+        ],
+      },
+      {
+        heading: "What a good trainer does differently",
+        body: [
+          "A good trainer for older adults will start by asking about your health, medication, joints and any falls. They will build up gradually, include balance work, and focus on everyday strength: getting up from a chair, carrying shopping, climbing stairs and getting down to the floor and back up.",
+          "Look for experience with conditions that become more common with age, such as arthritis, osteoporosis, high blood pressure or recovering from a joint replacement. Some trainers hold an extra qualification in exercise for older adults or exercise referral.",
+        ],
+      },
+      {
+        heading: "Where to train",
+        body: [
+          "A quiet private studio or home visits can feel more comfortable than a busy gym, especially at the start. Small group classes aimed at older adults are another good option, and some Pilates studios run seniors classes too.",
+        ],
+      },
+      {
+        heading: "Check with your GP if you need to",
+        body: [
+          "If you have a heart or lung condition, have had a fall, are recovering from surgery or have been told to be careful with exercise, speak to your GP first. They may be able to refer you to a local exercise referral scheme, and a trainer can work from their advice.",
+        ],
+      },
+      {
+        heading: "Questions to ask",
+        body: [
+          "Have you trained people my age before? How do you include balance work? What would you do differently because of my joints or condition? How will we know I am getting stronger?",
+        ],
+      },
+    ],
+    related: [
+      { href: "/specialisms/older-adults", label: "Personal trainers for older adults" },
+      { href: "/specialisms/home-visits", label: "Trainers who come to your home" },
+    ],
+  },
 ];
 
 export const guideBy = (slug: string) => GUIDES.find((g) => g.slug === slug);

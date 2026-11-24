@@ -31,7 +31,7 @@ export function FilterDrawer({ active, children }: { active: number; children: R
         {active > 0 && <span className="rounded-full bg-accent px-2 py-0.5 text-xs text-paper">{active}</span>}
       </button>
 
-      <div className={`fixed inset-0 z-50 ${open ? "" : "pointer-events-none"}`} aria-hidden={!open}>
+      <div className={`fixed inset-0 z-50 ${open ? "" : "pointer-events-none"}`} inert={!open}>
         <div
           onClick={() => setOpen(false)}
           className={`absolute inset-0 bg-ink/50 transition-opacity ${open ? "opacity-100" : "opacity-0"}`}
