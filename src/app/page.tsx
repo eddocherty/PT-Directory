@@ -23,7 +23,6 @@ const GOAL_LIST = ["weight-loss", "muscle-gain", "pre-post-natal", "rehab", "old
 
 export default async function Home() {
   const [featured, stats, uk] = await Promise.all([featuredTrainers(4), allTownStats(), ukCounts()]);
-  const townsCovered = CITIES.filter((c) => (stats[c.slug]?.total ?? 0) > 0).length;
   return (
     <>
       {/* Hero */}
@@ -39,17 +38,9 @@ export default async function Home() {
       <section className="relative overflow-hidden bg-soft text-ink">
         <UkTownMap stats={stats} className="absolute top-8 hidden h-[calc(100%-4rem)] lg:right-[3%] lg:block xl:right-[7%]" />
         <div className="pointer-events-none relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20 [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_form]:pointer-events-auto">
-          {uk.total > 0 && (
-            <p className="text-sm font-semibold text-accent">
-              <span className="tabular-nums">{uk.total}</span> independent trainers in <span className="tabular-nums">{townsCovered}</span> UK towns and cities
-            </p>
-          )}
-          <h1 className="display mt-5 text-5xl sm:text-7xl lg:text-8xl">
-            Training, built<br /><span className="text-accent">around you.</span>
+          <h1 className="display text-5xl sm:text-7xl lg:text-8xl">
+            Personal training,<br />built <span className="text-accent">around you.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-lg text-muted">
-            Personal trainers, Pilates instructors and online coaches who shape every session around your goals. Compare specialisms and reviews, then get in touch when you’re ready.
-          </p>
           <form action="/trainers" className="mt-8 flex max-w-3xl flex-col gap-2 rounded-3xl border border-line bg-paper p-2 text-ink shadow-sm sm:flex-row sm:rounded-full">
             <input name="location" placeholder="Postcode or town" aria-label="Postcode or town" className="flex-1 rounded-full px-5 py-3 text-base outline-none" />
             <select name="goal" defaultValue="" aria-label="Goal" className="rounded-full bg-soft px-5 py-3 text-base outline-none sm:w-56">
