@@ -11,8 +11,8 @@ import { Avatar } from "@/components/TrainerCard";
 import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
 import { abs } from "@/lib/site";
 import { allTownStats, countySlug, townFor } from "@/lib/stats";
-import { MIN_TRAINERS } from "@/lib/topics";
-import { getTrainer, isThin, type Trainer } from "@/lib/trainers";
+import { MIN_TRAINERS, TOWN_RADIUS } from "@/lib/topics";
+import { cachedSearch, getTrainer, isThin, type Trainer } from "@/lib/trainers";
 import { CITIES } from "@/lib/taxonomy";
 
 // years_experience was recorded in 2026; show a start year so it never goes stale.
@@ -25,13 +25,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!t) return {};
   return {
     title: `${t.name}, personal trainer${t.city ? ` in ${t.city}` : ""}`,
-    description:
-      t.headline ??
-      `${t.name} is an independent trainer${t.city ? ` in ${t.city}` : ""}${t.styles.length ? ` specialising in ${t.styles.slice(0, 3).map((s) => nameFor(TRAINING_STYLES, s).toLowerCase()).join(", ")}` : ""}. See their specialisms and get in touch directly.`,
+    description: describe(t),
     alternates: { canonical: `/trainers/${t.slug}` },
     // Sample listings and profiles with too little detail stay out of Google; town pages cover them.
     robots: t.is_sample || isThin(t) ? { index: false, follow: true } : undefined,
   };
+}
+
+/** Meta description from facts on the page: the headline, then how and where they train, kept near 155 characters. */
+function describe(t: Trainer) {
+  const styles = t.styles.slice(0, 3).map((s) => nameFor(TRAINING_STYLES, s).toLowerCase());
+  const lead = t.headline?.replace(/\.?$/, ".") ??
+    `${t.business_name && t.business_name !== t.name ? t.business_name : t.name}: independent trainer${t.city ? ` in ${t.city}` : ""}${styles.length ? ` for ${styles.join(", ")}` : ""}.`;
+  const modes = [t.in_person && t.city && `in person in ${t.city}`, t.home_visits && "home visits", t.online && "online coaching"].filter(Boolean) as string[];
+  const extra = modes.length ? ` Offers ${modes.join(", ").replace(/, ([^,]*)$/, " and $1")}.` : "";
+  const tail = " See specialisms and contact them directly.";
+  return [lead, extra, tail].reduce((acc, part) => (acc.length + part.length <= 160 ? acc + part : acc), "");
 }
 
 /** LocalBusiness data for Google: only facts shown on the page, and reviews only when real ones exist. */
@@ -82,7 +91,17 @@ export default async function TrainerPage({ params }: Props) {
     notFound();
   }
   const town = townFor(t.city);
-  const stats = town ? await allTownStats() : null;
+  const [stats, near] = town
+    ? await Promise.all([allTownStats(), cachedSearch({ lat: town.lat, lng: town.lng, radius: TOWN_RADIUS })])
+    : [null, null];
+  // Up to six other trainers near the same town, ones sharing a style first, for people comparing options.
+  const shared = (o: { styles: string[] }) => o.styles.filter((s) => t.styles.includes(s)).length;
+  const nearby = (near?.trainers ?? [])
+    .filter((o) => o.slug !== t.slug && !o.is_sample)
+    .map((o, i) => ({ o, i }))
+    .sort((a, b) => shared(b.o) - shared(a.o) || a.i - b.i)
+    .slice(0, 6)
+    .map(({ o }) => o);
   // Specialism links go to this trainer's town page for it when that page exists, otherwise the UK-wide page.
   const topicHref = (slug: string) =>
     town && (stats?.[town.slug]?.topics[slug] ?? 0) >= MIN_TRAINERS ? `/locations/${town.slug}/${slug}` : `/specialisms/${slug}`;
@@ -268,9 +287,25 @@ export default async function TrainerPage({ params }: Props) {
 
       {town && (
         <section className="border-t border-line">
-          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-10">
-            <p className="display text-2xl">More independent trainers near {town.name}</p>
-            <Link href={`/locations/${town.slug}`} className="btn-ghost">See trainers in {town.name}</Link>
+          <div className="mx-auto max-w-7xl px-4 py-10">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <h2 className="display text-2xl">Other independent trainers near {town.name}</h2>
+              <Link href={`/locations/${town.slug}`} className="btn-ghost">See all trainers in {town.name}</Link>
+            </div>
+            {nearby.length > 0 && (
+              <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {nearby.map((o) => (
+                  <li key={o.slug}>
+                    <Link href={`/trainers/${o.slug}`} className="block rounded-2xl border border-line p-4 hover:border-ink">
+                      <span className="font-semibold">{o.name}</span>
+                      <span className="mt-1 block text-sm text-muted">
+                        {[o.city, o.styles.slice(0, 2).map((s) => nameFor(TRAINING_STYLES, s)).join(", ")].filter(Boolean).join(" · ")}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </section>
       )}

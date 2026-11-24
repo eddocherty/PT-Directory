@@ -57,10 +57,10 @@ export function Results({
   const toolbar = (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <p className="text-lg font-semibold">
+        <h2 className="text-lg font-semibold">
           {total} {total === 1 ? "trainer" : "trainers"}
           {pages > 1 && <span className="ml-2 text-sm font-normal text-muted">showing {from} to {to}</span>}
-        </p>
+        </h2>
         {origin ? (
           <p className="text-sm text-muted">
             Sorted by distance, <span className="font-semibold text-ink">nearest to {origin} first</span>

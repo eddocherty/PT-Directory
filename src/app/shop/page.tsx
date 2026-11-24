@@ -36,7 +36,7 @@ export default function Shop() {
           {PRODUCTS.map((p) => (
             <Link key={p.slug} href={`/shop/${p.slug}`} className="group flex min-w-0 flex-col">
               <div className="overflow-hidden rounded-2xl bg-soft p-6 transition group-hover:bg-zap">
-                <PlanCover p={p} className="mx-auto max-w-[15rem] transition group-hover:-translate-y-1" />
+                <PlanCover p={p} className="mx-auto max-w-[15rem] transition group-hover:-translate-y-1" sizes="240px" />
               </div>
               <p className="eyebrow mt-4 text-muted">{p.level} · {p.pages} pages</p>
               <h2 className="display mt-1 text-2xl">{p.name}</h2>

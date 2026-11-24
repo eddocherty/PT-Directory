@@ -42,7 +42,7 @@ export function ShopResultsCard({ goals, styles }: { goals?: string[]; styles?: 
       href={`/shop/${p.slug}`}
       className="group col-span-full flex items-center gap-4 rounded-3xl bg-zap p-4 transition hover:bg-[#d8e4fa] sm:gap-6 sm:p-6"
     >
-      <div className="w-16 shrink-0 sm:w-20"><PlanCover p={p} className="rounded-lg" /></div>
+      <div className="w-16 shrink-0 sm:w-20"><PlanCover p={p} className="rounded-lg" sizes="80px" /></div>
       <div className="min-w-0 flex-1">
         <p className="eyebrow text-accent">Not ready to book a trainer?</p>
         <p className="display mt-1 text-xl sm:text-2xl">Try our {p.short.toLowerCase()} first, for just {formatPrice(p.price)}</p>
@@ -58,7 +58,7 @@ export function ShopProfileCard({ goals, styles }: { goals?: string[]; styles?: 
   const p = pickPlan(goals, styles);
   return (
     <Link href={`/shop/${p.slug}`} className="group mt-4 flex items-center gap-4 rounded-3xl border border-line p-4 transition hover:border-ink">
-      <div className="w-14 shrink-0"><PlanCover p={p} className="rounded-md" /></div>
+      <div className="w-14 shrink-0"><PlanCover p={p} className="rounded-md" sizes="56px" /></div>
       <div className="min-w-0">
         <p className="text-xs font-semibold text-accent">Not ready to commit yet?</p>
         <p className="mt-0.5 text-sm font-semibold">Or start on your own with our {p.short.toLowerCase()}, {formatPrice(p.price)}</p>

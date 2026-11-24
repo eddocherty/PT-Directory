@@ -35,7 +35,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
         <Link href="/shop" className="text-sm font-medium text-muted hover:text-ink"><Arrow dir="left" className="mr-1 h-3.5 w-3.5" />All plans</Link>
         <div className="mt-6 grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
           <div className="rounded-3xl bg-soft p-8">
-            <PlanCover p={p} className="mx-auto max-w-sm" />
+            <PlanCover p={p} className="mx-auto max-w-sm" sizes="384px" eager />
           </div>
           <div>
             <p className="eyebrow text-accent">{p.short} · PDF</p>
@@ -86,7 +86,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
           <div className="mt-6 grid gap-5 sm:grid-cols-3">
             {others.map((o) => (
               <Link key={o.slug} href={`/shop/${o.slug}`} className="group flex items-center gap-4 rounded-2xl bg-paper p-4 transition hover:-translate-y-0.5">
-                <div className="w-20 shrink-0"><PlanCover p={o} className="rounded-lg" /></div>
+                <div className="w-20 shrink-0"><PlanCover p={o} className="rounded-lg" sizes="80px" /></div>
                 <div className="min-w-0">
                   <p className="font-semibold group-hover:text-accent">{o.name}</p>
                   <p className="text-sm text-muted">{formatPrice(o.price)}</p>
