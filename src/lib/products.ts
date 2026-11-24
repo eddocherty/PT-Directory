@@ -21,7 +21,7 @@ export const PRODUCTS: Product[] = [
     description:
       "A confidence-building plan for anyone new to the gym. Three full-body sessions a week, every exercise explained in plain English.",
     price: 600,
-    file: "train-local-beginner-gym-plan.pdf",
+    file: "localpt-beginner-gym-plan.pdf",
     pages: 8,
     level: "Beginner",
     inside: [
@@ -40,7 +40,7 @@ export const PRODUCTS: Product[] = [
     description:
       "A gentle 12-week plan to rebuild your pelvic floor, core and everyday strength, for after your postnatal check and GP clearance.",
     price: 700,
-    file: "train-local-postnatal-return-plan.pdf",
+    file: "localpt-postnatal-return-plan.pdf",
     pages: 9,
     level: "Postnatal",
     inside: [
@@ -59,7 +59,7 @@ export const PRODUCTS: Product[] = [
     description:
       "Simple, balanced high-protein eating for gym-goers. Easy meals, a week of ideas, recipes and a shopping list. No calorie counting.",
     price: 500,
-    file: "train-local-high-protein-guide.pdf",
+    file: "localpt-high-protein-guide.pdf",
     pages: 7,
     level: "All levels",
     inside: [
@@ -78,7 +78,7 @@ export const PRODUCTS: Product[] = [
     description:
       "An 8-week strength plan you can do at home with just a pair of dumbbells. Upper, lower and full-body days that get harder every week.",
     price: 600,
-    file: "train-local-dumbbell-only-plan.pdf",
+    file: "localpt-dumbbell-only-plan.pdf",
     pages: 7,
     level: "Beginner to intermediate",
     inside: [
@@ -97,7 +97,7 @@ export const PRODUCTS: Product[] = [
     description:
       "A 12-week plan to take you from regular 5K runner to half marathon finisher, with strength sessions, fuelling tips and a race-day checklist.",
     price: 700,
-    file: "train-local-first-half-marathon-plan.pdf",
+    file: "localpt-first-half-marathon-plan.pdf",
     pages: 7,
     level: "Can run 5K",
     inside: [

@@ -1,3 +1,4 @@
+import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
 import { FilterDrawer } from "./FilterDrawer";
 import { FilterForm } from "./FilterForm";
 import { Results } from "./Results";
@@ -8,9 +9,13 @@ import type { SearchFilters, TrainerSummary } from "@/lib/trainers";
 const KEEP_OUT = new Set(["location", "radius", "page"]);
 
 export function SearchLayout({
-  eyebrow, title, subtitle, filters, action, hideLocation, trainers, total, params, origin,
+  eyebrow, crumbs, title, subtitle, intro, footer, filters, action, hideLocation, trainers, total, params, origin,
 }: {
-  eyebrow: string; title: string; subtitle: string; filters: SearchFilters & { location?: string };
+  eyebrow?: string; crumbs?: Crumb[]; title: string; subtitle: string;
+  /** Extra copy under the subtitle, such as real numbers for the town. */
+  intro?: React.ReactNode;
+  /** Sections after the results, such as links to nearby towns. */
+  footer?: React.ReactNode; filters: SearchFilters & { location?: string };
   action: string; hideLocation?: boolean; trainers: TrainerSummary[]; total: number; params: RawParams;
   /** Place the results are measured from. When set, results are sorted nearest first. */
   origin?: string;
@@ -22,9 +27,11 @@ export function SearchLayout({
     <>
       <section className="border-b border-line bg-soft text-ink">
         <div className="mx-auto max-w-7xl px-4 py-8 sm:py-12">
-          <p className="eyebrow text-accent">{eyebrow}</p>
-          <h1 className="display mt-3 text-3xl sm:text-5xl">{title}</h1>
-          <p className="mt-3 text-muted">{subtitle}</p>
+          {crumbs && <Breadcrumbs items={crumbs} className="mb-4" />}
+          {eyebrow && <p className="eyebrow text-accent">{eyebrow}</p>}
+          <h1 className={`display text-3xl sm:text-5xl ${eyebrow ? "mt-3" : ""}`}>{title}</h1>
+          <p className="mt-3 max-w-2xl text-muted">{subtitle}</p>
+          {intro}
 
           {/* Quick where + how far bar, keeps any other filters already chosen */}
           <form action={action} className="mt-6 flex max-w-2xl flex-col gap-2 sm:flex-row">
@@ -70,6 +77,7 @@ export function SearchLayout({
           />
         </section>
       </div>
+      {footer}
     </>
   );
 }

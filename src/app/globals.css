@@ -33,12 +33,12 @@ body {
   font-family: var(--font-body), system-ui, sans-serif;
 }
 
-/* Tight, confident display type */
+/* Display type: Schibsted Grotesk, a newspaper grotesque with more character than the body face */
 .display {
   font-family: var(--font-display), var(--font-body), sans-serif;
   font-weight: 700;
-  letter-spacing: -0.035em;
-  line-height: 0.98;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 .eyebrow {
   @apply text-xs font-bold uppercase tracking-[0.18em];

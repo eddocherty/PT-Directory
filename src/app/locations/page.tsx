@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { allTownStats, countySlug } from "@/lib/stats";
 import { CITIES, NATIONS } from "@/lib/taxonomy";
 
 export const metadata: Metadata = {
   title: "Find a personal trainer by county",
   description: "Pick your county, then your town or city, to find independent personal trainers near you.",
+  alternates: { canonical: "/locations" },
 };
 
-export default function LocationsPage() {
+export const revalidate = 21600;
+
+export default async function LocationsPage() {
+  const stats = await allTownStats();
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <p className="eyebrow text-accent">Locations</p>
-      <h1 className="display mt-3 text-4xl sm:text-6xl">Find trainers near you</h1>
+      <Breadcrumbs items={[{ name: "Locations", href: "/locations" }]} />
+      <h1 className="display mt-5 text-4xl sm:text-6xl">Find trainers near you</h1>
       <p className="mt-4 max-w-xl text-lg text-muted">Pick your county, then choose your town or city.</p>
 
       <nav aria-label="Jump to nation" className="mt-8 flex flex-wrap gap-2">
@@ -45,10 +51,15 @@ export default function LocationsPage() {
                         <li key={c.slug}>
                           <Link href={`/locations/${c.slug}`} className="flex items-center justify-between rounded-xl px-3 py-2 text-sm font-medium hover:bg-zap hover:text-accent">
                             {c.name}
-                            <span aria-hidden className="text-muted">→</span>
+                            <span className="text-xs tabular-nums text-muted">{stats[c.slug]?.total || ""}</span>
                           </Link>
                         </li>
                       ))}
+                      <li>
+                        <Link href={`/counties/${countySlug(county)}`} className="block rounded-xl px-3 py-2 text-sm font-semibold text-accent hover:bg-zap">
+                          All of {county}
+                        </Link>
+                      </li>
                     </ul>
                   </details>
                 );
@@ -60,7 +71,7 @@ export default function LocationsPage() {
 
       <p className="mt-12 text-sm text-muted">
         Can’t see your town? <Link href="/trainers" className="text-accent underline">Search by postcode</Link> to find trainers within a few miles, or{" "}
-        <Link href="/trainers?online=1" className="text-accent underline">train online</Link>.
+        <Link href="/online" className="text-accent underline">train online</Link>.
       </p>
     </div>
   );

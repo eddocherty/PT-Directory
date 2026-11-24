@@ -1,4 +1,4 @@
-# Train Local
+# LocalPT
 
 A directory of personal trainers across the UK. Visitors filter by location and radius, training style, fitness goal, online or in-person sessions, home visits, price and trainer gender.
 
@@ -20,15 +20,23 @@ Until Supabase env vars are set, the site runs on the fictional sample listings 
 
 | Route | What it does |
 | --- | --- |
-| `/` | Hero search, browse by style, popular cities |
-| `/trainers` | Search with every filter. Filters live in the URL, so every result page can be shared and indexed. |
-| `/trainers/[slug]` | Trainer profile, plus "claim" and "remove" links |
-| `/locations`, `/locations/[city]` | City landing pages for SEO |
-| `/for-trainers` | Claim or add a profile |
-| `/remove` | Opt-out request |
+| `/` | Hero search, UK town map, browse by style and goal, popular towns |
+| `/trainers` | Search with every filter. Only the unfiltered page is indexed; filtered views are `noindex, follow`. |
+| `/trainers/[slug]` | Trainer profile with breadcrumbs, LocalBusiness structured data and a removal link |
+| `/locations`, `/locations/[town]` | Town pages with real counts, specialism links and nearby towns |
+| `/locations/[town]/[specialism]` | Town × specialism landing pages. They exist only with 3+ trainers (`MIN_TRAINERS` in `src/lib/topics.ts`). |
+| `/counties/[county]` | County hubs linking every town |
+| `/specialisms`, `/specialisms/[specialism]` | UK-wide specialism pages linking each town page |
+| `/online` | Online coaches across the UK |
+| `/sitemap.xml`, `/robots.txt` | Built from live data. Previews are blocked from indexing. |
+| `/remove` | Opt-out and correction requests |
 | `/privacy` | Draft UK GDPR privacy notice. Get it reviewed before launch. |
 | `/shop`, `/shop/[slug]` | Downloadable training plans, sold through Stripe Checkout |
 | `/shop/thanks`, `/api/download` | Post-payment download. Every request is checked with Stripe first. |
+
+## Domain and SEO
+
+The site's home is **localpt.co.uk**. Canonical links, the sitemap and structured data use it automatically once it is the project's production domain in Vercel (`VERCEL_PROJECT_PRODUCTION_URL`). From then on, the old `*.vercel.app` address redirects there permanently (see `next.config.ts`). Town and specialism counts are cached for six hours (`src/lib/stats.ts`).
 
 ## Admin area
 
