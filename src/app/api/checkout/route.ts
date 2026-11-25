@@ -26,6 +26,8 @@ export async function POST(req: Request) {
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
+      // UK-only shop priced in pounds: don't let Stripe offer overseas buyers their own currency (it added a 4% fee).
+      adaptive_pricing: { enabled: false },
       line_items: [{
         quantity: 1,
         price_data: {

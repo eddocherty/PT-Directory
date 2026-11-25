@@ -34,20 +34,26 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en-GB">
       <body className={`${redHat.variable} antialiased min-h-screen flex flex-col`}>
+        <a href="#main" className="sr-only z-50 bg-ink px-4 py-2 text-paper focus:not-sr-only focus:fixed focus:left-2 focus:top-2">Skip to content</a>
         <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur">
           <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
             <Link href="/" aria-label="Home"><Logo /></Link>
-            <div className="flex items-center gap-3.5 text-sm font-medium sm:gap-6">
-              <Link href="/online" className="text-muted hover:text-ink">Online</Link>
-              <Link href="/locations" className="hidden text-muted hover:text-ink sm:inline">Locations</Link>
-              <Link href="/specialisms" className="hidden text-muted hover:text-ink md:inline">Specialisms</Link>
-              <Link href="/shop" className="text-muted hover:text-ink">Plans <span className="ml-1 hidden text-xs font-semibold text-accent sm:inline">from {FROM_PRICE}</span></Link>
+            {/* Fits a 320px-wide phone: tighter gaps and a shorter button label below 385px. Links get extra
+                invisible padding (py-3 -my-3) so they're comfortable to tap without changing the layout. */}
+            <div className="flex items-center gap-3 text-sm font-medium min-[385px]:gap-3.5 sm:gap-6">
+              <Link href="/online" className="-my-3 py-3 text-muted hover:text-ink">Online</Link>
+              <Link href="/locations" className="-my-3 hidden py-3 text-muted hover:text-ink sm:inline">Locations</Link>
+              <Link href="/specialisms" className="-my-3 hidden py-3 text-muted hover:text-ink md:inline">Specialisms</Link>
+              <Link href="/shop" className="-my-3 py-3 text-muted hover:text-ink">Plans <span className="ml-1 hidden text-xs font-semibold text-accent sm:inline">from {FROM_PRICE}</span></Link>
               <ShortlistNavLink />
-              <Link href="/trainers" className="btn whitespace-nowrap py-1 text-sm">Find a trainer</Link>
+              <Link href="/trainers" className="btn whitespace-nowrap py-1 text-sm">
+                <span className="min-[385px]:hidden">Search</span>
+                <span className="hidden min-[385px]:inline">Find a trainer</span>
+              </Link>
             </div>
           </nav>
         </header>
-        <main className="flex-1">{children}</main>
+        <main id="main" tabIndex={-1} className="flex-1 outline-none">{children}</main>
         <footer className="border-t border-paper/10 bg-ink text-paper">
           <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-[2fr_1fr_1fr]">
             <div>

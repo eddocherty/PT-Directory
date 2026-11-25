@@ -100,8 +100,8 @@ export default async function Home() {
               >
                 <span className="text-sm font-medium opacity-90">{n > 0 ? `${n} trainers` : ""}</span>
                 <span className="flex items-end justify-between gap-3">
-                  <span className="display text-2xl sm:text-4xl">{TRAINING_STYLES.find((x) => x.slug === slug)?.name ?? topic.name}</span>
-                  <Arrow className="mb-1 h-5 w-5 transition group-hover:translate-x-1" />
+                  <span className="display min-w-0 text-xl [overflow-wrap:anywhere] min-[360px]:text-2xl sm:text-4xl">{TRAINING_STYLES.find((x) => x.slug === slug)?.name ?? topic.name}</span>
+                  <Arrow className="mb-1 h-5 w-5 shrink-0 transition group-hover:translate-x-1" />
                 </span>
               </Link>
             );

@@ -1,17 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /** Mobile-only slide-up drawer that holds the filter form. */
 export function FilterDrawer({ active, children }: { active: number; children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
+  const opener = useRef<HTMLButtonElement>(null);
+  const closer = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
+    closer.current?.focus(); // keyboard and screen-reader users land inside the drawer
+    const back = opener.current;
     return () => {
+      back?.focus({ preventScroll: true });
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
@@ -20,7 +25,9 @@ export function FilterDrawer({ active, children }: { active: number; children: R
   return (
     <>
       <button
+        ref={opener}
         type="button"
+        aria-expanded={open}
         onClick={() => setOpen(true)}
         className="flex w-full items-center gap-2 border-y border-ink py-3 text-sm font-semibold"
       >
@@ -40,11 +47,11 @@ export function FilterDrawer({ active, children }: { active: number; children: R
           role="dialog"
           aria-modal="true"
           aria-label="Filters"
-          className={`absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col border-t-2 border-ink bg-paper shadow-2xl transition-transform duration-300 ${open ? "translate-y-0" : "translate-y-full"}`}
+          className={`absolute inset-x-0 bottom-0 flex max-h-[88vh] supports-[height:100dvh]:max-h-[88dvh] flex-col border-t-2 border-ink bg-paper shadow-2xl transition-transform duration-300 ${open ? "translate-y-0" : "translate-y-full"}`}
         >
           <div className="flex items-center justify-between border-b border-line px-5 py-4">
             <p className="display text-xl">Filters</p>
-            <button type="button" onClick={() => setOpen(false)} className="p-2 text-xl leading-none hover:text-accent" aria-label="Close filters">
+            <button ref={closer} type="button" onClick={() => setOpen(false)} className="p-2 text-xl leading-none hover:text-accent" aria-label="Close filters">
               ×
             </button>
           </div>

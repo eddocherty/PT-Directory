@@ -50,6 +50,27 @@ body {
 .input {
   @apply w-full border border-line bg-paper px-4 py-2.5 text-sm outline-none transition focus:border-ink;
 }
+/* iPhones zoom the whole page in when you tap a box whose text is under 16px, so touch screens get 16px. */
+@media (pointer: coarse) {
+  .input { font-size: 16px; }
+}
+/* Drop-downs: Safari draws its own grey rounded box around a <select>, which clashes with the square,
+   underlined boxes everywhere else. Remove the built-in look in every browser and draw one small chevron. */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 0;
+  padding-right: 1.75rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23111214' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 6l4 4 4-4'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.25rem center;
+  background-size: 1rem;
+}
+select.input { padding-right: 2.25rem; background-position: right 0.75rem center; }
+/* iPhones add an inner shadow to text boxes unless their built-in look is switched off. */
+input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), textarea { -webkit-appearance: none; appearance: none; }
+/* Safari and older Chrome ignore list-style on <summary>, so hide their built-in triangle too. */
+summary.list-none::-webkit-details-marker { display: none; }
 /*
  * Buttons and tags, "timetable" style: no capsules or boxes. A button is bold words with a thick bar
  * underneath and an arrow; a tag is small capitals after a blue slash. Lists of links are ruled rows (see LinkList).

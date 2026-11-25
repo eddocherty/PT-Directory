@@ -11,7 +11,7 @@ export default function MatchPage() {
   return (
     <section className="min-h-[70vh] bg-soft">
       <div className="mx-auto max-w-7xl px-4 py-10 sm:py-16">
-        <p className="eyebrow mx-auto mb-6 max-w-2xl text-accent">Find your training match · about a minute</p>
+        <h1 className="eyebrow mx-auto mb-6 max-w-2xl text-accent">Find your training match · about a minute</h1>
         <Quiz />
       </div>
     </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Arrow } from "./Arrow";
 import { QUESTIONS, type Answers } from "@/lib/match";
 
@@ -13,6 +13,17 @@ export function Quiz() {
   const [loc, setLoc] = useState("");
   const total = QUESTIONS.length + 1;
   const q = QUESTIONS[step];
+  // Each answer swaps the question, so move keyboard and screen-reader focus to the new one
+  // (otherwise focus drops back to the top of the page). Skipped on first load.
+  const stage = useRef<HTMLFieldSetElement>(null);
+  const moved = useRef(false);
+  useEffect(() => {
+    if (!moved.current) {
+      moved.current = true;
+      return;
+    }
+    if (QUESTIONS[step]) stage.current?.focus({ preventScroll: true });
+  }, [step]);
 
   const finish = (location: string) => {
     const p = new URLSearchParams(Object.entries({ ...answers, loc: location.trim() }).filter(([, v]) => v) as [string, string][]);
@@ -34,7 +45,7 @@ export function Quiz() {
       </div>
 
       {q ? (
-        <fieldset key={q.key} className="mt-8">
+        <fieldset key={q.key} ref={stage} tabIndex={-1} className="mt-8 outline-none">
           <legend className="display text-3xl sm:text-5xl">{q.title}</legend>
           <div className="mt-8 grid gap-3 sm:grid-cols-2">
             {q.choices.map((c) => {
