@@ -131,7 +131,7 @@ export default async function TrainerPage({ params }: Props) {
       <RememberViewed t={saved} />
       {/* Hero */}
       <section className="bg-soft text-ink">
-        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_1fr] md:items-end md:py-14">
+        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] md:items-end md:py-14">
           <div className="relative">
             <Avatar t={t} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
           </div>
@@ -148,7 +148,7 @@ export default async function TrainerPage({ params }: Props) {
               ]}
             />
             <div>
-              <h1 className="display text-5xl sm:text-6xl">{t.name}</h1>
+              <h1 className="display text-4xl [overflow-wrap:anywhere] min-[400px]:text-5xl sm:text-6xl">{t.name}</h1>
               <p className="mt-3 text-lg text-muted">{where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
             </div>
             {t.review_count > 0 && t.rating_avg != null && (

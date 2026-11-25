@@ -51,10 +51,10 @@ export function HeartButton({ t, variant = "round", className = "" }: { t: Saved
 export function ShortlistNavLink() {
   const n = useSaved("shortlist").length;
   return (
-    <Link href="/shortlist" className="relative text-muted hover:text-ink" aria-label={`Your shortlist${n ? `, ${n} saved` : ""}`} title="Your shortlist">
+    <Link href="/shortlist" className="relative -m-2 p-2 text-muted hover:text-ink" aria-label={`Your shortlist${n ? `, ${n} saved` : ""}`} title="Your shortlist">
       <HeartIcon filled={n > 0} className={`h-5 w-5 ${n ? "text-accent" : ""}`} />
       {n > 0 && (
-        <span className="absolute -right-2.5 -top-2 text-[11px] font-bold tabular-nums text-accent">{n}</span>
+        <span className="absolute -right-0.5 top-0 text-[11px] font-bold tabular-nums text-accent">{n}</span>
       )}
     </Link>
   );
@@ -101,7 +101,7 @@ export function RecentlyViewed({ exclude, title = "Pick up where you left off" }
         <Link href="/shortlist" className="text-sm font-semibold text-accent hover:underline">Your shortlist <Arrow className="h-3 w-3" /></Link>
       </div>
       <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {list.map((t) => <li key={t.slug}><MiniCard t={t} /></li>)}
+        {list.map((t) => <li key={t.slug} className="min-w-0"><MiniCard t={t} /></li>)}
       </ul>
     </section>
   );
@@ -130,7 +130,7 @@ export function ShortlistBoard() {
             <button type="button" onClick={() => clearSaved("shortlist")} className="text-sm font-semibold text-muted underline hover:text-ink">Clear shortlist</button>
           </div>
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {list.map((t) => <li key={t.slug}><MiniCard t={t} onRemove={() => removeSaved("shortlist", t.slug)} /></li>)}
+            {list.map((t) => <li key={t.slug} className="min-w-0"><MiniCard t={t} onRemove={() => removeSaved("shortlist", t.slug)} /></li>)}
           </ul>
           <p className="mt-6 bg-zap p-4 text-sm">
             <strong>Tip:</strong> message two or three of them with the same short note about your goal and when you can train. Not sure what to ask?{" "}
@@ -142,7 +142,7 @@ export function ShortlistBoard() {
         <section className="mt-12">
           <h2 className="display text-2xl">Recently viewed</h2>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {recent.map((t) => <li key={t.slug}><MiniCard t={t} /></li>)}
+            {recent.map((t) => <li key={t.slug} className="min-w-0"><MiniCard t={t} /></li>)}
           </ul>
         </section>
       )}

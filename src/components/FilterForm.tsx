@@ -30,7 +30,7 @@ export function Pills({ name, options, selected }: { name: string; options: Opti
 function Section({ title, open = false, first = false, count, children }: { title: string; open?: boolean; first?: boolean; count?: number; children: React.ReactNode }) {
   return (
     <details open={open} className={`group py-4 ${first ? "" : "border-t border-line"}`}>
-      <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold">
+      <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold [&::-webkit-details-marker]:hidden">
         <span>
           {title}
           {count ? <span className="ml-2 text-xs font-bold tabular-nums text-accent">{count}</span> : null}
@@ -71,7 +71,7 @@ export function FilterForm({ action = "/trainers", values, hideLocation = false 
             <option value="">Any gender</option>
             {GENDERS.map((g) => <option key={g.slug} value={g.slug}>{g.name}</option>)}
           </select>
-          <input name="q" defaultValue={values.q} placeholder="Name or keyword" className="input" />
+          <input name="q" defaultValue={values.q} placeholder="Name or keyword" aria-label="Name or keyword" className="input" />
         </div>
       </Section>
 

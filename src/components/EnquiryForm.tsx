@@ -28,7 +28,7 @@ export function EnquiryForm({ slug, firstName }: { slug: string; firstName: stri
           {FITNESS_GOALS.map((g) => <option key={g.slug} value={g.name}>{g.name}</option>)}
         </select>
       </div>
-      <textarea name="message" rows={4} className="input" placeholder={`Tell ${firstName} a bit about you and what you want to achieve`} />
+      <textarea name="message" rows={4} className="input" aria-label="Your message" placeholder={`Tell ${firstName} a bit about you and what you want to achieve`} />
       {state.error && <p className="font-semibold text-red-700">{state.error}</p>}
       <button disabled={pending} className="btn">
         {pending ? "Sending…" : `Message ${firstName}`}

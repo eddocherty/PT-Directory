@@ -8,7 +8,8 @@ const EVERY_MS = 8500;
 
 /**
  * Slides one fact along every few seconds (three visible on wide screens, one on phones).
- * Pauses while hovered or focused, and stays still for anyone who has asked their device to reduce motion.
+ * Pauses while hovered or focused, stops for good once the visitor uses the arrows (so phone users, who
+ * can't hover, have a way to stop it), and stays still for anyone who has asked their device to reduce motion.
  */
 export function FactCarousel({ facts }: { facts: Fact[] }) {
   const n = facts.length;
@@ -16,6 +17,16 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
   const [animate, setAnimate] = useState(true);
   const [paused, setPaused] = useState(false);
   const [still, setStill] = useState(false);
+  const [stopped, setStopped] = useState(false); // visitor used the arrows: leave it where they put it
+  const [perView, setPerView] = useState(3); // facts visible at once: 3 on wide screens, 1 on phones
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 768px)");
+    const update = () => setPerView(mq.matches ? 3 : 1);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -25,7 +36,7 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
     return () => mq.removeEventListener("change", update);
   }, []);
 
-  const moving = n > 1 && !paused && !still;
+  const moving = n > 1 && !paused && !still && !stopped;
   useEffect(() => {
     if (!moving) return;
     const t = setInterval(() => {
@@ -44,6 +55,7 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
   };
 
   const go = (d: number) => {
+    setStopped(true);
     setAnimate(!still);
     setI((v) => (((v + d) % n) + n) % n);
   };
@@ -59,9 +71,9 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
         </p>
         {n > 1 && (
           <div className="flex items-center gap-4 text-xs font-semibold tabular-nums text-muted">
-            <span aria-live="polite">{String(shown).padStart(2, "0")} / {String(n).padStart(2, "0")}</span>
-            <button type="button" onClick={() => go(-1)} aria-label="Previous fact" className="hover:text-accent"><Arrow dir="left" /></button>
-            <button type="button" onClick={() => go(1)} aria-label="Next fact" className="hover:text-accent"><Arrow /></button>
+            <span aria-live={moving ? "off" : "polite"}>{String(shown).padStart(2, "0")} / {String(n).padStart(2, "0")}</span>
+            <button type="button" onClick={() => go(-1)} aria-label="Previous fact" className="-m-2 p-2 hover:text-accent"><Arrow dir="left" /></button>
+            <button type="button" onClick={() => go(1)} aria-label="Next fact" className="-m-2 p-2 hover:text-accent"><Arrow /></button>
           </div>
         )}
       </div>
@@ -80,8 +92,8 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
           onTransitionEnd={onEnd}
         >
           {track.map((f, k) => (
-            <li key={k} className="w-full shrink-0 md:w-1/3 md:border-l md:border-line md:px-6" aria-hidden={k < i || k >= i + 3 ? true : undefined}>
-              <Link href={f.href} tabIndex={k < i || k >= i + 3 ? -1 : undefined} className="group block">
+            <li key={k} className="w-full shrink-0 md:w-1/3 md:border-l md:border-line md:px-6" aria-hidden={k < i || k >= i + perView ? true : undefined}>
+              <Link href={f.href} tabIndex={k < i || k >= i + perView ? -1 : undefined} className="group block">
                 <span className="display block text-4xl text-accent tabular-nums sm:text-5xl">{f.big}</span>
                 <span className="mt-2 block text-[15px] leading-snug">{f.text}</span>
                 <span className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-muted group-hover:text-ink">{f.cta} <Arrow className="h-3 w-3 transition group-hover:translate-x-0.5" /></span>

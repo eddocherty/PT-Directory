@@ -1,17 +1,20 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type Tip = { name: string; count: string; x: number; y: number };
+type Tip = { name: string; count: string; x: number; y: number; tapAgain?: boolean };
 
 const SHOW_MS = 2600; // how long an automatic label stays up
 const GAP_MS = 1400; // pause between automatic labels
 const RESUME_MS = 1500; // wait after the pointer leaves before going back to automatic
+const TOUCH_RESUME_MS = 5000; // after a tap, keep the label up this long before going back to automatic
 
 /**
  * Wraps the UK map and shows a small floating label for a town dot.
  * On its own it drifts slowly between random towns, fading each label in and out. As soon as the
  * pointer (or keyboard focus) is on the map, it stops and follows the visitor instead, then picks up
  * again a moment after they leave. It stays still for anyone who has asked their device to reduce motion.
+ * Touch screens can't hover, so there the first tap on a dot shows its label ("Tap again to open") and a
+ * second tap on the same dot opens the town page.
  * The dots carry their name and count as data attributes, so the map itself stays a server component.
  */
 export function MapHover({ className = "", children }: { className?: string; children: React.ReactNode }) {
@@ -21,7 +24,7 @@ export function MapHover({ className = "", children }: { className?: string; chi
   const [visible, setVisible] = useState(false);
   const [manual, setManual] = useState(false);
 
-  const point = useCallback((el: Element | null) => {
+  const point = useCallback((el: Element | null, tapAgain = false) => {
     active.current?.classList.remove("is-active");
     active.current = el;
     if (!el || !box.current) return setVisible(false);
@@ -30,7 +33,7 @@ export function MapHover({ className = "", children }: { className?: string; chi
     const r = dot.getBoundingClientRect();
     const b = box.current.getBoundingClientRect();
     const d = (el as HTMLElement).dataset;
-    setTip({ name: d.town ?? "", count: d.count ?? "", x: r.left + r.width / 2 - b.left, y: r.top - b.top });
+    setTip({ name: d.town ?? "", count: d.count ?? "", x: r.left + r.width / 2 - b.left, y: r.top - b.top, tapAgain });
     setVisible(true);
   }, []);
 
@@ -75,16 +78,38 @@ export function MapHover({ className = "", children }: { className?: string; chi
     clearTimeout(resume.current);
     setManual(true);
   };
+
+  // Touch: first tap on a dot shows the label instead of following the link; a second tap on it opens the page.
+  const touching = useRef(false);
+  const onPointerDown = (e: React.PointerEvent) => {
+    touching.current = e.pointerType !== "mouse";
+  };
+  const onClickCapture = (e: React.MouseEvent) => {
+    if (!touching.current) return;
+    touching.current = false; // a later keyboard "click" (Enter) should just open the link
+    const dot = (e.target as Element | null)?.closest?.("[data-town]");
+    if (!dot || (dot === active.current && manual)) return; // second tap: let the link open
+    e.preventDefault();
+    clearTimeout(resume.current);
+    setManual(true);
+    point(dot, true);
+    resume.current = setTimeout(() => {
+      point(null);
+      setManual(false);
+    }, TOUCH_RESUME_MS);
+  };
   useEffect(() => () => clearTimeout(resume.current), []);
 
   return (
     <div
       ref={box}
       className={className}
-      onPointerEnter={enter}
-      onPointerOver={(e) => fromEvent(e.target)}
-      onPointerLeave={leave}
-      onFocus={(e) => fromEvent(e.target)}
+      onPointerEnter={(e) => e.pointerType === "mouse" && enter()}
+      onPointerOver={(e) => e.pointerType === "mouse" && fromEvent(e.target)}
+      onPointerLeave={(e) => e.pointerType === "mouse" && leave()}
+      onPointerDown={onPointerDown}
+      onClickCapture={onClickCapture}
+      onFocus={(e) => !touching.current && fromEvent(e.target)}
       onBlur={leave}
     >
       {children}
@@ -97,6 +122,7 @@ export function MapHover({ className = "", children }: { className?: string; chi
           <div className="border-l-4 border-accent bg-ink px-3 py-1.5 text-paper shadow-lg">
             <span className="block text-sm font-bold leading-tight">{tip.name}</span>
             <span className="block text-[11px] font-medium text-paper/70">{tip.count}</span>
+            {tip.tapAgain && <span className="block text-[11px] font-semibold text-[#9db8f2]">Tap again to open</span>}
           </div>
           <div className="mx-auto h-2 w-px bg-ink" />
         </div>

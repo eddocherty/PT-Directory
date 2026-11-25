@@ -17,7 +17,7 @@ const UK_OUTLINE = "M5.9 58.2L6.6 58.5L7.1 58.3L7.3 57.8L7.5 57.2L8.7 57.2L9.3 5
 export function UkTownMap({ stats, className = "" }: { stats: Record<string, TownStats>; className?: string }) {
   return (
     <MapHover className={className}>
-    <svg viewBox={`-1 -1 ${W + 2} ${H + 2}`} className="h-full w-auto overflow-visible" role="img" aria-label={`Map of the UK towns and cities ${BRAND.name} covers`}>
+    <svg viewBox={`-1 -1 ${W + 2} ${H + 2}`} className="h-full w-auto overflow-visible" role="group" aria-label={`Map of the UK towns and cities ${BRAND.name} covers`}>
       <path d={UK_OUTLINE} className="fill-paper stroke-accent/40" strokeWidth={0.3} strokeLinejoin="round" />
       {CITIES.map((c) => {
         const n = stats[c.slug]?.total ?? 0;
