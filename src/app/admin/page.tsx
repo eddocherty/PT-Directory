@@ -2,7 +2,7 @@ import Link from "next/link";
 import { requireAdmin } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/admin-db";
 import { loadDashboard, loadInbox, loadLeads, loadTrainers, OUTREACH_STATUSES, type Dashboard } from "@/lib/admin-data";
-import { logoutAction, setRequestStatus } from "./actions";
+import { logoutAction, pingIndexNowAction, setRequestStatus } from "./actions";
 import { DailyChart } from "@/components/admin/DailyChart";
 import { TrainerTable } from "@/components/admin/TrainerTable";
 import { LeadTable } from "@/components/admin/LeadTable";
@@ -18,7 +18,7 @@ const TABS = [
 ] as const;
 const RANGES = [7, 30, 90, 365];
 
-type Props = { searchParams: Promise<{ tab?: string; days?: string }> };
+type Props = { searchParams: Promise<{ tab?: string; days?: string; indexnow?: string }> };
 
 const fmt = (n: number) => n.toLocaleString("en-GB");
 
@@ -37,10 +37,13 @@ export default async function AdminPage({ searchParams }: Props) {
           <h1 className="display mt-1 text-4xl">Dashboard</h1>
         </div>
         <div className="flex items-center gap-2">
+          <form action={pingIndexNowAction}><button className="btn-ghost px-4 py-2 text-xs" title="Tells Bing about every page on the site">Send pages to Bing</button></form>
           <Link href="/admin/password" className="btn-ghost px-4 py-2 text-xs">Change password</Link>
           <form action={logoutAction}><button className="btn-ghost px-4 py-2 text-xs">Log out</button></form>
         </div>
       </div>
+
+      {sp.indexnow && <p role="status" className="mt-4 bg-soft px-4 py-3 text-sm">{sp.indexnow.slice(0, 200)}</p>}
 
       <nav className="mt-6 flex flex-wrap gap-2 text-sm font-semibold">
         {TABS.map((t) => (

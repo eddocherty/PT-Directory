@@ -5,7 +5,7 @@ import { LinkList, LinkSections } from "@/components/LinkList";
 import { SearchLayout } from "@/components/SearchLayout";
 import { parseFilters, type RawParams } from "@/lib/filters";
 import { abs } from "@/lib/site";
-import { allTownStats } from "@/lib/stats";
+import { allTownStats, ukCounts } from "@/lib/stats";
 import { CITIES } from "@/lib/taxonomy";
 import { MIN_TRAINERS, TOPICS, TOPIC_INTROS, lowerFirst, topicBySlug, topicParam } from "@/lib/topics";
 import { cachedSearch } from "@/lib/trainers";
@@ -16,12 +16,14 @@ type Props = { params: Promise<{ topic: string }>; searchParams: Promise<RawPara
 export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const topic = topicBySlug((await params).topic);
   if (!topic) return {};
-  const sp = await searchParams;
+  const [sp, uk] = await Promise.all([searchParams, ukCounts()]);
+  // A UK page with fewer than three trainers would be thin, so it stays out of Google until the specialism fills up.
+  const thin = (uk.topics[topic.slug] ?? 0) < MIN_TRAINERS;
   return {
     title: `${topic.people} across the UK`,
     description: TOPIC_INTROS[topic.slug]?.split(". ").slice(0, 2).join(". ").replace(/\.?$/, ".") ?? `Find independent ${lowerFirst(topic.people)} near you. Browse by town, compare specialisms and reviews, then contact trainers directly.`,
     alternates: { canonical: `/specialisms/${topic.slug}` },
-    robots: Object.keys(sp).length ? { index: false, follow: true } : undefined,
+    robots: Object.keys(sp).length || thin ? { index: false, follow: true } : undefined,
   };
 }
 

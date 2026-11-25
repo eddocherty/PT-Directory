@@ -11,7 +11,7 @@ export const BRAND = {
   /** The production domain, without https:// or www. */
   domain: "localpt.co.uk",
   /** Old addresses that should redirect to the domain once it is live. */
-  oldHosts: ["pt-directory-vf6t.vercel.app"],
+  oldHosts: ["pt-directory-vf6t.vercel.app", "www.localpt.co.uk", "localpt.uk", "www.localpt.uk"],
   /** Used in file names such as CSV exports. */
   slug: "localpt",
 };

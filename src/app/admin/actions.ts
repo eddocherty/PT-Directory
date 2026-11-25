@@ -88,3 +88,11 @@ export async function changePasswordAction(_prev: PasswordState, form: FormData)
   if (error) return { error: `Couldn’t save it: ${error.message}. Has the password SQL been run in Supabase?` };
   return { ok: true };
 }
+
+/** Admin button: tell Bing and other IndexNow engines about every page in the sitemap. */
+export async function pingIndexNowAction(): Promise<void> {
+  await requireAdmin();
+  const { submitSitemapToIndexNow } = await import("@/lib/indexnow");
+  const r = await submitSitemapToIndexNow();
+  redirect(`/admin?indexnow=${encodeURIComponent(r.message)}`);
+}
