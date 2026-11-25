@@ -97,7 +97,7 @@ export default async function TownTopicPage({ params, searchParams }: Props) {
           { name: topic.name, href: `/locations/${city.slug}/${topic.slug}` },
         ]}
         title={`${topic.people} in ${city.name}`}
-        subtitle={`${count} independent trainers within ${TOWN_RADIUS} miles of ${city.name} ${topic.kind === "home" ? "will come to your home, or train you in a local park" : `list ${topic.name.toLowerCase()} as a specialism`}${online ? `, and ${online} of those on this page also coach online` : ""}. Nearest first.`}
+        subtitle={`${count} independent trainers within ${TOWN_RADIUS} miles of ${city.name} ${topic.kind === "home" ? "will come to your home, or train you in a local park" : `list ${topic.name.toLowerCase()} as a specialism`}${online ? `, and ${online} of those on this page also coach online` : ""}.`}
         filters={f}
         action={`/locations/${city.slug}`}
         hideLocation

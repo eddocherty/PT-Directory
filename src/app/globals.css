@@ -99,6 +99,9 @@ a.chip:hover, a.chip-ink:hover { @apply text-accent; }
 /* "Did you know" timer rule */
 @keyframes fact-progress { from { width: 0; } to { width: 100%; } }
 .fact-progress { animation: fact-progress linear forwards; }
+@keyframes runner-frame { 0%, 49.9% { opacity: 1; } 50%, 100% { opacity: 0; } }
+.runner-a { animation: runner-frame 0.45s infinite; }
+.runner-b { animation: runner-frame 0.45s infinite -0.225s; }
 
 /* Map dot whose label is showing */
 .is-active circle:last-of-type { fill: var(--ink); }
