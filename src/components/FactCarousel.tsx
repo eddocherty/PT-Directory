@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Arrow } from "./Arrow";
 import type { Fact } from "@/lib/facts";
 
-const EVERY_MS = 5000;
+const EVERY_MS = 6250;
 
 /**
  * Slides one fact along every few seconds (three visible on wide screens, one on phones).
@@ -72,7 +72,7 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
       <div className="mt-5 overflow-hidden">
         <ul
           className="flex [--k:1] md:-ml-[25px] md:w-[calc(100%+25px)] md:[--k:3]"
-          style={{ transform: `translateX(calc(${-i} * 100% / var(--k)))`, transition: animate ? "transform 700ms cubic-bezier(.2,.7,.2,1)" : "none" }}
+          style={{ transform: `translateX(calc(${-i} * 100% / var(--k)))`, transition: animate ? "transform 875ms cubic-bezier(.2,.7,.2,1)" : "none" }}
           onTransitionEnd={onEnd}
         >
           {track.map((f, k) => (

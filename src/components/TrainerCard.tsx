@@ -18,7 +18,7 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
   const specialisms = [...t.styles.map((s) => nameFor(TRAINING_STYLES, s)), ...t.goals.map((g) => nameFor(FITNESS_GOALS, g))];
   return (
     <div className="group/card relative h-full">
-    <Link href={`/trainers/${t.slug}`} className="group flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-paper transition hover:-translate-y-1 hover:shadow-lg">
+    <Link href={`/trainers/${t.slug}`} className="group flex h-full flex-col overflow-hidden border border-line bg-paper transition hover:-translate-y-1 hover:shadow-lg">
       <div className="relative aspect-[4/5] overflow-hidden">
         <Avatar t={t} className="h-full w-full transition duration-500 group-hover:scale-105" />
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-2 sm:p-3">

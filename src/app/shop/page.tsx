@@ -36,7 +36,7 @@ export default function Shop() {
         <div className="grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {PRODUCTS.map((p) => (
             <Link key={p.slug} href={`/shop/${p.slug}`} className="group flex min-w-0 flex-col">
-              <div className="overflow-hidden rounded-2xl bg-soft p-6 transition group-hover:bg-zap">
+              <div className="overflow-hidden bg-soft p-6 transition group-hover:bg-zap">
                 <PlanCover p={p} className="mx-auto max-w-[15rem] transition group-hover:-translate-y-1" sizes="240px" />
               </div>
               <p className="eyebrow mt-4 text-muted">{p.level} · {p.pages} pages</p>
@@ -52,7 +52,7 @@ export default function Shop() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-accent p-8 text-paper sm:flex-row sm:items-center sm:p-10">
+        <div className="flex flex-col items-start justify-between gap-6 bg-accent p-8 text-paper sm:flex-row sm:items-center sm:p-10">
           <div>
             <h2 className="display text-3xl sm:text-4xl">Want a plan made just for you?</h2>
             <p className="mt-2 max-w-xl text-paper/80">Independent personal trainers near you can build a programme around your goals, schedule and any niggles.</p>

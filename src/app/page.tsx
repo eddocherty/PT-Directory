@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { AllFilters } from "@/components/AllFilters";
 import { ShopBanner } from "@/components/ShopPromo";
-import { FROM_PRICE } from "@/lib/products";
 import { TrainerCard } from "@/components/TrainerCard";
 import { CITIES, FITNESS_GOALS, TRAINING_STYLES } from "@/lib/taxonomy";
 import { featuredTrainers } from "@/lib/trainers";
@@ -60,31 +59,15 @@ export default async function Home() {
             </label>
             <button className="btn self-start text-lg sm:self-auto">Search</button>
           </form>
-          <ul className="mt-10 max-w-xl border-y border-ink">
-            <li>
-              <Link href="/match" className="group flex items-center justify-between gap-4 py-3.5 font-semibold hover:text-accent">
-                <span>Not sure what you need? Find your training match</span>
-                <span className="flex shrink-0 items-center gap-2 text-xs font-semibold text-muted group-hover:text-accent">1 min <Arrow className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" /></span>
-              </Link>
-            </li>
-            <li className="border-t border-line">
-              <Link href="/online" className="group flex items-center justify-between gap-4 py-3.5 font-semibold text-accent hover:text-ink">
-                <span>Or train online with a UK coach, wherever you live</span>
-                <Arrow className="h-3.5 w-3.5 shrink-0 transition group-hover:translate-x-0.5" />
-              </Link>
-            </li>
-            <li className="border-t border-line">
-              <Link href="/shop" className="group flex items-center justify-between gap-4 py-3.5 font-semibold hover:text-accent">
-                <span>Not ready for a PT? Start with a plan</span>
-                <span className="flex shrink-0 items-center gap-2 text-xs font-semibold text-muted group-hover:text-accent">from {FROM_PRICE} <Arrow className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" /></span>
-              </Link>
-            </li>
-          </ul>
-          <p className="mt-6 flex max-w-xl flex-wrap items-baseline gap-x-4 gap-y-2">
+          <Link href="/match" className="group mt-8 flex max-w-xl items-center justify-between gap-4 border-y border-ink py-3.5 font-semibold hover:text-accent">
+            <span>Not sure what you need? Find your training match</span>
+            <span className="flex shrink-0 items-center gap-2 text-xs font-semibold text-muted group-hover:text-accent">1 min <Arrow className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" /></span>
+          </Link>
+          <p className="mt-5 flex max-w-xl flex-wrap items-baseline gap-x-4 gap-y-2">
             <span className="text-xs font-medium text-muted">Popular</span>
             <Link href="/specialisms/pilates" className="chip">Pilates</Link>
             <Link href="/specialisms/bootcamp" className="chip">Bootcamps</Link>
-            {["weight-loss", "muscle-gain", "pre-post-natal", "rehab"].map((g) => (
+            {["weight-loss", "pre-post-natal", "rehab"].map((g) => (
               <Link key={g} href={`/specialisms/${g}`} className="chip">
                 {FITNESS_GOALS.find((x) => x.slug === g)?.name}
               </Link>
@@ -124,6 +107,22 @@ export default async function Home() {
             );
           })}
         </div>
+      </section>
+
+      {/* Online coaching gets its own band, so the hero stays simple */}
+      <section className="border-y border-line bg-zap">
+        <Link href="/online" className="group mx-auto flex max-w-7xl flex-col gap-5 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:gap-10">
+          <span className="flex items-baseline gap-5">
+            {uk.online > 0 && <span className="display text-5xl tabular-nums text-accent sm:text-6xl">{uk.online}</span>}
+            <span>
+              <span className="display block text-2xl sm:text-3xl">Train online with a UK coach</span>
+              <span className="mt-1 block text-muted">UK coaches listed here who also train clients online, so where you live doesn’t matter.</span>
+            </span>
+          </span>
+          <span className="inline-flex shrink-0 items-center gap-2.5 self-start border-b-4 border-accent pb-1.5 pt-2 text-[15px] font-bold group-hover:text-accent sm:self-auto">
+            See online coaches <Arrow className="h-3.5 w-3.5 transition group-hover:translate-x-0.5" />
+          </span>
+        </Link>
       </section>
 
       <ShopBanner />

@@ -45,7 +45,7 @@ body {
 }
 
 .input {
-  @apply w-full rounded-xl border border-line bg-paper px-4 py-2.5 text-sm outline-none transition focus:border-ink;
+  @apply w-full border border-line bg-paper px-4 py-2.5 text-sm outline-none transition focus:border-ink;
 }
 /*
  * Buttons and tags, "timetable" style: no capsules or boxes. A button is bold words with a thick bar
@@ -99,3 +99,6 @@ a.chip:hover, a.chip-ink:hover { @apply text-accent; }
 /* "Did you know" timer rule */
 @keyframes fact-progress { from { width: 0; } to { width: 100%; } }
 .fact-progress { animation: fact-progress linear forwards; }
+
+/* Map dot whose label is showing */
+.is-active circle:last-of-type { fill: var(--ink); }

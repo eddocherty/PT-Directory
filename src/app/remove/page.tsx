@@ -20,7 +20,7 @@ export default async function Remove({ searchParams }: { searchParams: Promise<{
           <Link href={q("")} className={`-mb-px border-b-4 py-2 text-sm font-semibold ${!correction ? "border-accent" : "border-transparent text-muted hover:text-ink"}`}>Remove my listing</Link>
           <Link href={q("correction")} className={`-mb-px border-b-4 py-2 text-sm font-semibold ${correction ? "border-accent" : "border-transparent text-muted hover:text-ink"}`}>Correct my listing</Link>
         </div>
-        <div className="mt-6 rounded-3xl bg-soft p-6">
+        <div className="mt-6 bg-soft p-6">
           {correction ? (
             <RequestForm key="c" kind="correction" listing={listing} cta="Send correction" />
           ) : (

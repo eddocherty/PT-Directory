@@ -71,7 +71,7 @@ export function SessionsTool() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]">
-      <div className="space-y-8 rounded-3xl border border-line p-6 sm:p-8">
+      <div className="space-y-8 border border-line p-6 sm:p-8">
         <div>
           <label htmlFor="days" className="font-semibold">How many days a week could you train?</label>
           <div className="mt-4 flex items-center gap-4">
@@ -108,7 +108,7 @@ export function SessionsTool() {
           />
         </div>
       </div>
-      <div className="flex flex-col rounded-3xl bg-accent p-6 text-paper sm:p-8" aria-live="polite">
+      <div className="flex flex-col bg-accent p-6 text-paper sm:p-8" aria-live="polite">
         <p className="text-sm font-semibold text-paper/80">Sessions with a trainer</p>
         <p className="display mt-2 text-4xl sm:text-5xl">{r.pt}</p>
         <p className="mt-2 text-lg font-semibold">{r.own}</p>
@@ -147,7 +147,7 @@ export function RaceTool() {
 
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]">
-      <div className="space-y-8 rounded-3xl border border-line p-6 sm:p-8">
+      <div className="space-y-8 border border-line p-6 sm:p-8">
         <div>
           <label htmlFor="race" className="font-semibold">When is your race?</label>
           <input id="race" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="input mt-3 max-w-xs text-base" />
@@ -157,7 +157,7 @@ export function RaceTool() {
           <Options<"yes" | "no"> name="Can you run 5K" value={can5k} onChange={setCan5k} options={[{ value: "yes", label: "Yes" }, { value: "no", label: "Not yet" }]} />
         </div>
       </div>
-      <div className="flex flex-col rounded-3xl bg-accent p-6 text-paper sm:p-8" aria-live="polite">
+      <div className="flex flex-col bg-accent p-6 text-paper sm:p-8" aria-live="polite">
         {!r ? (
           <>
             <p className="display text-3xl">Pick your race date</p>

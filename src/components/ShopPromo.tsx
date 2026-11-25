@@ -7,7 +7,7 @@ import { FROM_PRICE, PRODUCTS, formatPrice, pickPlan } from "@/lib/products";
 export function ShopBanner() {
   return (
     <section className="mx-auto max-w-7xl px-4 py-16">
-      <div className="relative overflow-hidden rounded-[2rem] bg-zap p-6 sm:p-10 lg:p-12">
+      <div className="relative overflow-hidden bg-zap p-6 sm:p-10 lg:p-12">
         <div className="relative grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:items-center">
           <div>
             <h2 className="display text-4xl sm:text-5xl">Not ready for a PT?<br />Start with a plan from {FROM_PRICE}.</h2>
@@ -40,9 +40,9 @@ export function ShopResultsCard({ goals, styles }: { goals?: string[]; styles?: 
   return (
     <Link
       href={`/shop/${p.slug}`}
-      className="group col-span-full flex items-center gap-4 rounded-3xl bg-zap p-4 transition hover:bg-[#d8e4fa] sm:gap-6 sm:p-6"
+      className="group col-span-full flex items-center gap-4 bg-zap p-4 transition hover:bg-[#d8e4fa] sm:gap-6 sm:p-6"
     >
-      <div className="w-16 shrink-0 sm:w-20"><PlanCover p={p} className="rounded-lg" sizes="80px" /></div>
+      <div className="w-16 shrink-0 sm:w-20"><PlanCover p={p} className="" sizes="80px" /></div>
       <div className="min-w-0 flex-1">
         <p className="eyebrow text-accent">Not ready to book a trainer?</p>
         <p className="display mt-1 text-xl sm:text-2xl">Try our {p.short.toLowerCase()} first, for just {formatPrice(p.price)}</p>
@@ -57,8 +57,8 @@ export function ShopResultsCard({ goals, styles }: { goals?: string[]; styles?: 
 export function ShopProfileCard({ goals, styles }: { goals?: string[]; styles?: string[] }) {
   const p = pickPlan(goals, styles);
   return (
-    <Link href={`/shop/${p.slug}`} className="group mt-4 flex items-center gap-4 rounded-3xl border border-line p-4 transition hover:border-ink">
-      <div className="w-14 shrink-0"><PlanCover p={p} className="rounded-md" sizes="56px" /></div>
+    <Link href={`/shop/${p.slug}`} className="group mt-4 flex items-center gap-4 border border-line p-4 transition hover:border-ink">
+      <div className="w-14 shrink-0"><PlanCover p={p} className="" sizes="56px" /></div>
       <div className="min-w-0">
         <p className="text-xs font-semibold text-accent">Not ready to commit yet?</p>
         <p className="mt-0.5 text-sm font-semibold">Or start on your own with our {p.short.toLowerCase()}, {formatPrice(p.price)}</p>

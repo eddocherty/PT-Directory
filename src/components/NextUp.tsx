@@ -10,7 +10,7 @@ import { cachedSearch, type SearchFilters } from "@/lib/trainers";
 
 export function GuideCard({ g, big = false }: { g: Guide; big?: boolean }) {
   return (
-    <Link href={`/guides/${g.slug}`} className={`group flex flex-col justify-between gap-4 rounded-3xl border border-line bg-paper p-5 transition hover:border-ink ${big ? "sm:p-7" : ""}`}>
+    <Link href={`/guides/${g.slug}`} className={`group flex flex-col justify-between gap-4 border border-line bg-paper p-5 transition hover:border-ink ${big ? "sm:p-7" : ""}`}>
       <div>
         <p className="text-xs font-semibold text-accent">Guide · {readingMinutes(g)} min read</p>
         <p className={`display mt-2 group-hover:text-accent ${big ? "text-2xl sm:text-3xl" : "text-xl"}`}>{g.title}</p>
@@ -23,8 +23,8 @@ export function GuideCard({ g, big = false }: { g: Guide; big?: boolean }) {
 
 export function PlanCard({ p, eyebrow = "Start on your own" }: { p: Product; eyebrow?: string }) {
   return (
-    <Link href={`/shop/${p.slug}`} className="group flex items-center gap-4 rounded-3xl bg-zap p-5 transition hover:bg-[#d8e4fa]">
-      <div className="w-20 shrink-0"><PlanCover p={p} className="rounded-lg transition group-hover:-translate-y-0.5" sizes="80px" /></div>
+    <Link href={`/shop/${p.slug}`} className="group flex items-center gap-4 bg-zap p-5 transition hover:bg-[#d8e4fa]">
+      <div className="w-20 shrink-0"><PlanCover p={p} className="transition group-hover:-translate-y-0.5" sizes="80px" /></div>
       <div className="min-w-0">
         <p className="text-xs font-semibold text-accent">{eyebrow}</p>
         <p className="display mt-1 text-xl">{p.name}</p>

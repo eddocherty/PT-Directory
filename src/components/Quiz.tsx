@@ -48,7 +48,7 @@ export function Quiz() {
                     setAnswers({ ...answers, [q.key]: c.value });
                     setStep(step + 1);
                   }}
-                  className={`group rounded-2xl border-2 p-4 text-left transition hover:-translate-y-0.5 hover:border-ink sm:p-5 ${on ? "border-accent bg-zap" : "border-line bg-paper"}`}
+                  className={`group border-2 p-4 text-left transition hover:-translate-y-0.5 hover:border-ink sm:p-5 ${on ? "border-accent bg-zap" : "border-line bg-paper"}`}
                 >
                   <span className="block text-lg font-semibold">{c.label}</span>
                   {c.hint && <span className="mt-0.5 block text-sm text-muted">{c.hint}</span>}

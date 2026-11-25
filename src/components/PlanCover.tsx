@@ -13,7 +13,7 @@ export function PlanCover({ p, className = "", sizes = "(min-width: 768px) 320px
       loading={eager ? undefined : "lazy"}
       decoding="async"
       alt={`Cover of the ${p.short}`}
-      className={`aspect-[210/297] h-auto w-full max-w-full rounded-2xl border border-line bg-soft object-cover shadow-sm ${className}`}
+      className={`aspect-[210/297] h-auto w-full max-w-full border border-line bg-soft object-cover shadow-sm ${className}`}
     />
   );
 }

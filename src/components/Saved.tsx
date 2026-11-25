@@ -40,7 +40,7 @@ export function HeartButton({ t, variant = "round", className = "" }: { t: Saved
       aria-pressed={on}
       aria-label={label}
       title={on ? "On your shortlist" : "Save to your shortlist"}
-      className={`grid h-9 w-9 place-items-center rounded-full bg-paper/90 backdrop-blur transition hover:scale-110 ${on ? "text-accent" : "text-ink"} ${className}`}
+      className={`grid h-9 w-9 place-items-center bg-paper/90 backdrop-blur transition hover:scale-110 ${on ? "text-accent" : "text-ink"} ${className}`}
     >
       <HeartIcon filled={on} className="h-[18px] w-[18px]" />
     </button>
@@ -73,14 +73,14 @@ const tags = (t: SavedTrainer) => [...t.styles.map((s) => nameFor(TRAINING_STYLE
 
 export function MiniCard({ t, onRemove }: { t: SavedTrainer; onRemove?: () => void }) {
   return (
-    <div className="group relative flex items-center gap-3 rounded-2xl border border-line bg-paper p-2.5 pr-12 transition hover:border-ink">
-      <Avatar t={{ name: t.name, image_url: null, styles: t.styles }} className="h-16 w-14 shrink-0 rounded-xl [&_.display]:!text-xl" />
+    <div className="group relative flex items-center gap-3 border border-line bg-paper p-2.5 pr-12 transition hover:border-ink">
+      <Avatar t={{ name: t.name, image_url: null, styles: t.styles }} className="h-16 w-14 shrink-0 [&_.display]:!text-xl" />
       <Link href={`/trainers/${t.slug}`} className="min-w-0 flex-1 after:absolute after:inset-0">
         <span className="block truncate font-semibold group-hover:text-accent">{t.name}</span>
         <span className="block truncate text-xs text-muted">{[t.city, tags(t).slice(0, 2).join(", ")].filter(Boolean).join(" · ")}</span>
       </Link>
       {onRemove ? (
-        <button type="button" onClick={onRemove} aria-label={`Remove ${t.name}`} className="absolute right-3 top-1/2 z-10 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-muted hover:bg-soft hover:text-ink">
+        <button type="button" onClick={onRemove} aria-label={`Remove ${t.name}`} className="absolute right-3 top-1/2 z-10 grid h-8 w-8 -translate-y-1/2 place-items-center text-muted hover:bg-soft hover:text-ink">
           ✕
         </button>
       ) : (
@@ -114,7 +114,7 @@ export function ShortlistBoard() {
   return (
     <>
       {list.length === 0 ? (
-        <div className="rounded-3xl bg-soft p-8 text-center">
+        <div className="bg-soft p-8 text-center">
           <HeartIcon className="mx-auto h-10 w-10 text-accent" />
           <p className="display mt-4 text-2xl">Nothing saved yet</p>
           <p className="mx-auto mt-2 max-w-md text-muted">Tap the heart on any trainer to keep them here while you look around. Your shortlist stays on this device, no account needed.</p>
@@ -132,7 +132,7 @@ export function ShortlistBoard() {
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {list.map((t) => <li key={t.slug}><MiniCard t={t} onRemove={() => removeSaved("shortlist", t.slug)} /></li>)}
           </ul>
-          <p className="mt-6 rounded-2xl bg-zap p-4 text-sm">
+          <p className="mt-6 bg-zap p-4 text-sm">
             <strong>Tip:</strong> message two or three of them with the same short note about your goal and when you can train. Not sure what to ask?{" "}
             <Link href="/guides/questions-to-ask-a-personal-trainer" className="font-semibold text-accent underline">Questions to ask a trainer</Link>.
           </p>

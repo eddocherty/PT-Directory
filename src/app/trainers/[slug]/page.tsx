@@ -214,7 +214,7 @@ export default async function TrainerPage({ params }: Props) {
 
           <section>
             <H2>How they train</H2>
-            <dl className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+            <dl className="grid gap-px overflow-hidden border border-line bg-line sm:grid-cols-3">
               {([
                 ["In person", t.in_person],
                 ["Online", t.online],
@@ -248,14 +248,14 @@ export default async function TrainerPage({ params }: Props) {
             {t.reviews.length === 0 && <p className="text-muted">No reviews yet. If you’ve trained with {first}, you can write one below.</p>}
             <div className="grid gap-4 sm:grid-cols-2">
               {t.reviews.map((r) => (
-                <figure key={r.id} className="rounded-2xl bg-soft p-5">
+                <figure key={r.id} className="bg-soft p-5">
                   <Stars value={r.rating} />
                   {r.body && <blockquote className="mt-2 text-sm leading-relaxed">“{r.body}”</blockquote>}
                   <figcaption className="mt-3 text-xs font-semibold text-muted">{r.author_name}</figcaption>
                 </figure>
               ))}
             </div>
-            <details className="mt-6 rounded-2xl border border-line p-5">
+            <details className="mt-6 border border-line p-5">
               <summary className="cursor-pointer font-semibold">Write a review</summary>
               <div className="mt-4"><ReviewForm slug={t.slug} firstName={first} /></div>
             </details>
@@ -263,7 +263,7 @@ export default async function TrainerPage({ params }: Props) {
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:self-start" id="contact">
-          <div className="scroll-mt-24 rounded-3xl bg-soft p-6">
+          <div className="scroll-mt-24 bg-soft p-6">
             <p className="display text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">
               Ask {first} about prices and availability.
@@ -306,7 +306,7 @@ export default async function TrainerPage({ params }: Props) {
               <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {nearby.map((o) => (
                   <li key={o.slug}>
-                    <Link href={`/trainers/${o.slug}`} className="block rounded-2xl border border-line p-4 hover:border-ink">
+                    <Link href={`/trainers/${o.slug}`} className="block border border-line p-4 hover:border-ink">
                       <span className="font-semibold">{o.name}</span>
                       <span className="mt-1 block text-sm text-muted">
                         {[o.city, o.styles.slice(0, 2).map((s) => nameFor(TRAINING_STYLES, s)).join(", ")].filter(Boolean).join(" · ")}

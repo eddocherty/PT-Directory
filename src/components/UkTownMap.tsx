@@ -23,7 +23,7 @@ export function UkTownMap({ stats, className = "" }: { stats: Record<string, Tow
         const n = stats[c.slug]?.total ?? 0;
         const r = n ? 0.5 + Math.sqrt(n) * 0.12 : 0.4;
         return (
-          <Link key={c.slug} href={`/locations/${c.slug}`} data-town={c.name} data-count={n ? `${n} ${n === 1 ? "trainer" : "trainers"}` : "Trainers nearby"} aria-label={n ? `${c.name}, ${n} trainers` : c.name} className="group/dot outline-none">
+          <Link key={c.slug} href={`/locations/${c.slug}`} data-town={c.name} data-has={n ? "1" : "0"} data-count={n ? `${n} ${n === 1 ? "trainer" : "trainers"}` : "Trainers nearby"} aria-label={n ? `${c.name}, ${n} trainers` : c.name} className="group/dot outline-none">
             {/* Bigger invisible hit area, so small dots are easy to land on */}
             <circle cx={x(c.lng)} cy={y(c.lat)} r={Math.max(r, 1.1)} className="fill-transparent" />
             <circle cx={x(c.lng)} cy={y(c.lat)} r={r} className={`pointer-events-none transition ${n ? "fill-accent/75 group-hover/dot:fill-ink group-focus-visible/dot:fill-ink" : "fill-ink/20 group-hover/dot:fill-ink"}`} />

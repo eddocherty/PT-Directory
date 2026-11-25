@@ -93,7 +93,7 @@ export function Results({
     return (
       <div className="flex flex-col gap-6">
         {toolbar}
-        <div className="rounded-3xl bg-soft p-8 text-center sm:p-12">
+        <div className="bg-soft p-8 text-center sm:p-12">
           <p className="display text-3xl">No trainers match yet</p>
           <p className="mx-auto mt-2 max-w-md text-sm text-muted">
             {origin ? `Nobody within ${radius} miles of ${origin} fits all of that. ` : "Nobody fits all of that. "}
