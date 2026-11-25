@@ -15,6 +15,115 @@ export type Guide = {
 
 export const GUIDES: Guide[] = [
   {
+    slug: "starting-with-a-personal-trainer-in-january",
+    title: "Starting with a personal trainer in January: a realistic first 12 weeks",
+    summary: "How to start training in the new year without burning out by February: what to expect month by month, how to set a goal you can keep, and when to book.",
+    updated: "2026-11-24",
+    sections: [
+      {
+        heading: "Why January plans fall apart",
+        body: [
+          "Most new year fitness plans don't fail because people are lazy. They fail because the plan is built for the most motivated version of you, the one who exists for about a fortnight. Five hard sessions a week, a strict diet and no rest days is a lot to fit around work, family and short, dark days.",
+          "A trainer's real job in January is to slow you down a little: to build a routine you can still keep in March, when the motivation has worn off and the habit has to do the work.",
+        ],
+      },
+      {
+        heading: "Pick one goal you can measure",
+        body: [
+          "\"Get fit\" is hard to plan around. Something like \"squat my own body weight\", \"run 5k without stopping\", \"walk up the stairs at work without being out of breath\" or \"train twice a week until Easter\" gives you and your trainer something to work towards and a way to see progress.",
+          "It is fine if your goal is about how you feel rather than how you look. Tell the trainer that at the start, so the plan fits.",
+        ],
+      },
+      {
+        heading: "Weeks 1 to 4: learn the basics",
+        body: [
+          "Expect the first month to feel easier than you thought. A good trainer will spend it teaching you a handful of movements (squatting, hinging, pushing, pulling and carrying) and finding a starting weight or level that leaves you with a bit in reserve.",
+          "You will probably feel stiff for a day or two after the first few sessions. That usually settles as your body gets used to it. Sharp pain, or pain in a joint that doesn't go away, is different, so mention it.",
+        ],
+      },
+      {
+        heading: "Weeks 5 to 8: build the routine",
+        body: [
+          "By now the movements should feel familiar and your trainer should be adding a little each week: a bit more weight, an extra set, or a harder version of an exercise. This is also the point where most people start missing sessions, so it is worth agreeing fixed days and times that you treat like any other appointment.",
+          "If you only see a trainer once a week, ask them for a short plan to do on your own on one other day. The UK Chief Medical Officers' guidelines suggest adults do muscle-strengthening activity on at least two days a week, alongside around 150 minutes of moderate activity such as brisk walking.",
+        ],
+      },
+      {
+        heading: "Weeks 9 to 12: check your progress",
+        body: [
+          "Around the three-month mark, sit down with your trainer and look back. Are you lifting more than in week one? Is the walk, run or flight of stairs easier? Are you still turning up? Use that to decide what comes next: the same goal with a harder target, a new goal, or fewer sessions with more training on your own.",
+        ],
+      },
+      {
+        heading: "When to book",
+        body: [
+          "Trainers are busiest in the first few weeks of January, and popular early morning and evening slots fill first. Getting in touch in December, even just to have a first conversation, gives you a better choice of times. If you start in mid-January or February instead, that is fine too. There is nothing special about the first of the month.",
+        ],
+      },
+      {
+        heading: "If you are new, older, pregnant or have a health condition",
+        body: [
+          "Tell the trainer before the first session. If you have a heart condition, high blood pressure, are pregnant or have recently given birth, or have had recent surgery, check with your GP or midwife first. Look for a trainer who lists the experience you need, such as working with beginners, older adults, or pre and postnatal clients.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/specialisms/confidence", label: "Trainers who work well with beginners" },
+      { href: "/guides/how-often-should-you-see-a-personal-trainer", label: "How often should you see a trainer?" },
+    ],
+  },
+  {
+    slug: "bootcamps-and-small-group-training",
+    title: "Bootcamps and small group training: what to expect and how to choose",
+    summary: "What happens at an outdoor bootcamp or small group class, who it suits, how it differs from one-to-one training, and what to ask before you join.",
+    updated: "2026-11-24",
+    sections: [
+      {
+        heading: "What a bootcamp actually is",
+        body: [
+          "A bootcamp is a group exercise class, usually outdoors in a park or on a playing field, run by a personal trainer. Sessions tend to last 45 minutes to an hour and mix bodyweight exercises, running or shuttle drills, and simple kit such as kettlebells, resistance bands or medicine balls.",
+          "Despite the name, a well-run bootcamp shouldn't feel like the army. The trainer should give easier and harder versions of each exercise, so a beginner and a regular can work side by side.",
+        ],
+      },
+      {
+        heading: "Small group personal training",
+        body: [
+          "Small group personal training sits between a bootcamp and one-to-one sessions. Groups are usually somewhere between two and eight people, often indoors in a small studio, and the trainer has time to watch each person's technique and adjust weights for them. Some trainers let you bring a friend or partner to a one-to-one slot and split it between you.",
+        ],
+      },
+      {
+        heading: "Who group training suits",
+        body: [
+          "It suits people who enjoy training with others, find it easier to turn up when a group is expecting them, and want a trainer's structure without one-to-one costs. Lots of people also like being outside, especially in spring and summer.",
+          "It is less suited to anyone who needs close individual attention: if you are coming back from an injury, are pregnant or recently postnatal, have a health condition, or want to learn technical lifts, a few one-to-one sessions first are usually a better start.",
+        ],
+      },
+      {
+        heading: "Questions to ask before you join",
+        body: [
+          "How many people are in a typical session, and is there a limit? Is there a trial session? What happens when it rains, gets dark early, or the park is waterlogged? Do they ask about your health and injuries before your first class? Are they qualified and insured, and do they carry a first aid kit?",
+          "Ask what a typical week of sessions looks like, and whether the programme changes over time or repeats. Classes that build from one week to the next help you see progress.",
+        ],
+      },
+      {
+        heading: "Your first session",
+        body: [
+          "Arrive five or ten minutes early so the trainer can talk to you before it starts. Wear layers you can take off, trainers with a good grip (grass gets slippery), and bring water. In winter, a hat and gloves for the warm-up make a big difference. Take the easier option on everything the first time, then build up.",
+        ],
+      },
+      {
+        heading: "Outdoor training in the UK weather",
+        body: [
+          "Most outdoor groups run all year, but winter sessions are often shorter, move under cover or switch to an indoor space. Ask about lighting if sessions are early in the morning or after work, and how you will hear about cancellations.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/specialisms/bootcamp", label: "Outdoor bootcamps near you" },
+      { href: "/guides/questions-to-ask-a-personal-trainer", label: "Questions to ask a trainer" },
+    ],
+  },
+  {
     slug: "how-to-check-a-personal-trainer-is-qualified",
     title: "How to check a personal trainer is qualified",
     summary: "What a Level 3 qualification means, how to look a trainer up on the CIMSPA register, and the insurance they should hold.",
