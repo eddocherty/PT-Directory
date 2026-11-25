@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Arrow } from "./Arrow";
 import type { Fact } from "@/lib/facts";
 
-const EVERY_MS = 6250;
+const EVERY_MS = 7500;
 
 /**
  * Slides one fact along every few seconds (three visible on wide screens, one on phones).
@@ -65,9 +65,13 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
           </div>
         )}
       </div>
-      {/* Progress rule, fills while each fact is showing */}
-      <div className="mt-3 h-0.5 bg-line" aria-hidden>
-        {moving && <div key={i} className="fact-progress h-full bg-accent" style={{ animationDuration: `${EVERY_MS}ms` }} />}
+      {/* Timer: a little runner jogs along the rule while each fact is showing */}
+      <div className="relative mt-5 h-0.5 bg-line" aria-hidden>
+        {moving && (
+          <div key={i} className="fact-progress absolute inset-y-0 left-0 bg-accent" style={{ animationDuration: `${EVERY_MS}ms` }}>
+            <Runner className="absolute -right-2.5 bottom-0.5 h-5 w-5 text-accent" />
+          </div>
+        )}
       </div>
       <div className="mt-5 overflow-hidden">
         <ul
@@ -87,5 +91,23 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
         </ul>
       </div>
     </div>
+  );
+}
+
+/** Small two-frame stick runner; the frames swap to make the legs and arms move. */
+function Runner({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 20 20" className={className} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="13" cy="3.4" r="1.9" fill="currentColor" stroke="none" />
+      <path d="M12 6.2 9.2 12" />
+      <g className="runner-a">
+        <path d="M11.2 7.6 14 9.6l2.2-1.4M11.2 7.6 8.4 8.4 6.6 6.8" />
+        <path d="M9.2 12l3 2.4-.8 4M9.2 12l-2.8 2.8-3 .6" />
+      </g>
+      <g className="runner-b">
+        <path d="M11.2 7.6 13 10.4l2 .8M11.2 7.6 9.4 9.8 9 11.6" />
+        <path d="M9.2 12l1.4 3.4-2.4 3.2M9.2 12l2.4 2 2.6 1" />
+      </g>
+    </svg>
   );
 }

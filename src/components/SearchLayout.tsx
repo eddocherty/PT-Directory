@@ -9,11 +9,18 @@ import type { SearchFilters, TrainerSummary } from "@/lib/trainers";
 const KEEP_OUT = new Set(["location", "radius", "page"]);
 
 export function SearchLayout({
-  eyebrow, crumbs, title, subtitle, intro, footer, filters, action, hideLocation, trainers, total, params, origin,
+  eyebrow, crumbs, title, subtitle, intro, aboutTitle, footer, filters, action, hideLocation, trainers, total, params, origin,
 }: {
-  eyebrow?: string; crumbs?: Crumb[]; title: string; subtitle: string;
-  /** Extra copy under the subtitle, such as real numbers for the town. */
+  eyebrow?: string; crumbs?: Crumb[]; title: string;
+  /**
+   * Descriptive copy for the page. Kept out of the header so the title and search sit alone at the top,
+   * and shown in a short "About" section under the results instead (it still helps the page in search engines).
+   */
+  subtitle: string;
+  /** Extra copy for the About section, such as what a specialism involves. */
   intro?: React.ReactNode;
+  /** Heading for the About section. Defaults to "Good to know". */
+  aboutTitle?: string;
   /** Sections after the results, such as links to nearby towns. */
   footer?: React.ReactNode; filters: SearchFilters & { location?: string };
   action: string; hideLocation?: boolean; trainers: TrainerSummary[]; total: number; params: RawParams;
@@ -30,8 +37,6 @@ export function SearchLayout({
           {crumbs && <Breadcrumbs items={crumbs} className="mb-4" />}
           {eyebrow && <p className="eyebrow text-accent">{eyebrow}</p>}
           <h1 className={`display text-3xl sm:text-5xl ${eyebrow ? "mt-3" : ""}`}>{title}</h1>
-          <p className="mt-3 max-w-2xl text-muted">{subtitle}</p>
-          {intro}
 
           {/* Quick where + how far bar, keeps any other filters already chosen */}
           <form action={action} className="mt-6 flex max-w-2xl flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
@@ -77,6 +82,15 @@ export function SearchLayout({
           />
         </section>
       </div>
+      <section className="border-t border-line">
+        <div className="mx-auto max-w-7xl px-4 py-12">
+          <h2 className="display text-2xl">{aboutTitle ?? "Good to know"}</h2>
+          <div className="mt-3 max-w-2xl text-muted [&>p+p]:mt-3">
+            <p>{subtitle}</p>
+            {intro}
+          </div>
+        </div>
+      </section>
       {footer}
     </>
   );

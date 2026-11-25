@@ -44,8 +44,9 @@ export default async function SpecialismPage({ params, searchParams }: Props) {
       <SearchLayout
         crumbs={[{ name: "Specialisms", href: "/specialisms" }, { name: topic.name, href: `/specialisms/${topic.slug}` }]}
         title={`${topic.people} across the UK`}
-        subtitle={`${total} independent trainers list ${topic.name.toLowerCase()} as a specialism. Add your postcode to see who is closest.`}
-        intro={TOPIC_INTROS[topic.slug] && <p className="mt-3 max-w-2xl text-muted">{TOPIC_INTROS[topic.slug]}</p>}
+        subtitle={`${total} independent trainers list ${topic.name.toLowerCase()} as a specialism.`}
+        intro={TOPIC_INTROS[topic.slug] && <p>{TOPIC_INTROS[topic.slug]}</p>}
+        aboutTitle={`About ${!/[A-Z]/.test(topic.name.slice(1)) && topic.name !== "Pilates" ? topic.name.toLowerCase() : topic.name}`}
         filters={f}
         action="/trainers"
         trainers={trainers}

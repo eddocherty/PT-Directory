@@ -30,6 +30,7 @@ export default async function OnlinePage({ searchParams }: Props) {
         crumbs={[{ name: "Online coaching", href: "/online" }]}
         title="Online personal trainers"
         subtitle={`${total} UK trainers coach online as well as, or instead of, in person. Online coaching usually means video sessions, or a plan with regular check-ins. Ask each trainer how they work.`}
+        aboutTitle="About online coaching"
         filters={f}
         action="/trainers"
         trainers={trainers}
