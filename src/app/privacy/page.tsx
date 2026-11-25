@@ -53,6 +53,20 @@ export default function Privacy() {
         receipt and let you download your purchase. We never see your full card details. We keep order records as the law
         requires for tax and accounting.
       </p>
+
+      <h2>Free plan samples</h2>
+      <p>
+        If you ask for free sample pages of a plan, we store your email address, which plan you asked about and the date.
+        We only send you emails about new plans and guides if you tick the box to say yes, and every email will have a way to
+        unsubscribe. You can also ask us to stop or to delete your email at any time using the contact details above. Our
+        lawful basis is your consent for marketing emails, and legitimate interests for keeping a record of the request.
+      </p>
+
+      <h2>Your shortlist and recently viewed trainers</h2>
+      <p>
+        Trainers you save to your shortlist, and the ones you’ve recently looked at, are kept only in your own browser on
+        your device. They are never sent to us. Clearing your browser data removes them.
+      </p>
     </div>
   );
 }

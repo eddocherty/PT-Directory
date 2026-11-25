@@ -7,7 +7,10 @@ import { JsonLd } from "@/components/JsonLd";
 import { ReviewForm } from "@/components/ReviewForm";
 import { ShopProfileCard } from "@/components/ShopPromo";
 import { Stars } from "@/components/Stars";
-import { Avatar } from "@/components/TrainerCard";
+import { Avatar } from "@/components/Avatar";
+import { HeartButton, RecentlyViewed, RememberViewed } from "@/components/Saved";
+import { GuideCard } from "@/components/NextUp";
+import { guidesForTopics } from "@/lib/guides";
 import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
 import { abs } from "@/lib/site";
 import { allTownStats, countySlug, townFor } from "@/lib/stats";
@@ -119,8 +122,12 @@ export default async function TrainerPage({ params }: Props) {
     t.phone && { label: "Call", href: `tel:${t.phone}`, track: "phone" },
   ].filter(Boolean) as { label: string; href: string; track: string }[];
 
+  const saved = { slug: t.slug, name: t.name, city: t.city, styles: t.styles, goals: t.goals };
+  const reading = guidesForTopics([...t.styles, ...t.goals, ...(t.home_visits ? ["home-visits"] : []), ...(t.online ? ["online"] : [])], 2);
+
   return (
     <>
+      <RememberViewed t={saved} />
       {/* Hero */}
       <section className="bg-soft text-ink">
         <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_1fr] md:items-end md:py-14">
@@ -156,6 +163,7 @@ export default async function TrainerPage({ params }: Props) {
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <a href="#contact" data-track="contact_button" className="btn">Contact {first}</a>
+              <HeartButton t={saved} variant="pill" className="py-3" />
             </div>
             {t.is_sample && <p className="text-xs italic text-muted">Example listing, not a real trainer.</p>}
           </div>
@@ -309,6 +317,15 @@ export default async function TrainerPage({ params }: Props) {
           </div>
         </section>
       )}
+      <section className="border-t border-line bg-soft">
+        <div className="mx-auto max-w-7xl px-4 py-10">
+          <h2 className="display text-2xl">Before you get in touch</h2>
+          <div className="mt-5 grid gap-3 md:grid-cols-2">
+            {reading.map((g) => <GuideCard key={g.slug} g={g} />)}
+          </div>
+        </div>
+      </section>
+      <RecentlyViewed exclude={t.slug} title="Trainers you looked at" />
       {!t.is_sample && <JsonLd data={businessData(t)} />}
 
       {/* Mobile sticky contact bar */}

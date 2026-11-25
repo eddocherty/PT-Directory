@@ -23,6 +23,7 @@ export default function Shop() {
             Printable PDFs for the gym, the road and the kitchen. Follow one on your own, then find a local trainer when you want a programme made for you.
           </p>
           <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
+            <span className="rounded-full bg-accent px-3 py-1 text-paper">Free sample pages of every plan</span>
             <span className="rounded-full border border-line bg-paper px-3 py-1">Instant PDF download</span>
             <span className="rounded-full border border-line bg-paper px-3 py-1">Secure checkout with Stripe</span>
             <span className="rounded-full border border-line bg-paper px-3 py-1">Print it or use it on your phone</span>
@@ -43,7 +44,7 @@ export default function Shop() {
               <p className="mt-1 text-sm text-muted">{p.description}</p>
               <p className="mt-3 flex items-center justify-between">
                 <span className="text-lg font-semibold">{formatPrice(p.price)}</span>
-                <span className="text-sm font-semibold text-accent"><span className="inline-flex items-center gap-1">See what’s inside <Arrow /></span></span>
+                <span className="text-sm font-semibold text-accent"><span className="inline-flex items-center gap-1">Look inside, free sample <Arrow /></span></span>
               </p>
             </Link>
           ))}

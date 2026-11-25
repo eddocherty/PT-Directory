@@ -501,3 +501,42 @@ export const GUIDES: Guide[] = [
 ];
 
 export const guideBy = (slug: string) => GUIDES.find((g) => g.slug === slug);
+
+/** Specialisms (and "online" / "home-visits") each guide is most useful for. Drives "keep reading" panels. */
+const GUIDE_TOPICS: Record<string, string[]> = {
+  "starting-with-a-personal-trainer-in-january": ["confidence", "general-fitness", "weight-loss"],
+  "bootcamps-and-small-group-training": ["bootcamp", "hiit", "functional", "crossfit"],
+  "how-to-check-a-personal-trainer-is-qualified": [],
+  "pre-and-postnatal-personal-training": ["pre-post-natal"],
+  "online-vs-in-person-personal-training": ["online"],
+  "questions-to-ask-a-personal-trainer": ["confidence"],
+  "how-to-choose-a-postnatal-personal-trainer": ["pre-post-natal"],
+  "reformer-vs-mat-pilates": ["pilates", "yoga", "mobility", "flexibility"],
+  "what-happens-in-a-personal-training-session": ["confidence", "strength", "general-fitness"],
+  "how-often-should-you-see-a-personal-trainer": ["general-fitness", "muscle-gain", "weight-loss", "strength"],
+  "personal-training-for-over-50s": ["older-adults", "rehab", "home-visits"],
+};
+
+export const guideTopics = (slug: string) => GUIDE_TOPICS[slug] ?? [];
+
+/** The guides that best fit a set of specialisms, best match first; general guides fill any gaps. */
+export function guidesForTopics(topics: string[], n = 2, exclude?: string): Guide[] {
+  const fallback = ["questions-to-ask-a-personal-trainer", "how-to-check-a-personal-trainer-is-qualified", "what-happens-in-a-personal-training-session"];
+  return GUIDES.filter((g) => g.slug !== exclude)
+    .map((g, i) => ({ g, i, score: guideTopics(g.slug).filter((t) => topics.includes(t)).length * 10 - (fallback.includes(g.slug) ? 0 : 1) }))
+    .sort((a, b) => b.score - a.score || a.i - b.i)
+    .slice(0, n)
+    .map((x) => x.g);
+}
+
+/** The guide after this one, going round in a loop, so every guide ends with somewhere to go next. */
+export function nextGuide(slug: string): Guide {
+  const i = GUIDES.findIndex((g) => g.slug === slug);
+  return GUIDES[(i + 1) % GUIDES.length];
+}
+
+/** Rough reading time for a guide, in minutes. */
+export function readingMinutes(g: Guide): number {
+  const words = [g.summary, ...g.sections.flatMap((s) => [s.heading, ...s.body])].join(" ").split(/\s+/).length;
+  return Math.max(2, Math.round(words / 220));
+}

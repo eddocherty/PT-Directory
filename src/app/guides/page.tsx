@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { GUIDES } from "@/lib/guides";
+import { GUIDES, readingMinutes } from "@/lib/guides";
+import { TOOLS } from "@/lib/tools";
+import { FactStrip } from "@/components/Facts";
+import { buildFacts } from "@/lib/facts";
+import { allTownStats, ukCounts } from "@/lib/stats";
+
+export const revalidate = 21600;
 
 export const metadata: Metadata = {
   title: "Guides to choosing a personal trainer",
@@ -9,7 +15,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/guides" },
 };
 
-export default function GuidesPage() {
+export default async function GuidesPage() {
+  const [uk, stats] = await Promise.all([ukCounts(), allTownStats()]);
   return (
     <>
       <section className="border-b border-line bg-soft text-ink">
@@ -25,10 +32,27 @@ export default function GuidesPage() {
             <Link href={`/guides/${g.slug}`} className="group block">
               <h2 className="text-xl font-semibold group-hover:text-accent group-hover:underline">{g.title}</h2>
               <p className="mt-1 text-muted">{g.summary}</p>
+              <p className="mt-1 text-xs font-semibold text-accent">{readingMinutes(g)} min read</p>
             </Link>
           </li>
         ))}
       </ul>
+      <section className="mx-auto max-w-4xl px-4 pb-12">
+        <div className="rounded-3xl bg-soft p-6 sm:p-8">
+          <p className="display text-2xl">Prefer a quick answer?</p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-3">
+            {TOOLS.map((t) => (
+              <li key={t.href}>
+                <Link href={t.href} className="block h-full rounded-2xl bg-paper p-4 hover:ring-2 hover:ring-ink">
+                  <span className="font-semibold">{t.title}</span>
+                  <span className="mt-1 block text-xs text-muted">{t.time}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+      <FactStrip facts={buildFacts(uk, stats)} salt={1} />
     </>
   );
 }

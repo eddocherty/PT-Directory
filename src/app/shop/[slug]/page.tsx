@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Arrow } from "@/components/Arrow";
 import { notFound } from "next/navigation";
 import { PlanCover } from "@/components/PlanCover";
+import { FreeSample } from "@/components/FreeSample";
 import { PRODUCTS, formatPrice, getProduct } from "@/lib/products";
 
 type Props = { params: Promise<{ slug: string }>; searchParams: Promise<{ error?: string }> };
@@ -34,8 +35,22 @@ export default async function ProductPage({ params, searchParams }: Props) {
       <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
         <Link href="/shop" className="text-sm font-medium text-muted hover:text-ink"><Arrow dir="left" className="mr-1 h-3.5 w-3.5" />All plans</Link>
         <div className="mt-6 grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
-          <div className="rounded-3xl bg-soft p-8">
-            <PlanCover p={p} className="mx-auto max-w-sm" sizes="384px" eager />
+          <div>
+            <div className="rounded-3xl bg-soft p-8">
+              <PlanCover p={p} className="mx-auto max-w-sm" sizes="384px" eager />
+            </div>
+            <div className="mt-4">
+              <p className="eyebrow text-muted">A look inside</p>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                {[1, 2].map((n) => (
+                  <a key={n} href={`/shop/previews/${p.slug}-${n}.jpg`} target="_blank" className="group relative block overflow-hidden rounded-2xl border border-line bg-paper">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={`/shop/previews/${p.slug}-${n}.jpg`} alt={`Inside page ${n} of the ${p.short}, partly blurred`} width={794} height={1123} loading="lazy" className="h-auto w-full transition group-hover:scale-[1.02]" />
+                    <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-paper via-paper/80 to-transparent px-3 pb-3 pt-10 text-center text-xs font-semibold">Full page in the PDF</span>
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
           <div>
             <p className="eyebrow text-accent">{p.short} · PDF</p>
@@ -69,6 +84,8 @@ export default async function ProductPage({ params, searchParams }: Props) {
               <button className="btn mt-5 w-full text-base sm:w-auto">Buy now with secure checkout</button>
               <p className="mt-3 text-xs text-muted">Payments are handled by Stripe. You’ll get your download straight after paying, plus a receipt email with a link to download it again.</p>
             </form>
+
+            <div className="mt-6"><FreeSample slug={p.slug} name={`the ${p.short.toLowerCase()}`} /></div>
 
             <div className="mt-6 rounded-3xl bg-accent p-6 text-paper">
               <p className="display text-2xl">Want a plan built around you?</p>
