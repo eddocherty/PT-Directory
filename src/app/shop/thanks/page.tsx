@@ -58,7 +58,7 @@ export default async function Thanks({ searchParams }: { searchParams: Promise<{
           <p className="eyebrow text-accent">Payment received</p>
           <h1 className="display mt-3 text-4xl sm:text-6xl">You’re all set.</h1>
           <p className="mt-4 text-lg text-muted">Thanks for buying <strong className="text-ink">{product.name}</strong>. Your PDF is ready.</p>
-          <a href={`/api/download?session_id=${encodeURIComponent(session_id)}`} className="btn mt-8 px-8 text-base">Download your PDF</a>
+          <a href={`/api/download?session_id=${encodeURIComponent(session_id)}`} className="btn mt-8 text-lg">Download your PDF</a>
           <p className="mt-4 text-sm text-muted">
             {email ? <>We’ve also emailed a receipt to {email} with a link to download it again.</> : <>Your receipt email also has a link to download it again.</>}
             {" "}Please keep it for your personal use.
@@ -66,7 +66,7 @@ export default async function Thanks({ searchParams }: { searchParams: Promise<{
         </div>
       </section>
       <section className="mx-auto max-w-3xl px-4 py-12">
-        <div className="rounded-3xl bg-accent p-8 text-paper">
+        <div className="bg-accent p-8 text-paper">
           <h2 className="display text-3xl">Want someone in your corner?</h2>
           <p className="mt-2 text-paper/80">Work through your plan, then find a local personal trainer to build on it with a programme made just for you.</p>
           <Link href={product.goal ? `/specialisms/${product.goal}` : "/trainers"} className="btn-light mt-5">Find a local PT</Link>

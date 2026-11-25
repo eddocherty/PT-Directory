@@ -8,7 +8,7 @@ export function EnquiryForm({ slug, firstName }: { slug: string; firstName: stri
   const [state, action, pending] = useActionState<RequestState, FormData>(sendEnquiryAction, {});
   if (state.ok)
     return (
-      <div className="rounded-2xl bg-soft p-5">
+      <div className="bg-soft p-5">
         <p className="display text-2xl">Message sent!</p>
         <p className="mt-1 text-sm">{firstName} will get back to you by email. Time to get those trainers on.</p>
       </div>

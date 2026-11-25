@@ -11,14 +11,14 @@ export function FreeSample({ slug, name, compact = false }: { slug: string; name
   const path = usePathname();
   if (state.ok)
     return (
-      <div className={`rounded-3xl bg-zap ${compact ? "p-5" : "p-6"}`}>
+      <div className={` bg-zap ${compact ? "p-5" : "p-6"}`}>
         <p className="display text-2xl">Your sample is ready</p>
         <p className="mt-1 text-sm text-muted">The cover, the safety page and a full page from inside {name}.</p>
         <a href={`/free/${slug}-sample.pdf`} download className="btn mt-4">Download the free sample (PDF)</a>
       </div>
     );
   return (
-    <form action={action} className={`rounded-3xl border border-line ${compact ? "p-5" : "p-6"}`}>
+    <form action={action} className={` border border-line ${compact ? "p-5" : "p-6"}`}>
       <p className="display text-2xl">Try a few pages free</p>
       <p className="mt-1 text-sm text-muted">Pop in your email and download sample pages from {name} straight away, so you can see exactly what you’d be buying.</p>
       <input type="hidden" name="slug" value={slug} />

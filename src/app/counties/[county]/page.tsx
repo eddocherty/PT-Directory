@@ -48,7 +48,7 @@ export default async function CountyPage({ params }: Props) {
           const s = stats[t.slug];
           const top = s ? liveTopics(s).slice(0, 3) : [];
           return (
-            <div key={t.slug} className="flex flex-col rounded-2xl border border-line p-5">
+            <div key={t.slug} className="flex flex-col border border-line p-5">
               <Link href={`/locations/${t.slug}`} className="group flex items-baseline justify-between gap-3">
                 <span className="display text-2xl group-hover:text-accent">{t.name}</span>
                 <Arrow className="h-4 w-4 text-muted group-hover:text-accent" />

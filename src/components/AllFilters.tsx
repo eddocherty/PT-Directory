@@ -14,7 +14,7 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 export function AllFilters() {
   return (
     <details className="group mt-4 max-w-5xl">
-      <summary className="inline-flex cursor-pointer list-none items-center gap-2 rounded-full border border-ink bg-paper px-4 py-2 text-sm font-semibold hover:bg-ink hover:text-paper [&::-webkit-details-marker]:hidden">
+      <summary className="inline-flex cursor-pointer list-none items-center gap-2 border-b-2 border-ink py-1 text-sm font-semibold hover:border-accent hover:text-accent [&::-webkit-details-marker]:hidden">
         <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
           <path d="M3 5h14M6 10h8M8.5 15h3" strokeLinecap="round" />
         </svg>
@@ -23,7 +23,7 @@ export function AllFilters() {
         <span className="transition group-open:rotate-180" aria-hidden>▾</span>
       </summary>
 
-      <form action="/trainers" className="mt-3 rounded-3xl border border-line bg-paper p-5 text-sm shadow-sm sm:p-7">
+      <form action="/trainers" className="mt-4 border-t-2 border-ink bg-paper p-5 text-sm sm:p-7">
         <div className="grid gap-6 md:grid-cols-2">
           <Group title="Training style"><Pills name="style" options={TRAINING_STYLES} /></Group>
           <Group title="Your goal"><Pills name="goal" options={FITNESS_GOALS} /></Group>
@@ -46,9 +46,9 @@ export function AllFilters() {
             </Group>
           </div>
         </div>
-        <div className="mt-6 flex flex-col gap-2 border-t border-line pt-5 sm:flex-row">
+        <div className="mt-6 flex flex-col gap-4 border-t border-line pt-5 sm:flex-row sm:items-end sm:gap-6">
           <input name="location" placeholder="Postcode or town (optional)" aria-label="Postcode or town" className="input sm:flex-1" />
-          <button type="submit" className="btn px-7">Show trainers</button>
+          <button type="submit" className="btn self-start">Show trainers</button>
         </div>
       </form>
     </details>

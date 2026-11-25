@@ -9,7 +9,7 @@ export function RequestForm({
   const [state, action, pending] = useActionState<RequestState, FormData>(sendListingRequest, {});
   if (state.ok)
     return (
-      <p className="rounded-2xl bg-soft p-4 text-sm">
+      <p className="bg-soft p-4 text-sm">
         Thanks. We’ve got your request and will reply by email, usually within 2 working days.
       </p>
     );

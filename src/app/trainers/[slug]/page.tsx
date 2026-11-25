@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Arrow } from "@/components/Arrow";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -158,12 +159,12 @@ export default async function TrainerPage({ params }: Props) {
               </a>
             )}
             {t.headline && <p className="max-w-xl text-xl font-semibold">{t.headline}</p>}
-            <div className="flex flex-wrap gap-2">
-              {t.styles.map((s) => <span key={s} className="rounded-full bg-paper px-3 py-1 text-xs font-semibold">{nameFor(TRAINING_STYLES, s)}</span>)}
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              {t.styles.map((s) => <span key={s} className="chip-ink">{nameFor(TRAINING_STYLES, s)}</span>)}
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
               <a href="#contact" data-track="contact_button" className="btn">Contact {first}</a>
-              <HeartButton t={saved} variant="pill" className="py-3" />
+              <HeartButton t={saved} variant="pill" />
             </div>
             {t.is_sample && <p className="text-xs italic text-muted">Example listing, not a real trainer.</p>}
           </div>
@@ -184,14 +185,14 @@ export default async function TrainerPage({ params }: Props) {
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
                 <p className="eyebrow mb-2 text-muted">Training styles</p>
-                <div className="flex flex-wrap gap-2">
-                  {t.styles.map((s) => <Link key={s} href={topicHref(s)} className="chip-ink hover:bg-accent">{nameFor(TRAINING_STYLES, s)}</Link>)}
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {t.styles.map((s) => <Link key={s} href={topicHref(s)} className="chip-ink">{nameFor(TRAINING_STYLES, s)}</Link>)}
                 </div>
               </div>
               <div>
                 <p className="eyebrow mb-2 text-muted">Helps you with</p>
-                <div className="flex flex-wrap gap-2">
-                  {t.goals.map((g) => <Link key={g} href={topicHref(g)} className="chip hover:bg-line">{nameFor(FITNESS_GOALS, g)}</Link>)}
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {t.goals.map((g) => <Link key={g} href={topicHref(g)} className="chip text-muted">{nameFor(FITNESS_GOALS, g)}</Link>)}
                 </div>
               </div>
             </div>
@@ -200,10 +201,11 @@ export default async function TrainerPage({ params }: Props) {
           {t.sports.length > 0 && (
             <section>
               <H2>Sports &amp; hobbies</H2>
-              <div className="flex flex-wrap gap-3">
+              <div className="grid gap-x-8 sm:grid-cols-2">
                 {t.sports.map((s) => (
-                  <Link key={s} href={`/trainers?sport=${s}`} className="rounded-full border border-ink/20 px-4 py-2 text-sm font-medium hover:border-ink">
+                  <Link key={s} href={`/trainers?sport=${s}`} className="group flex items-center justify-between border-b border-line py-3 font-semibold hover:border-accent hover:text-accent">
                     {nameFor(SPORTS, s)}
+                    <Arrow className="h-3.5 w-3.5 text-muted transition group-hover:translate-x-0.5 group-hover:text-accent" />
                   </Link>
                 ))}
               </div>
@@ -212,7 +214,7 @@ export default async function TrainerPage({ params }: Props) {
 
           <section>
             <H2>How they train</H2>
-            <dl className="grid gap-px overflow-hidden rounded-2xl border border-line bg-line sm:grid-cols-3">
+            <dl className="grid gap-px overflow-hidden border border-line bg-line sm:grid-cols-3">
               {([
                 ["In person", t.in_person],
                 ["Online", t.online],
@@ -246,14 +248,14 @@ export default async function TrainerPage({ params }: Props) {
             {t.reviews.length === 0 && <p className="text-muted">No reviews yet. If you’ve trained with {first}, you can write one below.</p>}
             <div className="grid gap-4 sm:grid-cols-2">
               {t.reviews.map((r) => (
-                <figure key={r.id} className="rounded-2xl bg-soft p-5">
+                <figure key={r.id} className="bg-soft p-5">
                   <Stars value={r.rating} />
                   {r.body && <blockquote className="mt-2 text-sm leading-relaxed">“{r.body}”</blockquote>}
                   <figcaption className="mt-3 text-xs font-semibold text-muted">{r.author_name}</figcaption>
                 </figure>
               ))}
             </div>
-            <details className="mt-6 rounded-2xl border border-line p-5">
+            <details className="mt-6 border border-line p-5">
               <summary className="cursor-pointer font-semibold">Write a review</summary>
               <div className="mt-4"><ReviewForm slug={t.slug} firstName={first} /></div>
             </details>
@@ -261,7 +263,7 @@ export default async function TrainerPage({ params }: Props) {
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:self-start" id="contact">
-          <div className="scroll-mt-24 rounded-3xl bg-soft p-6">
+          <div className="scroll-mt-24 bg-soft p-6">
             <p className="display text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">
               Ask {first} about prices and availability.
@@ -269,14 +271,14 @@ export default async function TrainerPage({ params }: Props) {
             {direct ? (
               <>
                 <p className="mb-4 text-sm">Get in touch with {first} directly through their website.</p>
-                {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" data-track="website" className="btn w-full justify-center">Visit {first}’s website</a>}
+                {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" data-track="website" className="btn">Visit {first}’s website</a>}
               </>
             ) : (
               <EnquiryForm slug={t.slug} firstName={first} />
             )}
             {links.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" data-track={l.track} className="btn-ghost px-4 py-2 text-xs">{l.label}</a>)}
+              <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" data-track={l.track} className="btn-ghost text-sm">{l.label}</a>)}
               </div>
             )}
           </div>
@@ -304,7 +306,7 @@ export default async function TrainerPage({ params }: Props) {
               <ul className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 {nearby.map((o) => (
                   <li key={o.slug}>
-                    <Link href={`/trainers/${o.slug}`} className="block rounded-2xl border border-line p-4 hover:border-ink">
+                    <Link href={`/trainers/${o.slug}`} className="block border border-line p-4 hover:border-ink">
                       <span className="font-semibold">{o.name}</span>
                       <span className="mt-1 block text-sm text-muted">
                         {[o.city, o.styles.slice(0, 2).map((s) => nameFor(TRAINING_STYLES, s)).join(", ")].filter(Boolean).join(" · ")}
@@ -331,7 +333,7 @@ export default async function TrainerPage({ params }: Props) {
       {/* Mobile sticky contact bar */}
       <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">
         <span className="text-sm font-semibold">{t.name}</span>
-        <a href="#contact" data-track="contact_button" className="btn py-2.5">Contact {first}</a>
+        <a href="#contact" data-track="contact_button" className="btn">Contact {first}</a>
       </div>
     </>
   );

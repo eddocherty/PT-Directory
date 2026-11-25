@@ -73,13 +73,13 @@ export default async function MatchResult({ searchParams }: Props) {
           <p className="mt-5 max-w-2xl text-lg text-muted">{m.why}</p>
           {a.loc && !geo && <p className="mt-3 text-sm font-semibold text-red-700">We couldn’t find “{a.loc}”, so these are from across the UK. Try a full postcode or a nearby town.</p>}
           <div className="mt-8 grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-            <div className="rounded-3xl bg-paper p-6">
+            <div className="bg-paper p-6">
               <p className="font-semibold">What to look for in a trainer</p>
               <ul className="mt-3 space-y-2">
                 {m.lookFor.map((x) => <li key={x} className="flex gap-3"><span className="text-accent">✓</span><span>{x}</span></li>)}
               </ul>
             </div>
-            <div className="flex flex-col justify-center rounded-3xl bg-accent p-6 text-paper">
+            <div className="flex flex-col justify-center bg-accent p-6 text-paper">
               {total > 0 ? (
                 <>
                   <p className="display text-6xl tabular-nums">{total}</p>

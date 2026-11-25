@@ -22,13 +22,13 @@ export default function Shop() {
           <p className="mt-6 max-w-xl text-lg text-muted">
             Printable PDFs for the gym, the road and the kitchen. Follow one on your own, then find a local trainer when you want a programme made for you.
           </p>
-          <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
-            <span className="rounded-full bg-accent px-3 py-1 text-paper">Free sample pages of every plan</span>
-            <span className="rounded-full border border-line bg-paper px-3 py-1">Instant PDF download</span>
-            <span className="rounded-full border border-line bg-paper px-3 py-1">Secure checkout with Stripe</span>
-            <span className="rounded-full border border-line bg-paper px-3 py-1">Print it or use it on your phone</span>
-            <span className="rounded-full border border-line bg-paper px-3 py-1">UK customers only</span>
-          </div>
+          <ul className="mt-6 flex max-w-2xl flex-wrap gap-x-5 gap-y-1.5">
+            <li className="chip-ink text-accent">Free sample pages of every plan</li>
+            <li className="chip">Instant PDF download</li>
+            <li className="chip">Secure checkout with Stripe</li>
+            <li className="chip">Print it or use it on your phone</li>
+            <li className="chip">UK customers only</li>
+          </ul>
         </div>
       </section>
 
@@ -36,7 +36,7 @@ export default function Shop() {
         <div className="grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
           {PRODUCTS.map((p) => (
             <Link key={p.slug} href={`/shop/${p.slug}`} className="group flex min-w-0 flex-col">
-              <div className="overflow-hidden rounded-2xl bg-soft p-6 transition group-hover:bg-zap">
+              <div className="overflow-hidden bg-soft p-6 transition group-hover:bg-zap">
                 <PlanCover p={p} className="mx-auto max-w-[15rem] transition group-hover:-translate-y-1" sizes="240px" />
               </div>
               <p className="eyebrow mt-4 text-muted">{p.level} · {p.pages} pages</p>
@@ -52,7 +52,7 @@ export default function Shop() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 pb-16">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-3xl bg-accent p-8 text-paper sm:flex-row sm:items-center sm:p-10">
+        <div className="flex flex-col items-start justify-between gap-6 bg-accent p-8 text-paper sm:flex-row sm:items-center sm:p-10">
           <div>
             <h2 className="display text-3xl sm:text-4xl">Want a plan made just for you?</h2>
             <p className="mt-2 max-w-xl text-paper/80">Independent personal trainers near you can build a programme around your goals, schedule and any niggles.</p>

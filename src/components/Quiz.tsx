@@ -23,8 +23,8 @@ export function Quiz() {
     <div className="mx-auto max-w-2xl">
       <div className="flex items-center gap-3 text-sm font-semibold">
         <span className="tabular-nums text-muted">{step + 1} of {total}</span>
-        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-line" aria-hidden>
-          <div className="h-full rounded-full bg-accent transition-all duration-300" style={{ width: `${((step + 1) / total) * 100}%` }} />
+        <div className="h-1 flex-1 overflow-hidden bg-line" aria-hidden>
+          <div className="h-full bg-accent transition-all duration-300" style={{ width: `${((step + 1) / total) * 100}%` }} />
         </div>
         {step > 0 && (
           <button type="button" onClick={() => setStep(step - 1)} className="text-muted hover:text-ink">
@@ -48,7 +48,7 @@ export function Quiz() {
                     setAnswers({ ...answers, [q.key]: c.value });
                     setStep(step + 1);
                   }}
-                  className={`group rounded-2xl border-2 p-4 text-left transition hover:-translate-y-0.5 hover:border-ink sm:p-5 ${on ? "border-accent bg-zap" : "border-line bg-paper"}`}
+                  className={`group border-2 p-4 text-left transition hover:-translate-y-0.5 hover:border-ink sm:p-5 ${on ? "border-accent bg-zap" : "border-line bg-paper"}`}
                 >
                   <span className="block text-lg font-semibold">{c.label}</span>
                   {c.hint && <span className="mt-0.5 block text-sm text-muted">{c.hint}</span>}
@@ -73,7 +73,7 @@ export function Quiz() {
               ? "Online coaches work anywhere in the UK, so this is optional. It just lets us show local trainers too."
               : "Your postcode or town. We only use it to find trainers near you; it isn’t stored."}
           </p>
-          <div className="mt-6 flex flex-col gap-2 rounded-3xl border border-line bg-paper p-2 sm:flex-row sm:rounded-full">
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
             <input
               id="quiz-loc"
               value={loc}
@@ -81,9 +81,9 @@ export function Quiz() {
               placeholder="e.g. LS6 or Leeds"
               autoComplete="postal-code"
               autoFocus
-              className="flex-1 rounded-full px-5 py-3 text-base outline-none"
+              className="flex-1 border-b-2 border-ink bg-transparent py-2 text-xl outline-none placeholder:text-muted/70 focus:border-accent"
             />
-            <button className="btn px-7 text-base">Show my match</button>
+            <button className="btn self-start text-lg sm:self-auto">Show my match</button>
           </div>
           <button type="button" onClick={() => finish("")} className="mt-4 text-sm font-semibold text-muted underline hover:text-ink">
             Skip, show me trainers across the UK

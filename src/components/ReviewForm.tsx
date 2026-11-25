@@ -7,7 +7,7 @@ import { StarIcon } from "./Stars";
 export function ReviewForm({ slug, firstName }: { slug: string; firstName: string }) {
   const [state, action, pending] = useActionState<RequestState, FormData>(submitReviewAction, {});
   if (state.ok)
-    return <p className="rounded-2xl bg-soft p-4 text-sm">Thank you. Your review will appear once we’ve checked it.</p>;
+    return <p className="bg-soft p-4 text-sm">Thank you. Your review will appear once we’ve checked it.</p>;
   return (
     <form action={action} className="flex flex-col gap-3 text-sm">
       <input type="hidden" name="slug" value={slug} />

@@ -38,12 +38,12 @@ export default async function GuidesPage() {
         ))}
       </ul>
       <section className="mx-auto max-w-4xl px-4 pb-12">
-        <div className="rounded-3xl bg-soft p-6 sm:p-8">
+        <div className="bg-soft p-6 sm:p-8">
           <p className="display text-2xl">Prefer a quick answer?</p>
           <ul className="mt-4 grid gap-3 sm:grid-cols-3">
             {TOOLS.map((t) => (
               <li key={t.href}>
-                <Link href={t.href} className="block h-full rounded-2xl bg-paper p-4 hover:ring-2 hover:ring-ink">
+                <Link href={t.href} className="block h-full bg-paper p-4 hover:ring-2 hover:ring-ink">
                   <span className="font-semibold">{t.title}</span>
                   <span className="mt-1 block text-xs text-muted">{t.time}</span>
                 </Link>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { CITIES } from "@/lib/taxonomy";
 import type { TownStats } from "@/lib/stats";
 import { BRAND } from "@/brand";
+import { MapHover } from "./MapHover";
 
 // Equirectangular projection, scaled for the UK's latitude. The outline comes from Natural Earth (public domain),
 // simplified and projected the same way, so the town dots sit in the right places.
@@ -15,19 +16,21 @@ const UK_OUTLINE = "M5.9 58.2L6.6 58.5L7.1 58.3L7.3 57.8L7.5 57.2L8.7 57.2L9.3 5
 /** Every town we cover, as a dot on a UK outline, sized by how many trainers are listed there. Each dot links to its town page. */
 export function UkTownMap({ stats, className = "" }: { stats: Record<string, TownStats>; className?: string }) {
   return (
-    <svg viewBox={`-1 -1 ${W + 2} ${H + 2}`} className={className} role="img" aria-label={`Map of the UK towns and cities ${BRAND.name} covers`}>
+    <MapHover className={className}>
+    <svg viewBox={`-1 -1 ${W + 2} ${H + 2}`} className="h-full w-auto overflow-visible" role="img" aria-label={`Map of the UK towns and cities ${BRAND.name} covers`}>
       <path d={UK_OUTLINE} className="fill-paper stroke-accent/40" strokeWidth={0.3} strokeLinejoin="round" />
       {CITIES.map((c) => {
         const n = stats[c.slug]?.total ?? 0;
         const r = n ? 0.5 + Math.sqrt(n) * 0.12 : 0.4;
         return (
-          <Link key={c.slug} href={`/locations/${c.slug}`}>
-            <circle cx={x(c.lng)} cy={y(c.lat)} r={r} className={n ? "fill-accent/75 transition hover:fill-ink" : "fill-ink/20"}>
-              <title>{n ? `${c.name}: ${n} trainers` : c.name}</title>
-            </circle>
+          <Link key={c.slug} href={`/locations/${c.slug}`} data-town={c.name} data-has={n ? "1" : "0"} data-count={n ? `${n} ${n === 1 ? "trainer" : "trainers"}` : "Trainers nearby"} aria-label={n ? `${c.name}, ${n} trainers` : c.name} className="group/dot outline-none">
+            {/* Bigger invisible hit area, so small dots are easy to land on */}
+            <circle cx={x(c.lng)} cy={y(c.lat)} r={Math.max(r, 1.1)} className="fill-transparent" />
+            <circle cx={x(c.lng)} cy={y(c.lat)} r={r} className={`pointer-events-none transition ${n ? "fill-accent/75 group-hover/dot:fill-ink group-focus-visible/dot:fill-ink" : "fill-ink/20 group-hover/dot:fill-ink"}`} />
           </Link>
         );
       })}
     </svg>
+    </MapHover>
   );
 }

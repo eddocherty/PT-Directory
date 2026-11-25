@@ -36,14 +36,14 @@ export default async function ProductPage({ params, searchParams }: Props) {
         <Link href="/shop" className="text-sm font-medium text-muted hover:text-ink"><Arrow dir="left" className="mr-1 h-3.5 w-3.5" />All plans</Link>
         <div className="mt-6 grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
           <div>
-            <div className="rounded-3xl bg-soft p-8">
+            <div className="bg-soft p-8">
               <PlanCover p={p} className="mx-auto max-w-sm" sizes="384px" eager />
             </div>
             <div className="mt-4">
               <p className="eyebrow text-muted">A look inside</p>
               <div className="mt-3 grid grid-cols-2 gap-3">
                 {[1, 2].map((n) => (
-                  <a key={n} href={`/shop/previews/${p.slug}-${n}.jpg`} target="_blank" className="group relative block overflow-hidden rounded-2xl border border-line bg-paper">
+                  <a key={n} href={`/shop/previews/${p.slug}-${n}.jpg`} target="_blank" className="group relative block overflow-hidden border border-line bg-paper">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={`/shop/previews/${p.slug}-${n}.jpg`} alt={`Inside page ${n} of the ${p.short}, partly blurred`} width={794} height={1123} loading="lazy" className="h-auto w-full transition group-hover:scale-[1.02]" />
                     <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-paper via-paper/80 to-transparent px-3 pb-3 pt-10 text-center text-xs font-semibold">Full page in the PDF</span>
@@ -56,7 +56,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
             <p className="eyebrow text-accent">{p.short} · PDF</p>
             <h1 className="display mt-3 text-4xl sm:text-5xl">{p.name}</h1>
             <p className="mt-4 text-lg text-muted">{p.description}</p>
-            <div className="mt-6 rounded-3xl border border-line p-6">
+            <div className="mt-6 border border-line p-6">
               <p className="eyebrow text-muted">What’s inside</p>
               <ul className="mt-3 space-y-2">
                 {p.inside.map((i) => (
@@ -66,7 +66,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
               <p className="mt-4 text-sm text-muted">{p.pages} pages · {p.level} · Printable A4 PDF</p>
             </div>
 
-            <form action="/api/checkout" method="post" className="mt-6 rounded-3xl bg-soft p-6">
+            <form action="/api/checkout" method="post" className="mt-6 bg-soft p-6">
               <input type="hidden" name="slug" value={p.slug} />
               <p className="display text-4xl">{formatPrice(p.price)}</p>
               <label className="mt-4 flex items-start gap-3 text-sm">
@@ -81,13 +81,13 @@ export default async function ProductPage({ params, searchParams }: Props) {
                 <span>I’m buying from the UK. Plans are for UK customers only.</span>
               </label>
               {error && ERRORS[error] && <p className="mt-3 text-sm font-semibold text-red-700">{ERRORS[error]}</p>}
-              <button className="btn mt-5 w-full text-base sm:w-auto">Buy now with secure checkout</button>
+              <button className="btn mt-5 text-lg">Buy now with secure checkout</button>
               <p className="mt-3 text-xs text-muted">Payments are handled by Stripe. You’ll get your download straight after paying, plus a receipt email with a link to download it again.</p>
             </form>
 
             <div className="mt-6"><FreeSample slug={p.slug} name={`the ${p.short.toLowerCase()}`} /></div>
 
-            <div className="mt-6 rounded-3xl bg-accent p-6 text-paper">
+            <div className="mt-6 bg-accent p-6 text-paper">
               <p className="display text-2xl">Want a plan built around you?</p>
               <p className="mt-1 text-paper/80">Use this plan to build the habit, then find a local personal trainer to take you further.</p>
               <Link href={p.goal ? `/specialisms/${p.goal}` : "/trainers"} className="btn-light mt-4">Find a local PT</Link>
@@ -102,8 +102,8 @@ export default async function ProductPage({ params, searchParams }: Props) {
           <h2 className="display text-3xl">More plans</h2>
           <div className="mt-6 grid gap-5 sm:grid-cols-3">
             {others.map((o) => (
-              <Link key={o.slug} href={`/shop/${o.slug}`} className="group flex items-center gap-4 rounded-2xl bg-paper p-4 transition hover:-translate-y-0.5">
-                <div className="w-20 shrink-0"><PlanCover p={o} className="rounded-lg" sizes="80px" /></div>
+              <Link key={o.slug} href={`/shop/${o.slug}`} className="group flex items-center gap-4 bg-paper p-4 transition hover:-translate-y-0.5">
+                <div className="w-20 shrink-0"><PlanCover p={o} className="" sizes="80px" /></div>
                 <div className="min-w-0">
                   <p className="font-semibold group-hover:text-accent">{o.name}</p>
                   <p className="text-sm text-muted">{formatPrice(o.price)}</p>
