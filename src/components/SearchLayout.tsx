@@ -34,7 +34,7 @@ export function SearchLayout({
           {intro}
 
           {/* Quick where + how far bar, keeps any other filters already chosen */}
-          <form action={action} className="mt-6 flex max-w-2xl flex-col gap-2 sm:flex-row">
+          <form action={action} className="mt-6 flex max-w-2xl flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
             {Object.entries(params).flatMap(([k, v]) =>
               KEEP_OUT.has(k) ? [] : (Array.isArray(v) ? v : v ? [v] : []).map((item, i) => (
                 <input key={`${k}-${i}`} type="hidden" name={k} value={item} />
@@ -46,11 +46,11 @@ export function SearchLayout({
                 defaultValue={filters.location}
                 placeholder="Your postcode or town"
                 aria-label="Your postcode or town"
-                className="input flex-1 bg-paper"
+                className="flex-1 border-b-2 border-ink bg-transparent py-2 text-lg outline-none placeholder:text-muted/70 focus:border-accent"
               />
             )}
-            <div className="flex gap-2">
-              <select name="radius" defaultValue={String(filters.radius ?? 25)} className="input flex-1 bg-paper sm:w-auto" aria-label="Distance">
+            <div className="flex items-end gap-6">
+              <select name="radius" defaultValue={String(filters.radius ?? 25)} className="flex-1 border-b-2 border-ink bg-transparent py-2 text-lg outline-none focus:border-accent sm:w-auto" aria-label="Distance">
                 {RADII.map((r) => <option key={r} value={r}>Within {r} miles</option>)}
               </select>
               <button type="submit" className="btn shrink-0">{hideLocation ? "Update" : "Search"}</button>

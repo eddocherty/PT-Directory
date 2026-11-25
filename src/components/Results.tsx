@@ -70,15 +70,16 @@ export function Results({
         )}
       </div>
       {chips.length > 0 && (
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap items-center gap-x-5 gap-y-2 border-y border-line py-2 text-sm">
+          <span className="text-xs font-semibold uppercase tracking-wider text-muted">Filters</span>
           {chips.map((c) => (
-            <Link key={c.label} href={c.href} className="group inline-flex items-center gap-1.5 rounded-full bg-ink px-3 py-1 text-xs font-medium text-paper hover:bg-accent">
-              {c.label} <span aria-hidden className="opacity-70 group-hover:opacity-100">×</span>
+            <Link key={c.label} href={c.href} className="group inline-flex items-center gap-1.5 font-semibold hover:text-accent">
+              {c.label} <span aria-hidden className="text-accent">×</span>
               <span className="sr-only">remove filter</span>
             </Link>
           ))}
           {chips.length > 1 && (
-            <Link href={keepWhere(basePath, params)} className="px-2 text-xs font-semibold text-muted underline hover:text-ink">
+            <Link href={keepWhere(basePath, params)} className="ml-auto text-xs font-semibold text-muted underline hover:text-ink">
               Clear all
             </Link>
           )}
@@ -98,7 +99,7 @@ export function Results({
             {origin ? `Nobody within ${radius} miles of ${origin} fits all of that. ` : "Nobody fits all of that. "}
             Here are a few ways to widen the net.
           </p>
-          <div className="mt-6 flex flex-wrap justify-center gap-2">
+          <div className="mt-6 flex flex-wrap justify-center gap-x-8 gap-y-3">
             {origin && wider && (
               <Link href={`${basePath}?${toQuery(params, { radius: String(wider), page: undefined })}`} className="btn">
                 Search within {wider} miles
@@ -135,7 +136,7 @@ export function Results({
         ))}
       </div>
       {pages > 1 && (
-        <nav className="flex items-center justify-center gap-3 text-sm">
+        <nav className="flex items-center justify-center gap-8 text-sm">
           {page > 1 && <Link className="btn-ghost" href={`${basePath}?${toQuery(params, { page: String(page - 1) })}`}><Arrow dir="left" />{origin ? "Closer" : "Previous"}</Link>}
           <span className="font-bold">Page {page} of {pages}</span>
           {page < pages && <Link className="btn-ghost" href={`${basePath}?${toQuery(params, { page: String(page + 1) })}`}>{origin ? "Further away" : "Next"}<Arrow /></Link>}

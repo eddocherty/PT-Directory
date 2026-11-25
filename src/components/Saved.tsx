@@ -27,7 +27,7 @@ export function HeartButton({ t, variant = "round", className = "" }: { t: Saved
   };
   if (variant === "pill") {
     return (
-      <button type="button" onClick={onClick} aria-pressed={on} aria-label={label} className={`btn-ghost gap-2 px-4 py-2 text-xs ${on ? "border-accent bg-accent text-paper hover:bg-ink" : ""} ${className}`}>
+      <button type="button" onClick={onClick} aria-pressed={on} aria-label={label} className={`btn-ghost gap-2 text-sm ${on ? "border-accent text-accent" : ""} ${className}`}>
         <HeartIcon filled={on} className="h-4 w-4" />
         {on ? "On your shortlist" : "Save to shortlist"}
       </button>
@@ -54,7 +54,7 @@ export function ShortlistNavLink() {
     <Link href="/shortlist" className="relative text-muted hover:text-ink" aria-label={`Your shortlist${n ? `, ${n} saved` : ""}`} title="Your shortlist">
       <HeartIcon filled={n > 0} className={`h-5 w-5 ${n ? "text-accent" : ""}`} />
       {n > 0 && (
-        <span className="absolute -right-2.5 -top-2 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-ink px-1 text-[10px] font-bold tabular-nums text-paper">{n}</span>
+        <span className="absolute -right-2.5 -top-2 text-[11px] font-bold tabular-nums text-accent">{n}</span>
       )}
     </Link>
   );

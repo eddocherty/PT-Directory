@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Arrow } from "@/components/Arrow";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -158,12 +159,12 @@ export default async function TrainerPage({ params }: Props) {
               </a>
             )}
             {t.headline && <p className="max-w-xl text-xl font-semibold">{t.headline}</p>}
-            <div className="flex flex-wrap gap-2">
-              {t.styles.map((s) => <span key={s} className="rounded-full bg-paper px-3 py-1 text-xs font-semibold">{nameFor(TRAINING_STYLES, s)}</span>)}
+            <div className="flex flex-wrap gap-x-4 gap-y-1">
+              {t.styles.map((s) => <span key={s} className="chip-ink">{nameFor(TRAINING_STYLES, s)}</span>)}
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-x-8 gap-y-3">
               <a href="#contact" data-track="contact_button" className="btn">Contact {first}</a>
-              <HeartButton t={saved} variant="pill" className="py-3" />
+              <HeartButton t={saved} variant="pill" />
             </div>
             {t.is_sample && <p className="text-xs italic text-muted">Example listing, not a real trainer.</p>}
           </div>
@@ -184,14 +185,14 @@ export default async function TrainerPage({ params }: Props) {
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
                 <p className="eyebrow mb-2 text-muted">Training styles</p>
-                <div className="flex flex-wrap gap-2">
-                  {t.styles.map((s) => <Link key={s} href={topicHref(s)} className="chip-ink hover:bg-accent">{nameFor(TRAINING_STYLES, s)}</Link>)}
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {t.styles.map((s) => <Link key={s} href={topicHref(s)} className="chip-ink">{nameFor(TRAINING_STYLES, s)}</Link>)}
                 </div>
               </div>
               <div>
                 <p className="eyebrow mb-2 text-muted">Helps you with</p>
-                <div className="flex flex-wrap gap-2">
-                  {t.goals.map((g) => <Link key={g} href={topicHref(g)} className="chip hover:bg-line">{nameFor(FITNESS_GOALS, g)}</Link>)}
+                <div className="flex flex-wrap gap-x-4 gap-y-1">
+                  {t.goals.map((g) => <Link key={g} href={topicHref(g)} className="chip text-muted">{nameFor(FITNESS_GOALS, g)}</Link>)}
                 </div>
               </div>
             </div>
@@ -200,10 +201,11 @@ export default async function TrainerPage({ params }: Props) {
           {t.sports.length > 0 && (
             <section>
               <H2>Sports &amp; hobbies</H2>
-              <div className="flex flex-wrap gap-3">
+              <div className="grid gap-x-8 sm:grid-cols-2">
                 {t.sports.map((s) => (
-                  <Link key={s} href={`/trainers?sport=${s}`} className="rounded-full border border-ink/20 px-4 py-2 text-sm font-medium hover:border-ink">
+                  <Link key={s} href={`/trainers?sport=${s}`} className="group flex items-center justify-between border-b border-line py-3 font-semibold hover:border-accent hover:text-accent">
                     {nameFor(SPORTS, s)}
+                    <Arrow className="h-3.5 w-3.5 text-muted transition group-hover:translate-x-0.5 group-hover:text-accent" />
                   </Link>
                 ))}
               </div>
@@ -269,14 +271,14 @@ export default async function TrainerPage({ params }: Props) {
             {direct ? (
               <>
                 <p className="mb-4 text-sm">Get in touch with {first} directly through their website.</p>
-                {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" data-track="website" className="btn w-full justify-center">Visit {first}’s website</a>}
+                {t.website && <a href={t.website} target="_blank" rel="nofollow noopener" data-track="website" className="btn">Visit {first}’s website</a>}
               </>
             ) : (
               <EnquiryForm slug={t.slug} firstName={first} />
             )}
             {links.length > 0 && (
-              <div className="mt-4 flex flex-wrap gap-2">
-                {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" data-track={l.track} className="btn-ghost px-4 py-2 text-xs">{l.label}</a>)}
+              <div className="mt-5 flex flex-wrap gap-x-6 gap-y-2">
+                {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" data-track={l.track} className="btn-ghost text-sm">{l.label}</a>)}
               </div>
             )}
           </div>
@@ -331,7 +333,7 @@ export default async function TrainerPage({ params }: Props) {
       {/* Mobile sticky contact bar */}
       <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">
         <span className="text-sm font-semibold">{t.name}</span>
-        <a href="#contact" data-track="contact_button" className="btn py-2.5">Contact {first}</a>
+        <a href="#contact" data-track="contact_button" className="btn">Contact {first}</a>
       </div>
     </>
   );

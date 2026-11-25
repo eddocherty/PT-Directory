@@ -24,7 +24,7 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
         <div className="absolute inset-x-0 top-0 flex flex-wrap gap-1.5 p-2 sm:p-3">
 
           {t.review_count > 0 && t.rating_avg != null && (
-            <span className="rounded-full bg-paper/90 px-2.5 py-1 text-xs font-semibold backdrop-blur">
+            <span className="bg-paper/90 px-2 py-1 text-xs font-semibold backdrop-blur">
               <StarIcon className="mr-0.5 inline h-3 w-3 -translate-y-px text-star" />{t.rating_avg.toFixed(1)} <span className="font-normal text-muted">({t.review_count})</span>
             </span>
           )}
@@ -35,7 +35,7 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
             {t.city ?? "UK"}
           </p>
           {t.distance_miles != null && (
-            <p className="mt-1.5 inline-flex items-center gap-1 rounded-full bg-paper px-2 py-0.5 text-[11px] font-semibold text-ink sm:text-xs">
+            <p className="mt-1.5 inline-flex items-center gap-1 border-l-2 border-accent bg-paper px-2 py-0.5 text-[11px] font-semibold text-ink sm:text-xs">
               <svg viewBox="0 0 16 16" className="h-3 w-3 text-accent" fill="currentColor" aria-hidden>
                 <path d="M8 1a5 5 0 0 0-5 5c0 3.6 5 9 5 9s5-5.4 5-9a5 5 0 0 0-5-5Zm0 7a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z" />
               </svg>
@@ -45,9 +45,9 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
         </div>
       </div>
       <div className="flex flex-1 flex-col gap-3 p-3 sm:p-4">
-        <div className="hidden flex-wrap gap-1.5 sm:flex">
+        <div className="hidden flex-wrap gap-x-3 gap-y-1 sm:flex">
           {specialisms.slice(0, 3).map((s) => (
-            <span key={s} className="rounded-full bg-soft px-2.5 py-1 text-xs font-medium">{s}</span>
+            <span key={s} className="chip text-[11px]">{s}</span>
           ))}
         </div>
         <div className="mt-auto flex flex-wrap items-center justify-end gap-1">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Arrow } from "@/components/Arrow";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
@@ -47,9 +48,9 @@ export default async function GuidePage({ params }: Props) {
         <p className="mt-10 border-t border-line pt-6 text-sm text-muted">
           General guidance, not medical advice. If you have a health condition, are pregnant or have recently given birth, check with your GP or midwife before starting a new kind of exercise.
         </p>
-        <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-8 grid gap-x-8 sm:grid-cols-2">
           {g.related.map((r) => (
-            <Link key={r.href} href={r.href} className="btn-ghost px-4">{r.label}</Link>
+            <Link key={r.href} href={r.href} className="group flex items-center justify-between border-b border-line py-3 font-semibold hover:border-accent hover:text-accent">{r.label}<Arrow className="h-3.5 w-3.5 text-muted transition group-hover:translate-x-0.5 group-hover:text-accent" /></Link>
           ))}
         </div>
         <h2 className="mt-12 text-lg font-semibold">More guides</h2>

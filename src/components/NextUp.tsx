@@ -73,7 +73,7 @@ export async function GuideNextUp({ g }: { g: Guide }) {
           <>
             <div className="mt-10 flex flex-wrap items-end justify-between gap-3">
               <h2 className="display text-2xl sm:text-3xl">{label} to look at</h2>
-              <Link href={topicHref(main)} className="btn-ghost px-4 py-2">See them all</Link>
+              <Link href={topicHref(main)} className="btn-ghost">See them all</Link>
             </div>
             <div className="mt-5 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
               {trainers.map((t, i) => <div key={t.id} className={i === 2 ? "hidden lg:block" : ""}><TrainerCard t={t} /></div>)}

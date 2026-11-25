@@ -7,7 +7,7 @@ import { formatPrice, getProduct } from "@/lib/products";
 
 function Options<T extends string>({ value, onChange, options, name }: { value: T; onChange: (v: T) => void; options: { value: T; label: string }[]; name: string }) {
   return (
-    <div role="radiogroup" aria-label={name} className="mt-3 flex flex-wrap gap-2">
+    <div role="radiogroup" aria-label={name} className="mt-3 flex flex-wrap gap-x-5 gap-y-1 border-b border-line">
       {options.map((o) => (
         <button
           key={o.value}
@@ -15,7 +15,7 @@ function Options<T extends string>({ value, onChange, options, name }: { value: 
           role="radio"
           aria-checked={value === o.value}
           onClick={() => onChange(o.value)}
-          className={`rounded-full border px-4 py-2 text-sm font-semibold transition ${value === o.value ? "border-ink bg-ink text-paper" : "border-line bg-paper hover:border-ink"}`}
+          className={`-mb-px border-b-4 py-2 text-sm font-semibold transition ${value === o.value ? "border-accent text-ink" : "border-transparent text-muted hover:text-ink"}`}
         >
           {o.label}
         </button>

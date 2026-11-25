@@ -48,6 +48,18 @@ export function buildFacts(uk: Uk, stats: Record<string, TownStats>): Fact[] {
   const top = TOPICS.filter((t) => t.kind !== "home").map((t) => ({ t, n: uk.topics[t.slug] ?? 0 })).sort((a, b) => b.n - a.n)[0];
   if (top?.n) facts.push({ big: String(top.n), text: `trainers list ${top.t.name.toLowerCase()}, the most common specialism on the site.`, href: `/specialisms/${top.t.slug}`, cta: `See ${top.t.name.toLowerCase()}` });
 
+  // A few headline counts for specialisms people often look for, so the rotating strip has plenty to show.
+  for (const slug of ["pilates", "pre-post-natal", "bootcamp", "rehab", "older-adults"]) {
+    const t = topicBySlug(slug);
+    const n = uk.topics[slug] ?? 0;
+    if (!t || n < 5 || slug === top?.t.slug) continue;
+    facts.push({ big: String(n), text: `${t.people.toLowerCase()} listed across the UK.`, href: `/specialisms/${slug}`, cta: `See ${t.name.toLowerCase()}` });
+  }
+
+  // How many towns have real choice.
+  const choice = towns.filter((c) => (stats[c.slug]?.total ?? 0) >= 10).length;
+  if (choice >= 5) facts.push({ big: String(choice), text: `towns and cities have ten or more trainers to choose from within ${TOWN_RADIUS} miles.`, href: "/locations", cta: "Browse towns" });
+
   // Town with the most of a few specialisms people search for.
   for (const slug of ["pilates", "bootcamp", "pre-post-natal", "older-adults", "running"]) {
     const [best, second] = towns.map((c) => ({ c, n: stats[c.slug]?.ownTopics[slug] ?? 0 })).sort((a, b) => b.n - a.n);

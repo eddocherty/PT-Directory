@@ -14,11 +14,11 @@ type Values = {
 
 export function Pills({ name, options, selected }: { name: string; options: Option[]; selected?: string[] }) {
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-wrap gap-x-4 gap-y-1">
       {options.map((o) => (
         <label key={o.slug} className="cursor-pointer">
           <input type="checkbox" name={name} value={o.slug} defaultChecked={selected?.includes(o.slug)} className="peer sr-only" />
-          <span className="inline-block rounded-full border border-line px-3 py-1 text-xs font-medium transition peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:ring-2 peer-focus-visible:ring-accent hover:border-ink">
+          <span className="inline-block border-b-2 border-transparent py-1 text-sm font-medium text-muted transition before:mr-1.5 before:font-bold before:text-line before:content-['/'] hover:text-ink peer-checked:border-accent peer-checked:text-ink peer-checked:before:text-accent peer-focus-visible:outline-2 peer-focus-visible:outline-accent">
             {o.name}
           </span>
         </label>
@@ -33,7 +33,7 @@ function Section({ title, open = false, first = false, count, children }: { titl
       <summary className="flex cursor-pointer list-none items-center justify-between text-sm font-semibold">
         <span>
           {title}
-          {count ? <span className="ml-2 rounded-full bg-ink px-2 py-0.5 text-[10px] text-paper">{count}</span> : null}
+          {count ? <span className="ml-2 text-xs font-bold tabular-nums text-accent">{count}</span> : null}
         </span>
         <span className="text-lg transition group-open:rotate-45">+</span>
       </summary>
@@ -75,9 +75,9 @@ export function FilterForm({ action = "/trainers", values, hideLocation = false 
         </div>
       </Section>
 
-      <div className="sticky bottom-0 flex gap-2 border-t border-line bg-paper py-4">
-        <button type="submit" className="btn flex-1">Show trainers</button>
-        <a href={values.location ? `${action}?location=${encodeURIComponent(values.location)}&radius=${values.radius ?? 25}` : action} className="btn-ghost px-4">Clear</a>
+      <div className="sticky bottom-0 flex items-center gap-6 border-t border-line bg-paper py-4">
+        <button type="submit" className="btn">Show trainers</button>
+        <a href={values.location ? `${action}?location=${encodeURIComponent(values.location)}&radius=${values.radius ?? 25}` : action} className="btn-ghost no-arrow ml-auto">Clear</a>
       </div>
     </form>
   );

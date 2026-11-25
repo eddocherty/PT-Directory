@@ -22,13 +22,13 @@ export default function Shop() {
           <p className="mt-6 max-w-xl text-lg text-muted">
             Printable PDFs for the gym, the road and the kitchen. Follow one on your own, then find a local trainer when you want a programme made for you.
           </p>
-          <div className="mt-6 flex flex-wrap gap-2 text-xs font-semibold">
-            <span className="rounded-full bg-accent px-3 py-1 text-paper">Free sample pages of every plan</span>
-            <span className="rounded-full border border-line bg-paper px-3 py-1">Instant PDF download</span>
-            <span className="rounded-full border border-line bg-paper px-3 py-1">Secure checkout with Stripe</span>
-            <span className="rounded-full border border-line bg-paper px-3 py-1">Print it or use it on your phone</span>
-            <span className="rounded-full border border-line bg-paper px-3 py-1">UK customers only</span>
-          </div>
+          <ul className="mt-6 flex max-w-2xl flex-wrap gap-x-5 gap-y-1.5">
+            <li className="chip-ink text-accent">Free sample pages of every plan</li>
+            <li className="chip">Instant PDF download</li>
+            <li className="chip">Secure checkout with Stripe</li>
+            <li className="chip">Print it or use it on your phone</li>
+            <li className="chip">UK customers only</li>
+          </ul>
         </div>
       </section>
 

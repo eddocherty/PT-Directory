@@ -44,13 +44,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur">
           <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
             <Link href="/" aria-label="Home"><Logo /></Link>
-            <div className="flex items-center gap-4 text-sm font-medium sm:gap-6">
+            <div className="flex items-center gap-3.5 text-sm font-medium sm:gap-6">
               <Link href="/online" className="text-muted hover:text-ink">Online</Link>
               <Link href="/locations" className="hidden text-muted hover:text-ink sm:inline">Locations</Link>
               <Link href="/specialisms" className="hidden text-muted hover:text-ink md:inline">Specialisms</Link>
-              <Link href="/shop" className="text-muted hover:text-ink">Plans <span className="ml-1 hidden rounded-full bg-zap px-2 py-0.5 text-xs font-semibold text-accent sm:inline">from {FROM_PRICE}</span></Link>
+              <Link href="/shop" className="text-muted hover:text-ink">Plans <span className="ml-1 hidden text-xs font-semibold text-accent sm:inline">from {FROM_PRICE}</span></Link>
               <ShortlistNavLink />
-              <Link href="/trainers" className="btn whitespace-nowrap px-4 py-2">Find a trainer</Link>
+              <Link href="/trainers" className="btn whitespace-nowrap py-1 text-sm">Find a trainer</Link>
             </div>
           </nav>
         </header>

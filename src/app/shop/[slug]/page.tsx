@@ -81,7 +81,7 @@ export default async function ProductPage({ params, searchParams }: Props) {
                 <span>I’m buying from the UK. Plans are for UK customers only.</span>
               </label>
               {error && ERRORS[error] && <p className="mt-3 text-sm font-semibold text-red-700">{ERRORS[error]}</p>}
-              <button className="btn mt-5 w-full text-base sm:w-auto">Buy now with secure checkout</button>
+              <button className="btn mt-5 text-lg">Buy now with secure checkout</button>
               <p className="mt-3 text-xs text-muted">Payments are handled by Stripe. You’ll get your download straight after paying, plus a receipt email with a link to download it again.</p>
             </form>
 
