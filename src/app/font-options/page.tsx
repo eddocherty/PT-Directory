@@ -6,7 +6,7 @@ import { Arrow } from "@/components/Arrow";
 export const metadata: Metadata = { title: "Font options", robots: { index: false, follow: false } };
 
 const FONTS_CSS =
-  "https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Manrope:wght@400;500;600;700&family=Archivo:wdth,wght@100..125,400..800&display=swap";
+  "https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=Bodoni+Moda:opsz,wght@6..96,500;6..96,700&family=Manrope:wght@400;500;600;700&family=Archivo:wdth,wght@100..125,400..800&family=Outfit:wght@300..700&family=Urbanist:wght@400..700&family=Sora:wght@300..700&family=Red+Hat+Display:wght@400..700&display=swap";
 
 type Pairing = { id: string; label: string; name: string; fonts: string; blurb: string; display: React.CSSProperties; body: React.CSSProperties; caps?: boolean };
 
@@ -28,6 +28,42 @@ const PAIRINGS: Pairing[] = [
     blurb: "A clean geometric face in the spirit of the 1960s classics. Round O's, sharp points, light and confident. Sleek without trying too hard.",
     display: { fontFamily: "'Jost', sans-serif", fontWeight: 500, letterSpacing: "-0.02em" },
     body: { fontFamily: "'Jost', sans-serif", fontWeight: 400 },
+  },
+  {
+    id: "d",
+    label: "Option D",
+    name: "Weekend in Monaco",
+    fonts: "Outfit",
+    blurb: "Same clean geometric shapes as A, but rounder and softer, with friendlier letters. Relaxed and cool rather than formal.",
+    display: { fontFamily: "'Outfit', sans-serif", fontWeight: 500, letterSpacing: "-0.03em" },
+    body: { fontFamily: "'Outfit', sans-serif", fontWeight: 400 },
+  },
+  {
+    id: "e",
+    label: "Option E",
+    name: "Night drive",
+    fonts: "Urbanist",
+    blurb: "A slim, slightly condensed geometric face. Tall and sleek, with a modern city feel.",
+    display: { fontFamily: "'Urbanist', sans-serif", fontWeight: 600, letterSpacing: "-0.02em" },
+    body: { fontFamily: "'Urbanist', sans-serif", fontWeight: 500 },
+  },
+  {
+    id: "f",
+    label: "Option F",
+    name: "Control room",
+    fonts: "Sora",
+    blurb: "Wide, open and techy, with a touch of gadget about it. Very clear on phones.",
+    display: { fontFamily: "'Sora', sans-serif", fontWeight: 600, letterSpacing: "-0.04em" },
+    body: { fontFamily: "'Sora', sans-serif", fontWeight: 400 },
+  },
+  {
+    id: "g",
+    label: "Option G",
+    name: "Private members' club",
+    fonts: "Red Hat Display",
+    blurb: "Geometric but with a bit of swagger in the curves. Smart-casual: a good suit with no tie.",
+    display: { fontFamily: "'Red Hat Display', sans-serif", fontWeight: 700, letterSpacing: "-0.03em" },
+    body: { fontFamily: "'Red Hat Display', sans-serif", fontWeight: 400 },
   },
   {
     id: "b",
@@ -119,7 +155,7 @@ export default function FontOptions() {
       <link rel="stylesheet" href={FONTS_CSS} precedence="default" />
       <div className="mx-auto max-w-6xl px-4 pt-14">
         <h1 className="display text-5xl sm:text-6xl">Font options</h1>
-        <p className="mt-4 max-w-xl text-muted">The same bits of the site in four typefaces. Scroll down, then tell me A, B or C, or keep what you have.</p>
+        <p className="mt-4 max-w-xl text-muted">The same bits of the site in different typefaces. Scroll down and tell me a letter, or keep what you have.</p>
         <nav className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold">
           {PAIRINGS.map((p) => <a key={p.id} href={`#${p.id}`} className="border-b-2 border-accent pb-0.5">{p.id === "now" ? "Now" : p.label}</a>)}
         </nav>
