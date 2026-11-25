@@ -12,6 +12,10 @@ import { SITE_NAME, TAGLINE, abs } from "@/lib/site";
 import { allTownStats, ukCounts } from "@/lib/stats";
 import { topicBySlug } from "@/lib/topics";
 import type { Metadata } from "next";
+import { FactStrip } from "@/components/Facts";
+import { RecentlyViewed } from "@/components/Saved";
+import { buildFacts } from "@/lib/facts";
+import { TOOLS } from "@/lib/tools";
 
 export const metadata: Metadata = { alternates: { canonical: "/" } };
 
@@ -23,6 +27,7 @@ const GOAL_LIST = ["weight-loss", "muscle-gain", "pre-post-natal", "rehab", "old
 
 export default async function Home() {
   const [featured, stats, uk] = await Promise.all([featuredTrainers(4), allTownStats(), ukCounts()]);
+  const facts = buildFacts(uk, stats);
   return (
     <>
       {/* Hero */}
@@ -49,6 +54,12 @@ export default async function Home() {
             </select>
             <button className="btn px-7 text-base">Search</button>
           </form>
+          <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <Link href="/match" className="group inline-flex items-center gap-3 rounded-full border-2 border-ink bg-paper py-1.5 pl-1.5 pr-5 text-sm font-semibold hover:border-accent hover:text-accent">
+              <span className="rounded-full bg-ink px-3 py-1 text-xs text-paper group-hover:bg-accent">1 min</span>
+              Not sure what you need? Find your training match <Arrow />
+            </Link>
+          </div>
           <Link href="/online" className="mt-4 inline-flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-paper hover:opacity-90">
             Or train online with a UK coach, wherever you live <Arrow />
           </Link>
@@ -68,6 +79,9 @@ export default async function Home() {
           <AllFilters />
         </div>
       </section>
+
+      <FactStrip facts={facts} />
+      <RecentlyViewed />
 
       {/* Styles */}
       <section className="mx-auto max-w-7xl px-4 py-16">
@@ -141,8 +155,31 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Tools */}
+      <section className="bg-ink text-paper">
+        <div className="mx-auto grid max-w-7xl gap-8 px-4 py-14 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)] lg:items-center">
+          <div>
+            <h2 className="display text-4xl sm:text-5xl">Not sure where to start?</h2>
+            <p className="mt-4 max-w-sm text-paper/70">Free tools that give you a straight answer in under a minute. No sign-up.</p>
+          </div>
+          <ul className="divide-y divide-paper/15 border-y border-paper/15">
+            {TOOLS.map((t) => (
+              <li key={t.href}>
+                <Link href={t.href} className="group flex items-center justify-between gap-4 py-5">
+                  <span>
+                    <span className="display block text-2xl group-hover:text-[#9db8f2]">{t.title}</span>
+                    <span className="mt-1 block text-sm text-paper/65">{t.text}</span>
+                  </span>
+                  <span className="shrink-0 rounded-full border border-paper/30 px-3 py-1 text-xs font-semibold text-paper/80 group-hover:border-paper">{t.time}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* Cities */}
-      <section className="mx-auto max-w-7xl px-4 pb-16">
+      <section className="mx-auto max-w-7xl px-4 py-16">
         <h2 className="display mb-6 text-3xl sm:text-4xl">Trainers near you</h2>
         <div className="flex flex-wrap gap-2">
           {CITIES.filter((c) => c.popular).map((c) => (

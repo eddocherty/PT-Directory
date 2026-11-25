@@ -118,16 +118,20 @@ export async function loadLeads(): Promise<Lead[]> {
 export type ListingRequest = { id: string; kind: string; requester_name: string | null; requester_email: string; message: string | null; status: string; created_at: string; trainers: { name: string; slug: string } | null };
 export type Enquiry = { id: string; name: string; email: string; goal: string | null; message: string | null; created_at: string; trainers: { name: string; slug: string } | null };
 
-export async function loadInbox(): Promise<{ requests: ListingRequest[]; enquiries: Enquiry[]; pendingReviews: number }> {
+export type Signup = { id: string; email: string; plan_slug: string; marketing_ok: boolean; created_at: string; unsubscribed_at: string | null };
+
+export async function loadInbox(): Promise<{ requests: ListingRequest[]; enquiries: Enquiry[]; pendingReviews: number; signups: Signup[] }> {
   const db = getAdminDb()!;
-  const [r, e, p] = await Promise.all([
+  const [r, e, p, s] = await Promise.all([
     db.from("listing_requests").select("id, kind, requester_name, requester_email, message, status, created_at, trainers(name, slug)").order("created_at", { ascending: false }).limit(200),
     db.from("enquiries").select("id, name, email, goal, message, created_at, trainers(name, slug)").order("created_at", { ascending: false }).limit(100),
     db.from("reviews").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    db.from("email_signups").select("id, email, plan_slug, marketing_ok, created_at, unsubscribed_at").order("created_at", { ascending: false }).limit(500),
   ]);
   return {
     requests: (r.data ?? []) as unknown as ListingRequest[],
     enquiries: (e.data ?? []) as unknown as Enquiry[],
     pendingReviews: p.count ?? 0,
+    signups: (s.data ?? []) as Signup[],
   };
 }

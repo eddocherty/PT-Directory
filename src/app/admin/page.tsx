@@ -116,7 +116,8 @@ async function Body({ tab, days, href }: { tab: string; days: number; href: (p: 
   }
 
   if (tab === "inbox") {
-    const { requests, enquiries, pendingReviews } = await loadInbox();
+    const { requests, enquiries, pendingReviews, signups } = await loadInbox();
+    const optedIn = signups.filter((x) => x.marketing_ok && !x.unsubscribed_at);
     return (
       <section className="mt-6 grid gap-6">
         <div className="rounded-3xl bg-paper p-6">
@@ -154,6 +155,28 @@ async function Body({ tab, days, href }: { tab: string; days: number; href: (p: 
                   <p className="font-semibold">{e.name} → {e.trainers?.name ?? "?"}</p>
                   <p className="text-muted">{e.email} · {e.goal ?? "No goal given"} · {new Date(e.created_at).toLocaleDateString("en-GB")}</p>
                   {e.message && <p className="mt-1 whitespace-pre-line">{e.message}</p>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+        <div className="rounded-3xl bg-paper p-6">
+          <h2 className="display text-2xl">Free sample sign-ups</h2>
+          <p className="mt-1 text-xs text-muted">
+            {signups.length} sign-up{signups.length === 1 ? "" : "s"}, {optedIn.length} happy to get emails. Only email people marked “emails OK”, and include an unsubscribe link.
+          </p>
+          {optedIn.length > 0 && (
+            <details className="mt-3 text-sm">
+              <summary className="cursor-pointer font-semibold">Copy the “emails OK” list</summary>
+              <textarea readOnly rows={4} className="input mt-2 font-mono text-xs" value={[...new Set(optedIn.map((x) => x.email))].join(", ")} />
+            </details>
+          )}
+          {signups.length === 0 ? <p className="mt-4 text-sm text-muted">None yet.</p> : (
+            <ul className="mt-4 divide-y divide-line text-sm">
+              {signups.slice(0, 100).map((x) => (
+                <li key={x.id} className="flex flex-wrap justify-between gap-2 py-2">
+                  <span className="font-semibold">{x.email}</span>
+                  <span className="text-muted">{x.plan_slug} · {x.marketing_ok && !x.unsubscribed_at ? "emails OK" : "sample only"} · {new Date(x.created_at).toLocaleDateString("en-GB")}</span>
                 </li>
               ))}
             </ul>

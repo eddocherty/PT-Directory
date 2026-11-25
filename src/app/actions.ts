@@ -50,3 +50,32 @@ export async function submitReviewAction(_prev: RequestState, form: FormData): P
   if (!EMAIL.test(author_email)) return { error: "Please enter a valid email address. We won’t show it." };
   return submitReview({ slug: str(form, "slug", 200), author_name, author_email, rating, body: str(form, "body") });
 }
+
+export type SampleState = { ok?: boolean; error?: string; slug?: string };
+
+/** Free sample pages of a plan, in exchange for an email address. Saved with the service role (table is locked down). */
+export async function requestSampleAction(_prev: SampleState, form: FormData): Promise<SampleState> {
+  const { getProduct } = await import("@/lib/products");
+  const slug = str(form, "slug", 80);
+  if (!getProduct(slug)) return { error: "Unknown plan." };
+  if (form.get("website")) return { ok: true, slug }; // honeypot
+  const email = str(form, "email", 200).toLowerCase();
+  if (!EMAIL.test(email)) return { error: "Please enter a valid email address." };
+  try {
+    const { getAdminDb } = await import("@/lib/admin-db");
+    const db = getAdminDb();
+    if (db) {
+      const { error } = await db.from("email_signups").insert({
+        email,
+        plan_slug: slug,
+        marketing_ok: form.get("marketing") === "yes",
+        source_path: str(form, "path", 200) || null,
+      });
+      if (error) console.error("email signup", error.message);
+    }
+  } catch (e) {
+    console.error("email signup", e);
+  }
+  // Never hold the sample back because saving failed: the visitor did their part.
+  return { ok: true, slug };
+}

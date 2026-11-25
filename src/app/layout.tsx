@@ -6,6 +6,7 @@ import { Logo } from "@/components/Logo";
 import { FROM_PRICE } from "@/lib/products";
 import { Analytics } from "@vercel/analytics/next";
 import { Tracker } from "@/components/Tracker";
+import { ShortlistNavLink } from "@/components/Saved";
 import "./globals.css";
 
 // Fonts are bundled with the site (src/fonts) rather than fetched from Google at build time.
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/locations" className="hidden text-muted hover:text-ink sm:inline">Locations</Link>
               <Link href="/specialisms" className="hidden text-muted hover:text-ink md:inline">Specialisms</Link>
               <Link href="/shop" className="text-muted hover:text-ink">Plans <span className="ml-1 hidden rounded-full bg-zap px-2 py-0.5 text-xs font-semibold text-accent sm:inline">from {FROM_PRICE}</span></Link>
+              <ShortlistNavLink />
               <Link href="/trainers" className="btn whitespace-nowrap px-4 py-2">Find a trainer</Link>
             </div>
           </nav>
@@ -69,6 +71,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/online" className="text-paper/70 hover:text-paper">Online coaching</Link>
               <Link href="/shop" className="text-paper/70 hover:text-paper">Training plans</Link>
               <Link href="/guides" className="text-paper/70 hover:text-paper">Choosing a trainer</Link>
+              <Link href="/match" className="text-paper/70 hover:text-paper">Find your training match</Link>
+              <Link href="/tools" className="text-paper/70 hover:text-paper">Free tools</Link>
+              <Link href="/shortlist" className="text-paper/70 hover:text-paper">Your shortlist</Link>
             </div>
             <div className="flex flex-col gap-2 text-sm">
               <p className="eyebrow text-paper/50">Your data</p>

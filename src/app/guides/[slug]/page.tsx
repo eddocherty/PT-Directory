@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
-import { GUIDES, guideBy } from "@/lib/guides";
+import { GUIDES, guideBy, readingMinutes } from "@/lib/guides";
+import { GuideNextUp } from "@/components/NextUp";
 import { SITE_NAME, abs } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -34,7 +35,7 @@ export default async function GuidePage({ params }: Props) {
         <Breadcrumbs items={[{ name: "Guides", href: "/guides" }, { name: g.title, href: `/guides/${g.slug}` }]} className="mb-6" />
         <h1 className="display text-3xl sm:text-4xl">{g.title}</h1>
         <p className="mt-3 text-lg text-muted">{g.summary}</p>
-        <p className="mt-2 text-sm text-muted">Updated {dateLabel(g.updated)}</p>
+        <p className="mt-2 text-sm text-muted">Updated {dateLabel(g.updated)} · {readingMinutes(g)} min read</p>
         <div className="mt-8 space-y-8 leading-relaxed">
           {g.sections.map((s) => (
             <section key={s.heading}>
@@ -58,6 +59,7 @@ export default async function GuidePage({ params }: Props) {
           ))}
         </ul>
       </article>
+      <GuideNextUp g={g} />
       <JsonLd
         data={{
           "@context": "https://schema.org",
