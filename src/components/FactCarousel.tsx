@@ -55,7 +55,7 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
     <div onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)} onFocus={() => setPaused(true)} onBlur={() => setPaused(false)}>
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
         <p className="eyebrow text-muted">
-          Did you know? <span className="font-medium normal-case tracking-normal">Counted from our listings, updated daily.</span>
+          Did you know?
         </p>
         {n > 1 && (
           <div className="flex items-center gap-4 text-xs font-semibold tabular-nums text-muted">
