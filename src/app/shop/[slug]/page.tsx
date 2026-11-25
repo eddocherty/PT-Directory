@@ -4,7 +4,9 @@ import { Arrow } from "@/components/Arrow";
 import { notFound } from "next/navigation";
 import { PlanCover } from "@/components/PlanCover";
 import { FreeSample } from "@/components/FreeSample";
+import { JsonLd } from "@/components/JsonLd";
 import { PRODUCTS, formatPrice, getProduct } from "@/lib/products";
+import { SITE_NAME, abs } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }>; searchParams: Promise<{ error?: string }> };
 
@@ -29,9 +31,27 @@ export default async function ProductPage({ params, searchParams }: Props) {
   if (!p) notFound();
   const { error } = await searchParams;
   const others = PRODUCTS.filter((x) => x.slug !== p.slug).slice(0, 3);
+  // Product data for Google: our own price, so it is verifiable. Digital download, UK buyers only.
+  const product = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: p.name,
+    description: p.description,
+    image: abs(`/shop/${p.slug}-cover.jpg`),
+    brand: { "@type": "Brand", name: SITE_NAME },
+    offers: {
+      "@type": "Offer",
+      url: abs(`/shop/${p.slug}`),
+      price: (p.price / 100).toFixed(2),
+      priceCurrency: "GBP",
+      availability: "https://schema.org/InStock",
+      eligibleRegion: { "@type": "Country", name: "GB" },
+    },
+  };
 
   return (
     <>
+      <JsonLd data={product} />
       <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14">
         <Link href="/shop" className="text-sm font-medium text-muted hover:text-ink"><Arrow dir="left" className="mr-1 h-3.5 w-3.5" />All plans</Link>
         <div className="mt-6 grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">

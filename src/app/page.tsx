@@ -34,7 +34,7 @@ export default async function Home() {
         data={{
           "@context": "https://schema.org",
           "@graph": [
-            { "@type": "Organization", "@id": abs("/#org"), name: SITE_NAME, url: abs("/"), logo: abs("/icon.svg"), slogan: TAGLINE },
+            { "@type": "Organization", "@id": abs("/#org"), name: SITE_NAME, url: abs("/"), logo: abs("/apple-icon.png"), slogan: TAGLINE },
             { "@type": "WebSite", "@id": abs("/#site"), name: SITE_NAME, url: abs("/"), publisher: { "@id": abs("/#org") }, inLanguage: "en-GB" },
           ],
         }}

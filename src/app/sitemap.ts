@@ -3,18 +3,19 @@ import { PRODUCTS } from "@/lib/products";
 import { abs } from "@/lib/site";
 import { AREAS } from "@/lib/areas";
 import { GUIDES } from "@/lib/guides";
-import { COUNTIES, allAreaStats, allTownStats, areaIndexable, areaKey, liveTopics, townIndexable, townTopicIndexable } from "@/lib/stats";
+import { COUNTIES, allAreaStats, allTownStats, ukCounts, areaIndexable, areaKey, liveTopics, townIndexable, townTopicIndexable } from "@/lib/stats";
 import { CITIES } from "@/lib/taxonomy";
-import { TOPICS } from "@/lib/topics";
+import { MIN_TRAINERS, TOPICS } from "@/lib/topics";
 import { publishedTrainerSlugs } from "@/lib/trainers";
 
 export const revalidate = 21600;
 
 /** Every page worth indexing. Towns with no trainers and specialism pages under three trainers are left out. */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [stats, areaStats, trainers] = await Promise.all([
+  const [stats, areaStats, uk, trainers] = await Promise.all([
     allTownStats(),
     allAreaStats(),
+    ukCounts(),
     publishedTrainerSlugs().catch((e) => {
       console.error("sitemap trainers", e);
       return [];
@@ -32,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     page("/online", 0.8),
     page("/locations", 0.8),
     page("/specialisms", 0.7),
-    ...TOPICS.map((t) => page(`/specialisms/${t.slug}`, 0.7)),
+    ...TOPICS.filter((t) => (uk.topics[t.slug] ?? 0) >= MIN_TRAINERS).map((t) => page(`/specialisms/${t.slug}`, 0.7)),
     ...COUNTIES.filter((c) => c.towns.some((t) => townIndexable(stats[t.slug]))).map((c) => page(`/counties/${c.slug}`, 0.6)),
     ...CITIES.filter((c) => townIndexable(stats[c.slug])).flatMap((c) => [
       page(`/locations/${c.slug}`, 0.9),
