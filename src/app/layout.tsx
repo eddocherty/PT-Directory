@@ -10,15 +10,8 @@ import { ShortlistNavLink } from "@/components/Saved";
 import "./globals.css";
 
 // Fonts are bundled with the site (src/fonts) rather than fetched from Google at build time.
-const display = localFont({
-  variable: "--font-display",
-  display: "swap",
-  src: [
-    { path: "../fonts/schibsted-grotesk-latin-700-normal.woff2", weight: "700" },
-    { path: "../fonts/schibsted-grotesk-latin-800-normal.woff2", weight: "800" },
-  ],
-});
-const body = localFont({ variable: "--font-body", display: "swap", src: "../fonts/inter-latin-wght-normal.woff2", weight: "100 900" });
+// Red Hat Display (variable weight) is used for both headings and body text, so one small file covers the whole site.
+const redHat = localFont({ variable: "--font-red-hat", display: "swap", src: "../fonts/red-hat-display-latin-wght-normal.woff2", weight: "300 900" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -40,7 +33,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en-GB">
-      <body className={`${display.variable} ${body.variable} antialiased min-h-screen flex flex-col`}>
+      <body className={`${redHat.variable} antialiased min-h-screen flex flex-col`}>
         <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur">
           <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
             <Link href="/" aria-label="Home"><Logo /></Link>

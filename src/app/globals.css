@@ -28,12 +28,15 @@
 
 html { color-scheme: light; }
 body {
+  /* One family for everything: Red Hat Display (ed's pick, option G). */
+  --font-display: var(--font-red-hat);
+  --font-body: var(--font-red-hat);
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-body), system-ui, sans-serif;
 }
 
-/* Display type: Schibsted Grotesk, a newspaper grotesque with more character than the body face */
+/* Display type: Red Hat Display at bold weight with tight tracking */
 .display {
   font-family: var(--font-display), var(--font-body), sans-serif;
   font-weight: 700;
