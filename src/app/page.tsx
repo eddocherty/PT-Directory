@@ -43,7 +43,7 @@ export default async function Home() {
         <UkTownMap stats={stats} className="absolute top-8 hidden h-[calc(100%-4rem)] lg:right-[3%] lg:block xl:right-[7%]" />
         <div className="pointer-events-none relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20 [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_form]:pointer-events-auto">
           <h1 className="display text-5xl sm:text-7xl lg:text-8xl">
-            Find a personal trainer <span className="text-accent">near you.</span>
+            Your local PT,<br /><span className="text-accent">found in seconds.</span>
           </h1>
           <form action="/trainers" className="mt-10 flex max-w-3xl flex-col gap-4 text-ink sm:flex-row sm:items-end sm:gap-6">
             <label className="flex-1">
