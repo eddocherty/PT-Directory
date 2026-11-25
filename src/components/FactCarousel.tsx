@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Arrow } from "./Arrow";
 import type { Fact } from "@/lib/facts";
 
-const EVERY_MS = 7500;
+const EVERY_MS = 8500;
 
 /**
  * Slides one fact along every few seconds (three visible on wide screens, one on phones).
