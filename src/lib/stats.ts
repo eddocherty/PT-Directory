@@ -85,7 +85,8 @@ export const allTownStats = unstable_cache(
     }
     return out;
   },
-  ["all-town-stats-v2"],
+  // The town count is in the key so a deploy that adds towns gets fresh stats straight away.
+  ["all-town-stats-v2", String(CITIES.length)],
   { revalidate: DAY / 4 },
 );
 
