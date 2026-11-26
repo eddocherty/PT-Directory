@@ -31,8 +31,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${t.name}, personal trainer${t.city ? ` in ${t.city}` : ""}`,
     description: describe(t),
     alternates: { canonical: `/trainers/${t.slug}` },
-    // Sample listings and profiles with too little detail stay out of Google; town pages cover them.
-    robots: t.is_sample || isThin(t) ? { index: false, follow: true } : undefined,
+    // Profiles with too little detail stay out of Google; town pages cover them.
+    robots: isThin(t) ? { index: false, follow: true } : undefined,
   };
 }
 
@@ -101,7 +101,7 @@ export default async function TrainerPage({ params }: Props) {
   // Up to six other trainers near the same town, ones sharing a style first, for people comparing options.
   const shared = (o: { styles: string[] }) => o.styles.filter((s) => t.styles.includes(s)).length;
   const nearby = (near?.trainers ?? [])
-    .filter((o) => o.slug !== t.slug && !o.is_sample)
+    .filter((o) => o.slug !== t.slug)
     .map((o, i) => ({ o, i }))
     .sort((a, b) => shared(b.o) - shared(a.o) || a.i - b.i)
     .slice(0, 6)
@@ -113,7 +113,7 @@ export default async function TrainerPage({ params }: Props) {
   const isPerson = !!t.business_name && t.business_name !== t.name && !/^the\s/i.test(t.name);
   const first = isPerson ? t.name.split(" ")[0] : t.name;
   // Real listings nobody has claimed yet: enquiries would have no one to read them, so send people to the trainer directly.
-  const direct = !t.claimed && !t.is_sample;
+  const direct = !t.claimed;
   const checked = t.last_verified_at ? new Date(t.last_verified_at).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : null;
   const sourceLabel = t.source === "osm" ? "OpenStreetMap and their own website" : t.source === "website" ? "their own website" : null;
   const where = [t.city, t.region && t.region !== t.city ? t.region : null].filter(Boolean).join(", ");
@@ -166,7 +166,6 @@ export default async function TrainerPage({ params }: Props) {
               <a href="#contact" data-track="contact_button" className="btn">Contact {first}</a>
               <HeartButton t={saved} variant="pill" />
             </div>
-            {t.is_sample && <p className="text-xs italic text-muted">Example listing, not a real trainer.</p>}
           </div>
         </div>
       </section>
@@ -328,7 +327,7 @@ export default async function TrainerPage({ params }: Props) {
         </div>
       </section>
       <RecentlyViewed exclude={t.slug} title="Trainers you looked at" />
-      {!t.is_sample && <JsonLd data={businessData(t)} />}
+      <JsonLd data={businessData(t)} />
 
       {/* Mobile sticky contact bar */}
       <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">

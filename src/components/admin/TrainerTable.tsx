@@ -31,7 +31,7 @@ export function TrainerTable({ trainers, statuses }: { trainers: AdminTrainer[];
   const base = useMemo(() => {
     const s = q.trim().toLowerCase();
     return rows.filter((t) =>
-      (listing === "all" ? true : listing === "sample" ? t.is_sample : t.status === listing && !t.is_sample) &&
+      (listing === "all" ? true : t.status === listing) &&
       (!county || t.county === county) && (!city || t.city === city) && (!style || t.styles.includes(style)) &&
       (!onlineOnly || t.online) &&
       (!s || [t.name, t.business_name, t.city, t.county, t.website, t.postcode_district].some((v) => v?.toLowerCase().includes(s))));
@@ -76,7 +76,7 @@ export function TrainerTable({ trainers, statuses }: { trainers: AdminTrainer[];
         </select>
         <select className="input" value={listing} onChange={(e) => setListing(e.target.value)}>
           <option value="published">Live listings</option><option value="hidden">Hidden</option><option value="removed">Removed</option>
-          <option value="sample">Sample (fake) trainers</option><option value="all">Everything</option>
+          <option value="all">Everything</option>
         </select>
         <select className="input" value={sort} onChange={(e) => setSort(e.target.value as keyof typeof SORTS)}>
           {Object.entries(SORTS).map(([k, v]) => <option key={k} value={k}>Sort: {v}</option>)}

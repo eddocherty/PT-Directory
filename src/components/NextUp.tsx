@@ -58,7 +58,7 @@ export async function GuideNextUp({ g }: { g: Guide }) {
   const next = nextGuide(g.slug);
   let trainers: Awaited<ReturnType<typeof cachedSearch>>["trainers"] = [];
   try {
-    trainers = (await cachedSearch(filtersFor(main))).trainers.filter((t) => !t.is_sample).slice(0, 3);
+    trainers = (await cachedSearch(filtersFor(main))).trainers.slice(0, 3);
   } catch {}
   const label = main === "online" ? "Online coaches" : main ? topicBySlug(main)?.people ?? "Trainers" : "Independent trainers";
   return (

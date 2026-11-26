@@ -53,7 +53,6 @@ export function TrainerCard({ t }: { t: TrainerSummary }) {
         <div className="mt-auto flex flex-wrap items-center justify-end gap-1">
           <span className="inline-flex items-center gap-1 text-xs font-semibold text-muted group-hover:text-ink">View profile <Arrow className="h-3 w-3" /></span>
         </div>
-        {t.is_sample && <span className="text-[11px] italic text-muted">Example listing</span>}
       </div>
     </Link>
     <HeartButton
