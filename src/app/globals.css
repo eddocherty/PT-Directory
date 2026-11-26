@@ -43,6 +43,19 @@ body {
   letter-spacing: -0.03em;
   line-height: 1;
 }
+/* Headings wrap only between words, never mid-word (layered, so a utility
+   like [overflow-wrap:anywhere] can still opt in for one-word trainer names) */
+@layer components {
+  .display {
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: manual;
+  }
+}
+/* Home page style tiles: size follows the screen width so every word fits its tile */
+.tile-title {
+  font-size: clamp(1.125rem, 6vw, 2.25rem);
+}
 .eyebrow {
   @apply text-xs font-bold uppercase tracking-[0.18em];
 }

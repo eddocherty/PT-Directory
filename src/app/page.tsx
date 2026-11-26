@@ -94,15 +94,17 @@ export default async function Home() {
               <Link
                 key={slug}
                 href={`/specialisms/${slug}`}
-                className={`group flex aspect-[4/3] md:aspect-[16/9] flex-col justify-between p-5 transition hover:-translate-y-1 ${
+                className={`group flex min-h-[8.5rem] flex-col justify-between gap-4 p-4 transition hover:-translate-y-1 min-[400px]:p-5 sm:aspect-[4/3] md:aspect-[16/9] ${
                   i === 0 ? "bg-accent text-paper" : i % 2 ? "bg-soft" : "bg-zap"
                 }`}
               >
-                <span className="text-sm font-medium opacity-90">{n > 0 ? `${n} trainers` : ""}</span>
-                <span className="flex items-end justify-between gap-3">
-                  <span className="display min-w-0 text-xl [overflow-wrap:anywhere] min-[360px]:text-2xl sm:text-4xl">{TRAINING_STYLES.find((x) => x.slug === slug)?.name ?? topic.name}</span>
-                  <Arrow className="mb-1 h-5 w-5 shrink-0 transition group-hover:translate-x-1" />
+                {/* Count and arrow share the top row, so the name gets the full tile width
+                    and long words like "bootcamp" never have to split. */}
+                <span className="flex items-center justify-between gap-3 text-sm font-medium">
+                  <span className="opacity-90">{n > 0 ? `${n} trainer${n === 1 ? "" : "s"}` : ""}</span>
+                  <Arrow className="h-5 w-5 shrink-0 transition group-hover:translate-x-1" />
                 </span>
+                <span className="display tile-title">{TRAINING_STYLES.find((x) => x.slug === slug)?.name ?? topic.name}</span>
               </Link>
             );
           })}
