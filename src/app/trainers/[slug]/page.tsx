@@ -237,28 +237,35 @@ export default async function TrainerPage({ params }: Props) {
             </section>
           )}
 
-          <section id="reviews" className="scroll-mt-24">
-            <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-              <H2>Reviews</H2>
-              {t.rating_avg != null && (
-                <p className="mb-4 flex items-center gap-2"><Stars value={t.rating_avg} size="text-lg" /> <strong>{t.rating_avg.toFixed(1)}</strong> from {t.review_count}</p>
-              )}
-            </div>
-            {t.reviews.length === 0 && <p className="text-muted">No reviews yet. If you’ve trained with {first}, you can write one below.</p>}
-            <div className="grid gap-4 sm:grid-cols-2">
-              {t.reviews.map((r) => (
-                <figure key={r.id} className="bg-soft p-5">
-                  <Stars value={r.rating} />
-                  {r.body && <blockquote className="mt-2 text-sm leading-relaxed">“{r.body}”</blockquote>}
-                  <figcaption className="mt-3 text-xs font-semibold text-muted">{r.author_name}</figcaption>
-                </figure>
-              ))}
-            </div>
-            <details className="mt-6 border border-line p-5">
-              <summary className="cursor-pointer font-semibold">Write a review</summary>
+          {t.reviews.length > 0 ? (
+            <section id="reviews" className="scroll-mt-24">
+              <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                <H2>Reviews</H2>
+                {t.rating_avg != null && (
+                  <p className="mb-4 flex items-center gap-2"><Stars value={t.rating_avg} size="text-lg" /> <strong>{t.rating_avg.toFixed(1)}</strong> from {t.review_count}</p>
+                )}
+              </div>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {t.reviews.map((r) => (
+                  <figure key={r.id} className="bg-soft p-5">
+                    <Stars value={r.rating} />
+                    {r.body && <blockquote className="mt-2 text-sm leading-relaxed">“{r.body}”</blockquote>}
+                    <figcaption className="mt-3 text-xs font-semibold text-muted">{r.author_name}</figcaption>
+                  </figure>
+                ))}
+              </div>
+              <details className="mt-6 border border-line p-5">
+                <summary className="cursor-pointer font-semibold">Write a review</summary>
+                <div className="mt-4"><ReviewForm slug={t.slug} firstName={first} /></div>
+              </details>
+            </section>
+          ) : (
+            /* No reviews yet: no empty "Reviews" section, just a quiet way to leave the first one. */
+            <details id="reviews" className="scroll-mt-24 border-t border-line pt-5">
+              <summary className="cursor-pointer font-semibold">Trained with {first}? Write a review</summary>
               <div className="mt-4"><ReviewForm slug={t.slug} firstName={first} /></div>
             </details>
-          </section>
+          )}
         </div>
 
         <aside className="lg:sticky lg:top-24 lg:self-start" id="contact">

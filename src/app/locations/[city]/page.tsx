@@ -24,7 +24,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   return {
     title: n >= 3 ? `${n} personal trainers in ${city.name}` : `Personal trainers in ${city.name}`,
     description: n
-      ? `Compare ${n} independent personal trainers near ${city.name}, ${city.county}${top.length ? `, including ${top.join(", ")}` : ""}. See specialisms and reviews, then contact them directly.`
+      ? `Compare ${n} independent personal trainers near ${city.name}, ${city.county}${top.length ? `, including ${top.join(", ")}` : ""}. See specialisms, then contact them directly.`
       : `Independent personal trainers near ${city.name}, ${city.county}, plus UK online coaches.`,
     alternates: { canonical: `/locations/${city.slug}` },
     // Filtered views and empty towns are for visitors, not for Google.

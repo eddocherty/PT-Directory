@@ -13,7 +13,7 @@ export async function generateMetadata({ searchParams }: Props): Promise<Metadat
   const sp = await searchParams;
   return {
     title: "Online personal trainers in the UK",
-    description: "Independent UK personal trainers and coaches who work with clients online, wherever you live. Compare specialisms and reviews.",
+    description: "Independent UK personal trainers and coaches who work with clients online, wherever you live. Compare their specialisms and contact them directly.",
     alternates: { canonical: "/online" },
     robots: Object.keys(sp).length ? { index: false, follow: true } : undefined,
   };

@@ -56,7 +56,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (a)
     return {
       title: `Personal trainers in ${a.area.name}, ${a.city.name}`,
-      description: `${a.s.total} independent personal trainers and coaches within ${AREA_RADIUS} miles of ${a.area.name}. Compare specialisms and reviews, then contact them directly.`,
+      description: `${a.s.total} independent personal trainers and coaches within ${AREA_RADIUS} miles of ${a.area.name}. Compare specialisms, then contact them directly.`,
       alternates: { canonical: `/locations/${a.city.slug}/${a.area.slug}` },
       robots: areaIndexable(a.s) ? undefined : { index: false, follow: true },
     };
