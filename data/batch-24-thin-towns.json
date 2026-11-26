@@ -1,0 +1,255 @@
+[
+  {
+    "business_name": "Pilates Haven",
+    "headline": "Reformer and mat Pilates, yoga and more in Armagh",
+    "bio": "Pilates Haven is a studio on Scotch Street in Armagh offering reformer and mat Pilates, yoga, TRX and Zumba under one flexible membership, plus online options.",
+    "city": "Armagh",
+    "region": "Northern Ireland",
+    "postcode_district": "BT61",
+    "lat": 54.3469,
+    "lng": -6.6514,
+    "in_person": true,
+    "online": true,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates",
+      "yoga"
+    ],
+    "goals": [
+      "general-fitness",
+      "flexibility",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://www.pilateshavenfitness.com/",
+    "source": "website",
+    "source_url": "https://www.pilateshavenfitness.com/",
+    "slug": "pilates-haven-armagh",
+    "name": "Pilates Haven"
+  },
+  {
+    "business_name": "R8 Coffee & Cardio",
+    "headline": "Small group personal training and HIIT classes in Armagh",
+    "bio": "R8 runs heart-rate tracked strength and cardio classes, small group personal training programmes and 1-1 or 1-2 personal training at its Armagh studio, with nutrition support.",
+    "city": "Armagh",
+    "region": "Northern Ireland",
+    "postcode_district": "BT61",
+    "lat": 54.346,
+    "lng": -6.6517,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "hiit",
+      "strength",
+      "functional"
+    ],
+    "goals": [
+      "weight-loss",
+      "general-fitness",
+      "endurance"
+    ],
+    "free_consultation": false,
+    "website": "https://r8coffeecardio.com/pages/gym",
+    "source": "website",
+    "source_url": "https://r8coffeecardio.com/pages/gym",
+    "slug": "r8-coffee-and-cardio-armagh",
+    "name": "R8 Coffee & Cardio"
+  },
+  {
+    "business_name": "The Core Pilates Studio",
+    "headline": "Small mat and equipment Pilates classes near Lichfield",
+    "bio": "Steph Lloyd established The Core Pilates Studio in 2007 at Elford, near Lichfield, with mat classes of no more than five and equipment classes of no more than four people.",
+    "city": "Lichfield",
+    "region": "West Midlands",
+    "postcode_district": "B79",
+    "lat": 52.6936,
+    "lng": -1.7274,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "rehab",
+      "flexibility",
+      "older-adults"
+    ],
+    "free_consultation": false,
+    "website": "https://www.thecorepilatesstudio.co.uk/",
+    "source": "website",
+    "source_url": "https://www.thecorepilatesstudio.co.uk/",
+    "slug": "the-core-pilates-studio-lichfield",
+    "name": "Steph Lloyd"
+  },
+  {
+    "business_name": "Louise Clancy Pilates",
+    "headline": "Pilates classes around Wrexham and online",
+    "bio": "Louise Clancy and her team teach Pilates classes in Gresford, Marford, Rossett, Holt and Pulford near Wrexham, plus online classes and recordings, to ease aches and stiffness.",
+    "city": "Wrexham",
+    "region": "Wales",
+    "postcode_district": "LL12",
+    "lat": 53.0879,
+    "lng": -2.989,
+    "in_person": true,
+    "online": true,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "flexibility",
+      "older-adults",
+      "rehab"
+    ],
+    "free_consultation": false,
+    "website": "https://lcpilates.kartra.com/page/LCP-Home",
+    "source": "website",
+    "source_url": "https://lcpilates.kartra.com/page/LCP-Home",
+    "slug": "louise-clancy-pilates-wrexham",
+    "name": "Louise Clancy"
+  },
+  {
+    "business_name": "Northern Light Yoga",
+    "headline": "Dru yoga for wellbeing in Bangor",
+    "bio": "Naomi teaches Dru yoga in and around Bangor, with classes for beginners and experienced students that focus on wellbeing, easing stiff joints and improving posture.",
+    "city": "Bangor",
+    "region": "Wales",
+    "postcode_district": "LL57",
+    "lat": 53.2068,
+    "lng": -4.1121,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "yoga"
+    ],
+    "goals": [
+      "flexibility",
+      "older-adults",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://northernlightyoga.co.uk/",
+    "source": "website",
+    "source_url": "https://northernlightyoga.co.uk/",
+    "slug": "northern-light-yoga-bangor-wales",
+    "name": "Naomi"
+  },
+  {
+    "business_name": "Sister Studio",
+    "headline": "Online Pilates led by two sisters in Derry",
+    "bio": "Sister Studio is run by sisters Claire and Kathryn, based in Derry / Londonderry, offering live online Pilates classes for men and women of all levels, plus Pilates for sports.",
+    "city": "Londonderry",
+    "region": "Northern Ireland",
+    "postcode_district": "BT48",
+    "lat": 55.0104,
+    "lng": -7.3278,
+    "in_person": false,
+    "online": true,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "general-fitness",
+      "sports-performance",
+      "flexibility"
+    ],
+    "free_consultation": false,
+    "website": "https://www.sisterstudio.uk/",
+    "source": "website",
+    "source_url": "https://www.sisterstudio.uk/",
+    "slug": "sister-studio-londonderry",
+    "name": "Claire and Kathryn"
+  },
+  {
+    "business_name": "Studio 25",
+    "headline": "Boutique reformer Pilates studio in Doncaster",
+    "bio": "Studio 25 is a boutique reformer Pilates studio in Doncaster with classes for every level, including first-timers and experienced clients, plus private 1:1 sessions.",
+    "city": "Doncaster",
+    "region": "Yorkshire and the Humber",
+    "postcode_district": "DN1",
+    "lat": 53.5214,
+    "lng": -1.1306,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates"
+    ],
+    "goals": [
+      "general-fitness",
+      "flexibility",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://www.studio25reformerpilates.co.uk/",
+    "source": "website",
+    "source_url": "https://www.studio25reformerpilates.co.uk/",
+    "slug": "studio-25-doncaster",
+    "name": "Studio 25"
+  },
+  {
+    "business_name": "Rise Wellness Concept",
+    "headline": "Mat and reformer studios in Auckley and Bawtry",
+    "bio": "Rise Wellness Concept is a boutique Pilates and fitness business near Doncaster with a mat studio in Auckley and a reformer studio in Bawtry, running Pilates, yoga, barre and strength classes.",
+    "city": "Doncaster",
+    "region": "Yorkshire and the Humber",
+    "postcode_district": "DN9",
+    "lat": 53.4973,
+    "lng": -1.0342,
+    "in_person": true,
+    "online": false,
+    "home_visits": false,
+    "price_from": null,
+    "price_to": null,
+    "qualifications": [],
+    "years_experience": null,
+    "styles": [
+      "pilates",
+      "yoga",
+      "strength"
+    ],
+    "goals": [
+      "general-fitness",
+      "flexibility",
+      "confidence"
+    ],
+    "free_consultation": false,
+    "website": "https://www.risewellnessconcept.co.uk/",
+    "source": "website",
+    "source_url": "https://www.risewellnessconcept.co.uk/",
+    "slug": "rise-wellness-concept-doncaster",
+    "name": "Rise Wellness Concept"
+  }
+]
