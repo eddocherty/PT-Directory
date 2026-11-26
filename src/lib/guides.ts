@@ -15,6 +15,65 @@ export type Guide = {
 
 export const GUIDES: Guide[] = [
   {
+    slug: "pilates-for-beginners",
+    title: "Pilates for beginners: what happens at your first class",
+    summary: "What a first Pilates class is like, the words instructors use, what to wear and bring, how often to go, and how to choose a class or instructor.",
+    updated: "2026-11-26",
+    sections: [
+      {
+        heading: "What Pilates is",
+        body: [
+          "Pilates is a way of exercising that focuses on control, breathing and the deep muscles around your middle, hips and back. Movements are slow and precise rather than fast and sweaty. It suits most ages and fitness levels, because nearly every exercise has an easier and a harder version.",
+          "You will usually choose between mat classes, done on the floor with your body weight, and reformer classes, done on a machine with springs. If you are not sure which, our guide to reformer and mat Pilates explains the difference.",
+        ],
+      },
+      {
+        heading: "Before your first class",
+        body: [
+          "Most instructors ask you to fill in a short health form. Mention any injuries, back or joint problems, recent surgery, pregnancy or a recent birth, even if they seem minor. Arrive five or ten minutes early so the instructor can talk to you and show you how to set up.",
+          "Many reformer studios ask new clients to book an introduction class or a private session first. It is worth doing, because the machine takes a little getting used to.",
+        ],
+      },
+      {
+        heading: "What happens in the class",
+        body: [
+          "Classes usually last 45 to 60 minutes. Expect to start lying on your back, learning how to breathe and how to find a comfortable position for your spine. From there the class works through a series of exercises for your middle, legs, arms and back, often finishing with some stretching.",
+          "It may feel gentle at first, and then surprisingly hard. Small, slow movements done properly ask a lot of muscles you don't often use. Shaking is normal. If something pinches or hurts, stop and tell the instructor, who should give you another option.",
+        ],
+      },
+      {
+        heading: "Words you might hear",
+        body: [
+          "Neutral spine means keeping the natural curves of your back, neither flattened nor arched. Imprint means gently pressing your lower back towards the mat. Your powerhouse, or centre, is the band of muscles around your middle, hips and lower back. Instructors also talk a lot about breathing in through the nose and out through the mouth to help you move with control.",
+          "You don't need to know any of this before you go. A good instructor will explain each term the first time it comes up.",
+        ],
+      },
+      {
+        heading: "What to wear and bring",
+        body: [
+          "Wear close-fitting clothes you can move in, so the instructor can see your position. Most people do Pilates barefoot on a mat, and many reformer studios ask for grip socks, so check before you go. Bring water. Mat classes usually provide mats, but some people prefer to bring their own.",
+        ],
+      },
+      {
+        heading: "How often to go, and when you'll notice a difference",
+        body: [
+          "Once or twice a week is a good start. Many people say they feel steadier, stand taller or move more easily after a few weeks of regular classes, though it varies from person to person. Pilates works well alongside walking, running or strength training, and the UK Chief Medical Officers' guidelines suggest adults do some muscle-strengthening activity on at least two days a week.",
+        ],
+      },
+      {
+        heading: "Choosing a class or instructor",
+        body: [
+          "Pilates teacher isn't a protected title in the UK, so ask what training your instructor has done, how long the course was, and whether it covered mat, reformer or both. Ask how many people are in a class and whether there is a beginners' class. Smaller groups mean more help with your position.",
+          "If you have a back problem, an injury, a long-term condition, or are pregnant or recently postnatal, start with one-to-one sessions or a small group, and check with your GP, midwife or physiotherapist first. Some instructors specialise in these groups and will say so.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/specialisms/pilates", label: "Pilates instructors near you" },
+      { href: "/guides/reformer-vs-mat-pilates", label: "Reformer or mat Pilates?" },
+    ],
+  },
+  {
     slug: "starting-with-a-personal-trainer-in-january",
     title: "Starting with a personal trainer in January: a realistic first 12 weeks",
     summary: "How to start training in the new year without burning out by February: what to expect month by month, how to set a goal you can keep, and when to book.",
