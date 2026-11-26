@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: `${SITE_NAME}: independent personal trainers near you`, template: `%s | ${SITE_NAME}` },
   description:
-    "Find independent personal trainers, Pilates instructors and small studios near you, or online, across the UK. Compare specialisms and reviews, then contact them directly.",
+    "Find independent personal trainers, Pilates instructors and small studios near you, or online, across the UK. Compare specialisms, then contact them directly.",
   applicationName: SITE_NAME,
   robots: INDEXABLE ? undefined : { index: false, follow: false },
   openGraph: {

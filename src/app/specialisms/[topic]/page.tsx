@@ -21,7 +21,7 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   const thin = (uk.topics[topic.slug] ?? 0) < MIN_TRAINERS;
   return {
     title: `${topic.people} across the UK`,
-    description: TOPIC_INTROS[topic.slug]?.split(". ").slice(0, 2).join(". ").replace(/\.?$/, ".") ?? `Find independent ${lowerFirst(topic.people)} near you. Browse by town, compare specialisms and reviews, then contact trainers directly.`,
+    description: TOPIC_INTROS[topic.slug]?.split(". ").slice(0, 2).join(". ").replace(/\.?$/, ".") ?? `Find independent ${lowerFirst(topic.people)} near you. Browse by town, compare specialisms, then contact trainers directly.`,
     alternates: { canonical: `/specialisms/${topic.slug}` },
     robots: Object.keys(sp).length || thin ? { index: false, follow: true } : undefined,
   };
