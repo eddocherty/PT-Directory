@@ -1,12 +1,20 @@
 export type Option = { slug: string; name: string };
 
 export const TRAINING_STYLES: Option[] = [
+  { slug: "burnley", name: "Burnley", county: "Lancashire", nation: "England", lat: 53.789, lng: -2.248 },
+  { slug: "eastbourne", name: "Eastbourne", county: "East Sussex", nation: "England", lat: 50.7684, lng: 0.2903 },
+  { slug: "gateshead", name: "Gateshead", county: "Tyne and Wear", nation: "England", lat: 54.9527, lng: -1.6034 },
+  { slug: "halifax", name: "Halifax", county: "West Yorkshire", nation: "England", lat: 53.7248, lng: -1.8658 },
+  { slug: "hastings", name: "Hastings", county: "East Sussex", nation: "England", lat: 50.8543, lng: 0.5735 },
+  { slug: "mansfield", name: "Mansfield", county: "Nottinghamshire", nation: "England", lat: 53.1472, lng: -1.1987 },
+  { slug: "stockton-on-tees", name: "Stockton-on-Tees", county: "County Durham", nation: "England", lat: 54.5705, lng: -1.3181 },
   { slug: "strength", name: "Strength training" },
   { slug: "bodybuilding", name: "Bodybuilding" },
   { slug: "powerlifting", name: "Powerlifting" },
   { slug: "hiit", name: "HIIT" },
   { slug: "crossfit", name: "CrossFit style" },
   { slug: "boxing", name: "Boxing & combat" },
+  { slug: "worthing", name: "Worthing", county: "West Sussex", nation: "England", lat: 50.8179, lng: -0.3729 },
   { slug: "yoga", name: "Yoga" },
   { slug: "pilates", name: "Pilates" },
   { slug: "kettlebells", name: "Kettlebells" },
