@@ -1,7 +1,5 @@
 import { unstable_cache } from "next/cache";
-import sample from "../../data/sample-trainers.json";
 import { getSupabase } from "./supabase";
-import { milesBetween } from "./geocode";
 
 export type TrainerSummary = {
   id: string;
@@ -65,81 +63,9 @@ export type SearchFilters = {
 
 export const PAGE_SIZE = 24;
 
-type SampleRow = (typeof sample)[number];
-
-function fromSample(r: SampleRow, distance: number | null = null): Trainer {
-  const reviews = r.reviews.map((v, i) => ({ ...v, id: `${r.slug}-${i}`, created_at: "2026-11-01T00:00:00Z" }));
-  return {
-    id: r.slug,
-    slug: r.slug,
-    name: r.name,
-    business_name: r.business_name,
-    headline: r.headline,
-    bio: r.bio,
-    city: r.city,
-    region: r.region,
-    postcode_district: r.postcode_district,
-    in_person: r.in_person,
-    online: r.online,
-    home_visits: r.home_visits,
-    price_from: r.price_from,
-    price_to: r.price_to,
-    gender: r.gender,
-    image_url: r.image_url,
-    photos: [],
-    sports: r.sports,
-    free_consultation: r.free_consultation,
-    reviews,
-    review_count: reviews.length,
-    rating_avg: reviews.length ? Math.round((reviews.reduce((a, v) => a + v.rating, 0) / reviews.length) * 10) / 10 : null,
-    is_sample: true,
-    claimed: false,
-    styles: r.styles,
-    goals: r.goals,
-    qualifications: r.qualifications,
-    years_experience: r.years_experience,
-    website: null,
-    email: null,
-    phone: null,
-    instagram: null,
-    source: r.source,
-    source_url: null,
-    source_licence: null,
-    last_verified_at: null,
-    distance_miles: distance,
-  };
-}
-
-function searchSample(f: SearchFilters, limit = PAGE_SIZE): { trainers: TrainerSummary[]; total: number } {
-  const origin = f.lat != null && f.lng != null ? { lat: f.lat, lng: f.lng } : null;
-  const radius = f.radius ?? 25;
-  let rows = sample
-    .map((r) => fromSample(r, origin ? milesBetween(origin, r) : null))
-    .filter((t) => {
-      if (origin && !(t.distance_miles! <= radius || (f.online && t.online))) return false;
-      if (f.city && t.city?.toLowerCase() !== f.city.toLowerCase()) return false;
-      if (f.online != null && t.online !== f.online) return false;
-      if (f.homeVisits != null && t.home_visits !== f.homeVisits) return false;
-      if (f.gender && t.gender !== f.gender) return false;
-      if (f.styles?.length && !t.styles.some((s) => f.styles!.includes(s))) return false;
-      if (f.goals?.length && !t.goals.some((g) => f.goals!.includes(g))) return false;
-      if (f.sports?.length && !t.sports.some((g) => f.sports!.includes(g))) return false;
-      if (f.q) {
-        const q = f.q.toLowerCase();
-        if (![t.name, t.business_name, t.headline].some((v) => v?.toLowerCase().includes(q))) return false;
-      }
-      return true;
-    });
-  rows = rows.sort(
-    (a, b) => (a.distance_miles ?? Infinity) - (b.distance_miles ?? Infinity) || a.name.localeCompare(b.name),
-  );
-  const page = Math.max(1, f.page ?? 1);
-  return { trainers: rows.slice((page - 1) * limit, page * limit), total: rows.length };
-}
-
 export async function searchTrainers(f: SearchFilters, limit = PAGE_SIZE): Promise<{ trainers: TrainerSummary[]; total: number }> {
   const db = getSupabase();
-  if (!db) return searchSample(f, limit);
+  if (!db) return { trainers: [], total: 0 };
 
   const page = Math.max(1, f.page ?? 1);
   const { data, error } = await db.rpc("search_trainers", {
@@ -165,10 +91,7 @@ export async function searchTrainers(f: SearchFilters, limit = PAGE_SIZE): Promi
 
 export async function getTrainer(slug: string): Promise<Trainer | null> {
   const db = getSupabase();
-  if (!db) {
-    const r = sample.find((s) => s.slug === slug);
-    return r ? fromSample(r) : null;
-  }
+  if (!db) return null;
   const { data, error } = await db
     .from("trainers")
     .select("*, trainer_styles(style_slug), trainer_goals(goal_slug)")

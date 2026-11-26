@@ -4,7 +4,7 @@ A directory of personal trainers across the UK. Visitors filter by location and 
 
 **Stack:** Next.js 15 (App Router, TypeScript, Tailwind) on Vercel, with Supabase Postgres and PostGIS. postcodes.io (free, Open Government Licence) turns postcodes and towns into coordinates.
 
-Until Supabase env vars are set, the site runs on the fictional sample listings in `data/sample-trainers.json`, so it can be deployed and previewed straight away.
+The site needs the Supabase env vars set; without them pages render with no trainers.
 
 ## Setup
 
@@ -12,7 +12,7 @@ Until Supabase env vars are set, the site runs on the fictional sample listings 
 2. **Env vars.** Copy `.env.example` to `.env.local`, then add the same values in Vercel under Project → Settings → Environment Variables. The service role key (`SUPABASE_SERVICE_ROLE_KEY`) is used server-side only, by the admin area and visitor tracking. Never prefix it with `NEXT_PUBLIC_`.
 3. **Load data.**
    ```bash
-   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-trainers.mjs data/sample-trainers.json
+   SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-trainers.mjs data/<file>.json
    ```
 4. Run `npm run dev` to work locally.
 

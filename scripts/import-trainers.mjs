@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Upsert trainers from a JSON file into Supabase.
-// Usage: SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-trainers.mjs data/sample-trainers.json
+// Usage: SUPABASE_URL=... SUPABASE_SERVICE_ROLE_KEY=... node scripts/import-trainers.mjs data/<file>.json
 //
 // Each record: { slug, name, business_name?, headline?, bio?, gender?, city?, region?, postcode_district?,
 //   lat?, lng?, in_person?, online?, home_visits?, price_from?, price_to?, qualifications?, years_experience?,
