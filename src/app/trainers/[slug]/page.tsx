@@ -28,7 +28,7 @@ function nameSize(name: string) {
   const longest = Math.max(...name.split(/[\s-]+/).map((w) => w.length));
   if (longest >= 16) return "text-2xl min-[400px]:text-3xl lg:text-4xl xl:text-5xl";
   if (longest >= 13) return "text-3xl min-[400px]:text-4xl sm:text-3xl lg:text-5xl xl:text-6xl";
-  if (longest >= 11) return "text-4xl min-[400px]:text-5xl lg:text-6xl";
+  if (longest >= 11) return "text-4xl min-[400px]:text-5xl sm:text-4xl lg:text-6xl";
   return "text-4xl min-[400px]:text-5xl sm:text-6xl";
 }
 
