@@ -38,18 +38,18 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <header className="sticky top-0 z-40 border-b border-line bg-paper/85 backdrop-blur">
           <nav className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4">
             <Link href="/" aria-label="Home"><Logo /></Link>
-            {/* Fits a 320px-wide phone: tighter gaps and a shorter button label below 385px. Links get extra
-                invisible padding (py-3 -my-3) so they're comfortable to tap without changing the layout. */}
-            <div className="flex items-center gap-3 text-sm font-medium min-[385px]:gap-3.5 sm:gap-6">
+            {/* Fits a 320px-wide phone: tighter gaps, a short "Search" button label on phones, and Articles from
+                350px up. Links get extra invisible padding (py-3 -my-3) so they're comfortable to tap. */}
+            <div className="flex items-center gap-2 text-sm font-medium min-[385px]:gap-3.5 sm:gap-6">
               <Link href="/online" className="-my-3 py-3 text-muted hover:text-ink">Online</Link>
               <Link href="/locations" className="-my-3 hidden py-3 text-muted hover:text-ink sm:inline">Locations</Link>
               <Link href="/specialisms" className="-my-3 hidden py-3 text-muted hover:text-ink md:inline">Specialisms</Link>
-              <Link href="/articles" className="-my-3 hidden py-3 text-muted hover:text-ink sm:inline">Articles</Link>
+              <Link href="/articles" className="-my-3 hidden py-3 text-muted hover:text-ink min-[350px]:inline">Articles</Link>
               <Link href="/shop" className="-my-3 py-3 text-muted hover:text-ink">Plans <span className="ml-1 hidden text-xs font-semibold text-accent sm:inline">from {FROM_PRICE}</span></Link>
               <ShortlistNavLink />
               <Link href="/trainers" className="btn whitespace-nowrap py-1 text-sm">
-                <span className="min-[385px]:hidden">Search</span>
-                <span className="hidden min-[385px]:inline">Find a trainer</span>
+                <span className="sm:hidden">Search</span>
+                <span className="hidden sm:inline">Find a trainer</span>
               </Link>
             </div>
           </nav>
