@@ -19,6 +19,19 @@ import { MIN_TRAINERS, TOWN_RADIUS } from "@/lib/topics";
 import { cachedSearch, getTrainer, isThin, type Trainer } from "@/lib/trainers";
 import { CITIES } from "@/lib/taxonomy";
 
+/**
+ * Heading size for a trainer's name, stepped down by its longest word, so one long word
+ * ("Macclesfield", "Bodytransformation") fits the column whole instead of splitting mid-word
+ * on phones and tablets, where the name sits beside the photo in a narrow column.
+ */
+function nameSize(name: string) {
+  const longest = Math.max(...name.split(/[\s-]+/).map((w) => w.length));
+  if (longest >= 16) return "text-2xl min-[400px]:text-3xl lg:text-4xl xl:text-5xl";
+  if (longest >= 13) return "text-3xl min-[400px]:text-4xl sm:text-3xl lg:text-5xl xl:text-6xl";
+  if (longest >= 11) return "text-4xl min-[400px]:text-5xl lg:text-6xl";
+  return "text-4xl min-[400px]:text-5xl sm:text-6xl";
+}
+
 // years_experience was recorded in 2026; show a start year so it never goes stale.
 const EXPERIENCE_BASE_YEAR = 2026;
 
@@ -82,7 +95,7 @@ function businessData(t: Trainer) {
 }
 
 function H2({ children }: { children: React.ReactNode }) {
-  return <h2 className="display mb-4 text-3xl">{children}</h2>;
+  return <h2 className="display mb-4 text-3xl [overflow-wrap:anywhere]">{children}</h2>;
 }
 
 export default async function TrainerPage({ params }: Props) {
@@ -148,7 +161,7 @@ export default async function TrainerPage({ params }: Props) {
               ]}
             />
             <div>
-              <h1 className="display text-4xl [overflow-wrap:anywhere] min-[400px]:text-5xl sm:text-6xl">{t.name}</h1>
+              <h1 className={`display [overflow-wrap:anywhere] ${nameSize(t.name)}`}>{t.name}</h1>
               <p className="mt-3 text-lg text-muted">{where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
             </div>
             {t.review_count > 0 && t.rating_avg != null && (
@@ -171,7 +184,7 @@ export default async function TrainerPage({ params }: Props) {
       </section>
 
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 lg:grid-cols-[1fr_380px]">
-        <div className="flex flex-col gap-12">
+        <div className="flex min-w-0 flex-col gap-12">
           {t.bio && (
             <section>
               <H2>About {first}</H2>
@@ -268,9 +281,9 @@ export default async function TrainerPage({ params }: Props) {
           )}
         </div>
 
-        <aside className="lg:sticky lg:top-24 lg:self-start" id="contact">
+        <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start" id="contact">
           <div className="scroll-mt-24 bg-soft p-6">
-            <p className="display text-3xl">Contact {first}</p>
+            <p className="display text-2xl [overflow-wrap:anywhere] sm:text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">
               Ask {first} about prices and availability.
             </p>
@@ -338,8 +351,9 @@ export default async function TrainerPage({ params }: Props) {
 
       {/* Mobile sticky contact bar */}
       <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">
-        <span className="text-sm font-semibold">{t.name}</span>
-        <a href="#contact" data-track="contact_button" className="btn">Contact {first}</a>
+        {/* A business's button already carries its full name, so only show the name beside a person's first name. */}
+        {first !== t.name && <span className="min-w-0 truncate text-sm font-semibold">{t.name}</span>}
+        <a href="#contact" data-track="contact_button" className="btn ml-auto">Contact {first}</a>
       </div>
     </>
   );
