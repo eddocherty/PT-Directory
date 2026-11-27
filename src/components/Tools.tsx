@@ -115,7 +115,7 @@ export function SessionsTool() {
         <p className="mt-4 text-paper/85">{r.why}</p>
         <div className="mt-auto flex flex-wrap gap-3 pt-6">
           <Link href="/match" className="btn-light">Find a trainer who fits <Arrow /></Link>
-          <Link href="/guides/how-often-should-you-see-a-personal-trainer" className="inline-flex items-center px-2 text-sm font-semibold underline">Read the guide</Link>
+          <Link href="/articles/how-often-should-you-see-a-personal-trainer" className="inline-flex items-center px-2 text-sm font-semibold underline">Read the article</Link>
         </div>
       </div>
     </div>

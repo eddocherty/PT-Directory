@@ -44,6 +44,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/online" className="-my-3 py-3 text-muted hover:text-ink">Online</Link>
               <Link href="/locations" className="-my-3 hidden py-3 text-muted hover:text-ink sm:inline">Locations</Link>
               <Link href="/specialisms" className="-my-3 hidden py-3 text-muted hover:text-ink md:inline">Specialisms</Link>
+              <Link href="/articles" className="-my-3 hidden py-3 text-muted hover:text-ink sm:inline">Articles</Link>
               <Link href="/shop" className="-my-3 py-3 text-muted hover:text-ink">Plans <span className="ml-1 hidden text-xs font-semibold text-accent sm:inline">from {FROM_PRICE}</span></Link>
               <ShortlistNavLink />
               <Link href="/trainers" className="btn whitespace-nowrap py-1 text-sm">
@@ -69,7 +70,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               <Link href="/specialisms" className="text-paper/70 hover:text-paper">By specialism</Link>
               <Link href="/online" className="text-paper/70 hover:text-paper">Online coaching</Link>
               <Link href="/shop" className="text-paper/70 hover:text-paper">Training plans</Link>
-              <Link href="/guides" className="text-paper/70 hover:text-paper">Choosing a trainer</Link>
+              <Link href="/articles" className="text-paper/70 hover:text-paper">Articles</Link>
               <Link href="/match" className="text-paper/70 hover:text-paper">Find your training match</Link>
               <Link href="/tools" className="text-paper/70 hover:text-paper">Free tools</Link>
               <Link href="/shortlist" className="text-paper/70 hover:text-paper">Your shortlist</Link>

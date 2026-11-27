@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { GuideCard, PlanCard } from "@/components/NextUp";
+import { ArticleCard, PlanCard } from "@/components/NextUp";
 import { TrainerCard } from "@/components/TrainerCard";
 import { Arrow } from "@/components/Arrow";
 import { geocodeUk } from "@/lib/geocode";
-import { guideBy } from "@/lib/guides";
+import { articleBy } from "@/lib/articles";
 import { matchFor, parseAnswers } from "@/lib/match";
 import { getProduct } from "@/lib/products";
 import { searchTrainers, type SearchFilters, type TrainerSummary } from "@/lib/trainers";
@@ -52,7 +52,7 @@ export default async function MatchResult({ searchParams }: Props) {
   // Home visits are rarer: fall back to anyone nearby rather than an empty page.
   if (!found.trainers.length && base.homeVisits) found = await findTrainers({ ...base, homeVisits: undefined }, m.styles, m.goals, !!geo);
   const { trainers, total, filters } = found;
-  const guide = guideBy(m.guide)!;
+  const guide = articleBy(m.guide)!;
   const plan = getProduct(m.plan)!;
 
   const where = geo ? `within ${filters.radius ?? 25} miles of ${geo.label}` : online ? "who coach online" : "across the UK";
@@ -112,7 +112,7 @@ export default async function MatchResult({ searchParams }: Props) {
       <section className="border-t border-line bg-soft">
         <div className="mx-auto grid max-w-7xl gap-4 px-4 py-12 lg:grid-cols-2">
           <PlanCard p={plan} eyebrow="Not ready to book? Start with this plan" />
-          <GuideCard g={guide} />
+          <ArticleCard g={guide} />
         </div>
         <p className="pb-12 text-center text-sm">
           <Link href="/match" className="font-semibold text-muted underline hover:text-ink">Take the quiz again</Link>

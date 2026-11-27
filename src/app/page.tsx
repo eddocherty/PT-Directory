@@ -1,4 +1,6 @@
+import Image from "next/image";
 import Link from "next/link";
+import { ARTICLES, sectionName } from "@/lib/articles";
 import { AllFilters } from "@/components/AllFilters";
 import { ShopBanner } from "@/components/ShopPromo";
 import { TrainerCard } from "@/components/TrainerCard";
@@ -38,7 +40,7 @@ type Counts = Awaited<ReturnType<typeof ukCounts>>;
 const NAMES: { term: string; text: string; href: string; count: (uk: Counts) => number }[] = [
   { term: "Personal trainer, or PT", text: "A coach who plans your sessions and trains you, usually one-to-one.", href: "/trainers", count: (uk) => uk.total },
   { term: "1-2-1 or one-to-one training", text: "Just you and the trainer for the whole session. Pick your town to compare them.", href: "/locations", count: () => 0 },
-  { term: "Private trainer, private PT", text: "Usually self-employed rather than a gym employee. Worth checking their qualifications.", href: "/guides/how-to-check-a-personal-trainer-is-qualified", count: () => 0 },
+  { term: "Private trainer, private PT", text: "Usually self-employed rather than a gym employee. Worth checking their qualifications.", href: "/articles/how-to-check-a-personal-trainer-is-qualified", count: () => 0 },
   { term: "Mobile personal trainer", text: "Comes to your home, a park or your workplace, and brings the kit.", href: "/specialisms/home-visits", count: (uk) => uk.topics["home-visits"] ?? 0 },
   { term: "Online personal trainer", text: "Video sessions or a plan with check-ins, wherever you live.", href: "/online", count: (uk) => uk.online },
   { term: "Small group training", text: "Bootcamps and classes of a few people. Cheaper per session than 1-2-1.", href: "/specialisms/bootcamp", count: (uk) => uk.topics.bootcamp ?? 0 },
@@ -235,7 +237,7 @@ export default async function Home() {
             <p className="mt-4 max-w-sm text-muted">
               People search for personal training in a lot of ways. Here is what each one usually means, and where to find it on {SITE_NAME}.
             </p>
-            <Link href="/guides/personal-trainer-pt-private-trainer-names" className="mt-6 inline-flex items-center gap-2.5 border-b-4 border-accent pb-1.5 text-[15px] font-bold hover:text-accent">
+            <Link href="/articles/personal-trainer-pt-private-trainer-names" className="mt-6 inline-flex items-center gap-2.5 border-b-4 border-accent pb-1.5 text-[15px] font-bold hover:text-accent">
               What the names mean <Arrow className="h-3.5 w-3.5" />
             </Link>
           </div>
@@ -274,6 +276,31 @@ export default async function Home() {
             </Link>
           </li>
         </ul>
+      </section>
+
+      {/* Articles: last on the page and kept small, so the directory and the shop stay the main event */}
+      <section className="border-t border-line">
+        <div className="mx-auto max-w-7xl px-4 py-12">
+          <div className="flex flex-wrap items-baseline justify-between gap-3">
+            <h2 className="display text-2xl sm:text-3xl">From the articles</h2>
+            <Link href="/articles" className="btn-ghost text-sm">All articles</Link>
+          </div>
+          <ul className="mt-4 grid gap-x-8 border-t border-ink sm:grid-cols-3">
+            {ARTICLES.slice(0, 3).map((a) => (
+              <li key={a.slug}>
+                <Link href={`/articles/${a.slug}`} className="group flex gap-4 border-b border-line py-4">
+                  <div className="relative aspect-[4/3] w-20 shrink-0 overflow-hidden bg-soft">
+                    <Image src={`/articles/${a.slug}.jpg`} alt="" fill sizes="80px" className="object-cover transition duration-500 group-hover:scale-[1.04]" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-semibold text-accent">{sectionName(a.section)}</p>
+                    <p className="mt-1 font-bold leading-snug group-hover:text-accent">{a.headline}</p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
     </>

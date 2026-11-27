@@ -134,7 +134,7 @@ export function ShortlistBoard() {
           </ul>
           <p className="mt-6 bg-zap p-4 text-sm">
             <strong>Tip:</strong> message two or three of them with the same short note about your goal and when you can train. Not sure what to ask?{" "}
-            <Link href="/guides/questions-to-ask-a-personal-trainer" className="font-semibold text-accent underline">Questions to ask a trainer</Link>.
+            <Link href="/articles/questions-to-ask-a-personal-trainer" className="font-semibold text-accent underline">Questions to ask a trainer</Link>.
           </p>
         </>
       )}
