@@ -283,7 +283,7 @@ function WhoCounted({ dash, view, href, mine }: { dash: Dashboard; view: Traffic
           <table className="mt-4 w-full text-sm">
             <thead>
               <tr className="border-b border-ink text-left text-xs uppercase tracking-wider text-muted">
-                <th className="pb-2 font-semibold">Who</th><th className="pb-2 text-right font-semibold">Page views</th><th className="pb-2 text-right font-semibold">Share</th>
+                <th className="pb-2 font-semibold">Who</th><th className="pb-2 text-right font-semibold">Views</th><th className="pb-2 text-right font-semibold">Share</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line">
