@@ -790,8 +790,8 @@ const ALL_ARTICLES: Article[] = [
     slug: "how-parkrun-changed-saturday-mornings",
     title: "Thirteen runners and a stopwatch: how parkrun changed Saturday mornings",
     summary: "It started with a handful of club runners in a London park. Why a free, timed 5k became part of so many people's week, and where a running coach fits in.",
-    published: "2026-12-04",
-    updated: "2026-12-04",
+    published: "2026-11-27",
+    updated: "2026-11-27",
     section: "running",
     headline: "Thirteen runners and a stopwatch: how parkrun took over Saturday mornings",
     photo: { alt: "A parkrun finish sign by the water", credit: "C", source: "https://unsplash.com/photos/finish-line-sign-at-a-parkrun-event-ed45rw905E8" },
@@ -801,7 +801,6 @@ const ALL_ARTICLES: Article[] = [
       "Want to go faster or further? That's where a running coach comes in.",
     ],
     callout: { at: 1, big: "5k", text: "free and timed, every Saturday morning. Walkers welcome" },
-    status: "draft",
     shop: "first-half-marathon-plan",
     sections: [
       {
@@ -849,8 +848,8 @@ const ALL_ARTICLES: Article[] = [
     slug: "training-through-a-british-winter",
     title: "Dark mornings, cold hands: keeping going through a British winter",
     summary: "Why routines slip between November and February, and the small, unglamorous changes that keep people training until the evenings get light again.",
-    published: "2026-12-11",
-    updated: "2026-12-11",
+    published: "2026-11-27",
+    updated: "2026-11-27",
     section: "training",
     headline: "Dark mornings, cold hands: how to keep training until spring",
     photo: { alt: "Snow falling on a city park at night", credit: "Evan Wise", source: "https://unsplash.com/photos/a-woman-is-walking-through-the-snow-at-night-SBVWM7Ysmes" },
@@ -860,7 +859,6 @@ const ALL_ARTICLES: Article[] = [
       "Be seen, stick to lit routes and move indoors when it's icy.",
     ],
     callout: { at: 4, big: "10µg", text: "of vitamin D a day in autumn and winter: what the NHS advises everyone to consider" },
-    status: "draft",
     shop: "dumbbell-only-plan",
     sections: [
       {
