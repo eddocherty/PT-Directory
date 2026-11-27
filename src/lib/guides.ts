@@ -15,6 +15,67 @@ export type Guide = {
 
 export const GUIDES: Guide[] = [
   {
+    slug: "personal-trainer-pt-private-trainer-names",
+    title: "Personal trainer, PT or private trainer: what's the difference?",
+    summary: "PT, 1-2-1 training, private trainer, mobile PT, coach, instructor: what each name usually means in the UK, and which one fits what you want.",
+    updated: "2026-11-27",
+    sections: [
+      {
+        heading: "Mostly, they mean the same thing",
+        body: [
+          "Personal trainer, PT, personal training and one-to-one training all describe the same basic service: a trainer plans sessions around you, coaches you through them and keeps track of your progress. PT is simply the short form. Some people also say personal PT or private PT, which mean the same.",
+          "The names start to matter when they tell you where you train, who else is in the session, and who the trainer works for. Those three things change the price and the feel of it far more than the label does.",
+        ],
+      },
+      {
+        heading: "1-2-1, one-to-one and small group",
+        body: [
+          "1-2-1 or one-to-one personal training means it is just you and the trainer for the whole session. It is the most flexible option and the most expensive per hour, because the trainer's time is all yours.",
+          "Small group personal training, including bootcamps, puts a few people with one trainer. Each person gets less individual attention, but it costs less per session and some people find training with others keeps them going. Ask how many people are in a group, because small group can mean anything from three to twenty.",
+          "Duo or partner training sits in between: two people, usually friends or a couple, sharing one trainer and splitting the cost.",
+        ],
+      },
+      {
+        heading: "Private trainer and gym PT",
+        body: [
+          "A private trainer or private PT is usually self-employed. They might rent space in a gym, run their own small studio, train people outdoors or come to your home. You book and pay them directly.",
+          "Big gyms also employ or host trainers, and you normally need a membership there to train with them. We list independent trainers and small studios rather than big gym chains, so the trainers you find here run their own diaries and set their own way of working.",
+        ],
+      },
+      {
+        heading: "Mobile and home personal trainers",
+        body: [
+          "A mobile personal trainer comes to you, at home, in a park or at your workplace, and brings the equipment. It suits parents, people with busy jobs and anyone who would rather not go to a gym. Some charge a little more to cover travel, and ask how far they will go and how much space you need.",
+        ],
+      },
+      {
+        heading: "Online personal trainers",
+        body: [
+          "An online personal trainer coaches you remotely. That might be live video sessions, or a written plan in an app with check-ins each week. It usually costs less than in-person training and works wherever you live, but nobody is there to correct your form in the moment, so it suits people who already know the basics. Our guide to online and in-person training goes into this in more detail.",
+        ],
+      },
+      {
+        heading: "Coach, instructor and teacher",
+        body: [
+          "Coach often means someone who specialises: a strength coach, running coach or online coach. Instructor is common for Pilates and for gym staff, and teacher for yoga. A Level 2 gym instructor can supervise you in a gym, while a Level 3 personal trainer is qualified to write programmes and coach you one to one.",
+          "None of these titles is protected by law in the UK, so whatever someone calls themselves, it is worth asking what qualifications and insurance they hold.",
+        ],
+      },
+      {
+        heading: "Which should you search for?",
+        body: [
+          "If you want someone's full attention and a plan built for you, look for 1-2-1 personal training near you. If cost matters most, try small group sessions or a bootcamp. If getting to a gym is the problem, search for a mobile trainer or an online coach. You can filter by all of these here, and every listing shows what that trainer offers.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/locations", label: "Personal trainers by town" },
+      { href: "/specialisms/home-visits", label: "Mobile personal trainers" },
+      { href: "/online", label: "Online personal trainers" },
+      { href: "/specialisms/bootcamp", label: "Small group and bootcamps" },
+    ],
+  },
+  {
     slug: "pilates-for-beginners",
     title: "Pilates for beginners: what happens at your first class",
     summary: "What a first Pilates class is like, the words instructors use, what to wear and bring, how often to go, and how to choose a class or instructor.",
@@ -563,6 +624,7 @@ export const guideBy = (slug: string) => GUIDES.find((g) => g.slug === slug);
 
 /** Specialisms (and "online" / "home-visits") each guide is most useful for. Drives "keep reading" panels. */
 const GUIDE_TOPICS: Record<string, string[]> = {
+  "personal-trainer-pt-private-trainer-names": ["general-fitness", "home-visits", "bootcamp", "online"],
   "starting-with-a-personal-trainer-in-january": ["confidence", "general-fitness", "weight-loss"],
   "bootcamps-and-small-group-training": ["bootcamp", "hiit", "functional", "crossfit"],
   "how-to-check-a-personal-trainer-is-qualified": [],

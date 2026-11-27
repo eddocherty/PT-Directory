@@ -20,11 +20,13 @@ export async function generateMetadata({ params, searchParams }: Props): Promise
   if (!city) return {};
   const s = (await allTownStats())[slug];
   const n = s?.total ?? 0;
+  // Only the kinds of training this town's trainers actually list.
+  const kinds = ["1-2-1", ...(s?.topics.bootcamp ? ["small group"] : []), ...(s?.homeVisits ? ["at-home"] : [])];
   const top = s ? liveTopics(s).slice(0, 3).map((x) => x.topic.name.toLowerCase()) : [];
   return {
-    title: n >= 3 ? `${n} personal trainers in ${city.name}` : `Personal trainers in ${city.name}`,
+    title: n >= 3 ? `Personal trainers in ${city.name}: ${n} local PTs` : `Personal trainers in ${city.name}`,
     description: n
-      ? `Compare ${n} independent personal trainers near ${city.name}, ${city.county}${top.length ? `, including ${top.join(", ")}` : ""}. See specialisms, then contact them directly.`
+      ? `Compare ${n} independent personal trainers near ${city.name}, ${city.county}, for ${kinds.length > 1 ? `${kinds.slice(0, -1).join(", ")} or ${kinds.at(-1)}` : kinds[0]} personal training${top.length ? `. Specialisms include ${top.join(", ")}` : ""}. Contact them directly.`
       : `Independent personal trainers near ${city.name}, ${city.county}, plus UK online coaches.`,
     alternates: { canonical: `/locations/${city.slug}` },
     // Filtered views and empty towns are for visitors, not for Google.

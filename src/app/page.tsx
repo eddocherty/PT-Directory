@@ -16,12 +16,35 @@ import { RecentlyViewed } from "@/components/Saved";
 import { buildFacts } from "@/lib/facts";
 import { TOOLS } from "@/lib/tools";
 
-export const metadata: Metadata = { alternates: { canonical: "/" } };
+/** The home page is the site's hub for "personal trainer directory UK" and the plain "personal trainer" searches,
+ *  so its title and description say exactly that, with the real live counts. */
+export async function generateMetadata(): Promise<Metadata> {
+  const uk = await ukCounts();
+  const n = uk.total ? uk.total.toLocaleString("en-GB") : "";
+  return {
+    title: { absolute: `Personal trainer directory UK: find a PT near you | ${SITE_NAME}` },
+    description: n
+      ? `${SITE_NAME} is a UK directory of ${n} independent personal trainers in ${CITIES.length} towns. Find 1-2-1 personal training, private PTs, Pilates, small group and online coaches near you.`
+      : `${SITE_NAME} is a UK directory of independent personal trainers. Find 1-2-1 personal training, private PTs, Pilates, small group and online coaches near you.`,
+    alternates: { canonical: "/" },
+  };
+}
 
 // Refresh featured trainers every 5 minutes rather than freezing them at build time.
 export const revalidate = 300;
 
 const STYLE_TILES = ["strength", "pilates", "boxing", "yoga", "running", "bootcamp"];
+type Counts = Awaited<ReturnType<typeof ukCounts>>;
+const NAMES: { term: string; text: string; href: string; count: (uk: Counts) => number }[] = [
+  { term: "Personal trainer, or PT", text: "A coach who plans your sessions and trains you, usually one-to-one.", href: "/trainers", count: (uk) => uk.total },
+  { term: "1-2-1 or one-to-one training", text: "Just you and the trainer for the whole session. Pick your town to compare them.", href: "/locations", count: () => 0 },
+  { term: "Private trainer, private PT", text: "Usually self-employed rather than a gym employee. Worth checking their qualifications.", href: "/guides/how-to-check-a-personal-trainer-is-qualified", count: () => 0 },
+  { term: "Mobile personal trainer", text: "Comes to your home, a park or your workplace, and brings the kit.", href: "/specialisms/home-visits", count: (uk) => uk.topics["home-visits"] ?? 0 },
+  { term: "Online personal trainer", text: "Video sessions or a plan with check-ins, wherever you live.", href: "/online", count: (uk) => uk.online },
+  { term: "Small group training", text: "Bootcamps and classes of a few people. Cheaper per session than 1-2-1.", href: "/specialisms/bootcamp", count: (uk) => uk.topics.bootcamp ?? 0 },
+  { term: "Pilates instructor", text: "Mat or reformer Pilates, one-to-one or in a small class.", href: "/specialisms/pilates", count: (uk) => uk.topics.pilates ?? 0 },
+];
+
 const GOAL_LIST = ["weight-loss", "muscle-gain", "pre-post-natal", "rehab", "older-adults", "confidence", "sports-performance", "general-fitness"];
 
 export default async function Home() {
@@ -34,8 +57,17 @@ export default async function Home() {
         data={{
           "@context": "https://schema.org",
           "@graph": [
-            { "@type": "Organization", "@id": abs("/#org"), name: SITE_NAME, url: abs("/"), logo: abs("/apple-icon.png"), slogan: TAGLINE },
-            { "@type": "WebSite", "@id": abs("/#site"), name: SITE_NAME, url: abs("/"), publisher: { "@id": abs("/#org") }, inLanguage: "en-GB" },
+            { "@type": "Organization", "@id": abs("/#org"), name: SITE_NAME, url: abs("/"), logo: abs("/apple-icon.png"), slogan: TAGLINE, description: "A UK directory of independent personal trainers, Pilates instructors and small studios.", areaServed: { "@type": "Country", name: "United Kingdom" } },
+            {
+              "@type": "WebSite",
+              "@id": abs("/#site"),
+              name: SITE_NAME,
+              alternateName: `${SITE_NAME} personal trainer directory`,
+              url: abs("/"),
+              publisher: { "@id": abs("/#org") },
+              inLanguage: "en-GB",
+              potentialAction: { "@type": "SearchAction", target: { "@type": "EntryPoint", urlTemplate: `${abs("/trainers")}?location={location}` }, "query-input": "required name=location" },
+            },
           ],
         }}
       />
@@ -43,6 +75,7 @@ export default async function Home() {
         <UkTownMap stats={stats} className="absolute top-8 hidden h-[calc(100%-4rem)] lg:right-[3%] lg:block xl:right-[7%]" />
         <div className="pointer-events-none relative mx-auto max-w-7xl px-4 pb-16 pt-14 sm:pb-24 sm:pt-20 [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_form]:pointer-events-auto">
           <h1 className="display text-5xl sm:text-7xl lg:text-8xl">
+            <span className="eyebrow mb-4 block font-sans text-muted">The UK personal trainer directory</span>
             Your local PT,<br /><span className="text-accent">found in seconds.</span>
           </h1>
           <form action="/trainers" className="mt-10 flex max-w-3xl flex-col gap-4 text-ink sm:flex-row sm:items-end sm:gap-6">
@@ -189,6 +222,36 @@ export default async function Home() {
                 </Link>
               </li>
             ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* What people call it. Each row is a real way of searching for a trainer, a plain answer, and the
+          page that lists those trainers, with the live count, so the words earn their place. */}
+      <section className="border-t border-line">
+        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
+          <div>
+            <h2 className="display text-4xl sm:text-5xl">PT, 1-2-1, private trainer: same idea</h2>
+            <p className="mt-4 max-w-sm text-muted">
+              People search for personal training in a lot of ways. Here is what each one usually means, and where to find it on {SITE_NAME}.
+            </p>
+            <Link href="/guides/personal-trainer-pt-private-trainer-names" className="mt-6 inline-flex items-center gap-2.5 border-b-4 border-accent pb-1.5 text-[15px] font-bold hover:text-accent">
+              What the names mean <Arrow className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+          <ul className="border-t border-ink">
+            {NAMES.map((x) => {
+              const n = x.count(uk);
+              return (
+                <li key={x.term}>
+                  <Link href={x.href} className="group grid gap-1 border-b border-line py-4 hover:border-accent sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)_auto] sm:items-baseline sm:gap-6">
+                    <span className="font-semibold group-hover:text-accent">{x.term}</span>
+                    <span className="text-sm text-muted">{x.text}</span>
+                    <span className="text-sm tabular-nums text-muted">{n ? n.toLocaleString("en-GB") : ""}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </section>
