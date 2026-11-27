@@ -9,8 +9,8 @@ type Props = { searchParams: Promise<RawParams> };
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const sp = await searchParams;
   return {
-    title: "Find an independent personal trainer",
-    description: "Search independent personal trainers, Pilates instructors and small studios across the UK by postcode, specialism and goal.",
+    title: "Find a personal trainer near you",
+    description: "Search independent personal trainers, PTs, Pilates instructors and small studios across the UK by postcode. Filter by specialism, goal, home visits or online.",
     alternates: { canonical: "/trainers" },
     // Search results change with every filter, so only the plain page is indexed. Town and specialism pages cover the rest.
     robots: Object.keys(sp).length ? { index: false, follow: true } : undefined,
@@ -30,7 +30,7 @@ export default async function TrainersPage({ searchParams }: Props) {
 
   return (
     <SearchLayout
-      title={geo ? `Trainers near ${geo.label}` : "Trainers across the UK"}
+      title={geo ? `Personal trainers near ${geo.label}` : "Personal trainers across the UK"}
       subtitle={subtitle}
       filters={f}
       action="/trainers"

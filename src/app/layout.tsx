@@ -15,7 +15,7 @@ const redHat = localFont({ variable: "--font-red-hat", display: "swap", src: "..
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: `${SITE_NAME}: independent personal trainers near you`, template: `%s | ${SITE_NAME}` },
+  title: { default: `${SITE_NAME}: UK personal trainer directory`, template: `%s | ${SITE_NAME}` },
   description:
     "Find independent personal trainers, Pilates instructors and small studios near you, or online, across the UK. Compare specialisms, then contact them directly.",
   applicationName: SITE_NAME,
@@ -59,7 +59,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <div>
               <Logo light />
               <p className="mt-3 max-w-sm text-sm text-paper/60">
-                {TAGLINE} A UK directory of self-employed personal trainers, Pilates instructors and small studios. No big gym chains.
+                {TAGLINE} A UK personal trainer directory of self-employed PTs, Pilates instructors and small studios. No big gym chains.
               </p>
             </div>
             <div className="flex flex-col gap-2 text-sm">

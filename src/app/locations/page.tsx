@@ -5,8 +5,8 @@ import { allTownStats, countySlug } from "@/lib/stats";
 import { CITIES, NATIONS } from "@/lib/taxonomy";
 
 export const metadata: Metadata = {
-  title: "Find a personal trainer by county",
-  description: "Pick your county, then your town or city, to find independent personal trainers near you.",
+  title: "Personal trainers by town and county",
+  description: "Find a local personal trainer: pick your county, then your town or city, to compare independent PTs near you for 1-2-1, small group or home training.",
   alternates: { canonical: "/locations" },
 };
 
@@ -17,7 +17,7 @@ export default async function LocationsPage() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10">
       <Breadcrumbs items={[{ name: "Locations", href: "/locations" }]} />
-      <h1 className="display mt-5 text-4xl sm:text-6xl">Find trainers near you</h1>
+      <h1 className="display mt-5 text-4xl sm:text-6xl">Find a personal trainer near you</h1>
       <p className="mt-4 max-w-xl text-lg text-muted">Pick your county, then choose your town or city.</p>
 
       <nav aria-label="Jump to nation" className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
