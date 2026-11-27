@@ -2,7 +2,7 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { ADMIN_COOKIE, adminConfigured, checkCredentials, checkPassword, hashPassword, makeSessionValue, requireAdmin, sessionCookieOptions } from "@/lib/admin-auth";
+import { ADMIN_COOKIE, MINE_COOKIE, adminConfigured, makeMineValue, mineCookieOptions, checkCredentials, checkPassword, hashPassword, makeSessionValue, requireAdmin, sessionCookieOptions } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/admin-db";
 
 export type LoginState = { error?: string; username?: string };
@@ -26,13 +26,25 @@ export async function loginAction(_prev: LoginState, form: FormData): Promise<Lo
     return { error: "That admin ID or password isn’t right.", username };
   }
   failures.delete(ip);
-  (await cookies()).set(ADMIN_COOKIE, makeSessionValue(), sessionCookieOptions);
+  const jar = await cookies();
+  jar.set(ADMIN_COOKIE, makeSessionValue(), sessionCookieOptions);
+  // Any browser ed logs in on is his, so its page views stop counting as real visitors.
+  jar.set(MINE_COOKIE, makeMineValue(), mineCookieOptions);
   redirect("/admin");
 }
 
 export async function logoutAction(): Promise<void> {
   (await cookies()).delete({ name: ADMIN_COOKIE, path: "/" });
   redirect("/admin/login");
+}
+
+/** The "This device is mine, don't count it" switch on the Traffic tab. */
+export async function setMyDeviceAction(form: FormData): Promise<void> {
+  await requireAdmin();
+  const jar = await cookies();
+  if (form.get("mine") === "1") jar.set(MINE_COOKIE, makeMineValue(), mineCookieOptions);
+  else jar.delete({ name: MINE_COOKIE, path: "/" });
+  redirect(`/admin?tab=overview&device=${form.get("mine") === "1" ? "on" : "off"}`);
 }
 
 export type OutreachUpdate = { status: string; notes: string; last_contacted: string | null };

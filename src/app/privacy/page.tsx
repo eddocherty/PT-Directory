@@ -43,8 +43,10 @@ export default function Privacy() {
         We count page visits so we know which pages and trainers people find useful. We don’t use cookies or similar
         technology for this, and we don’t store IP addresses. We record the page, the website that sent you (if any), your
         country and device type, and a code made from your connection details that changes every day, so a visit can be
-        counted once per day but can’t be linked to you or followed over time. We also use Vercel Web Analytics, which
-        works the same cookie-free way. Our lawful basis is legitimate interests: running and improving the site.
+        counted once per day but can’t be linked to you or followed over time. We also note whether a visit comes from a
+        bot or an automated browser, so those aren’t counted as people. We also use Vercel Web Analytics, which works the
+        same cookie-free way. The only cookies we set are on our own team’s devices, to keep our own visits out of the
+        count; visitors never get them. Our lawful basis is legitimate interests: running and improving the site.
       </p>
 
       <h2>Shop purchases</h2>

@@ -7,8 +7,9 @@ import { useEffect, useRef } from "react";
  * Cookie-free page view and contact-click tracking (first-party, stored in our own database).
  * Add data-track="website" (or instagram, phone, email, contact_button) to any link to count clicks on it.
  */
-function send(body: Record<string, string>) {
-  const json = JSON.stringify(body);
+function send(body: Record<string, string | number>) {
+  // Automated browsers (Playwright, Selenium, etc.) set navigator.webdriver; tell the server so they aren't counted as people.
+  const json = JSON.stringify(navigator.webdriver ? { ...body, w: 1 } : body);
   try {
     if (navigator.sendBeacon?.("/api/track", new Blob([json], { type: "application/json" }))) return;
   } catch {}
