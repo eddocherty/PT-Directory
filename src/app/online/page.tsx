@@ -39,7 +39,7 @@ export default async function OnlinePage({ searchParams }: Props) {
         footer={
           <LinkSections>
             <LinkList title="Online coaching by specialism" items={TOPICS.filter((t) => t.kind !== "home").map((t) => ({ href: `/trainers?online=1&${topicParam(t).join("=")}`, label: t.people }))} />
-            <LinkList title="Not sure?" items={[{ href: "/guides/online-vs-in-person-personal-training", label: "Online or in-person personal training?" }]} />
+            <LinkList title="Not sure?" items={[{ href: "/articles/online-vs-in-person-personal-training", label: "Online or in-person personal training?" }]} />
           </LinkSections>
         }
       />

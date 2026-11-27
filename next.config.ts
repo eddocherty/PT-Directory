@@ -15,13 +15,18 @@ const nextConfig: NextConfig = {
     "/api/download": ["./private/plans/*.pdf.enc"],
   },
   async redirects() {
-    if (!customDomainLive) return [];
-    return BRAND.oldHosts.map((host) => ({
+    // The old Guides section became Articles (27 Nov 2026). Permanent redirects keep old links and Google rankings.
+    const moved = [
+      { source: "/guides", destination: "/articles", permanent: true },
+      { source: "/guides/:slug", destination: "/articles/:slug", permanent: true },
+    ];
+    if (!customDomainLive) return moved;
+    return [...moved, ...BRAND.oldHosts.map((host) => ({
       source: "/:path*",
       has: [{ type: "host" as const, value: host }],
       destination: `https://${BRAND.domain}/:path*`,
       permanent: true,
-    }));
+    }))];
   },
   async headers() {
     return [

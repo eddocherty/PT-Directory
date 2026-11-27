@@ -1,24 +1,70 @@
 /**
- * Short, practical guides for people choosing a trainer. Plain UK English, general guidance only,
- * written to answer the questions people actually type into Google before they book.
- * Each section is a heading and one or more paragraphs. `related` links them to specialism pages.
+ * The Articles section: practical pieces on choosing a trainer, plus softer features on training, running,
+ * Pilates and how exercise fits into ordinary life. Plain UK English, general guidance only.
+ *
+ * House rules for every piece: no free workout plans (the structured plans are sold in the shop, so point
+ * there instead), no prices, no invented quotes, experts or statistics, NHS or UK guidance where health is
+ * involved, and at least two links to other pages on the site.
+ *
+ * To add a piece: copy one below, give it a new slug, set `status: "draft"` while it is being reviewed (drafts
+ * only appear on preview links, never on the live site), then remove `status` to publish it.
  */
-export type Guide = {
+export const SECTIONS = [
+  { slug: "choosing", name: "Choosing a trainer" },
+  { slug: "training", name: "Training" },
+  { slug: "running", name: "Running and athletics" },
+  { slug: "pilates-yoga", name: "Pilates and yoga" },
+  { slug: "nutrition", name: "Nutrition" },
+  { slug: "body-mind", name: "Body and mind" },
+] as const;
+export type SectionSlug = (typeof SECTIONS)[number]["slug"];
+export const sectionName = (slug: SectionSlug) => SECTIONS.find((x) => x.slug === slug)!.name;
+
+export type Article = {
   slug: string;
+  /** The search-friendly title, used for the browser tab and Google. */
   title: string;
-  /** One sentence for the meta description and the guides index. */
+  /** The punchier magazine headline shown on the page and in lists. Must stay true to the piece. */
+  headline: string;
+  /** One sentence for the meta description, the standfirst and the index. */
   summary: string;
+  /** First published, and last properly revised. YYYY-MM-DD. */
+  published: string;
   updated: string;
+  section: SectionSlug;
+  /** "draft" pieces show on preview links only. */
+  status?: "draft";
+  /** A shop plan (products.ts slug) to point to for readers who want something structured to follow. */
+  shop?: string;
+  /**
+   * The cover photo, stored at public/articles/<slug>.jpg. Only free-licence stock (Unsplash or Pexels) or photos
+   * we own, never images found through Google. `source` is the photo's page, kept as the licence record.
+   */
+  photo: { alt: string; credit: string; source: string };
+  /** "The short version": three snappy takeaways, each already said in the piece. */
+  quick: string[];
+  /** One big-number callout, shown after section `at` (counted from 0). Only facts the piece itself states. */
+  callout?: { at: number; big: string; text: string };
   sections: { heading: string; body: string[] }[];
   related: { href: string; label: string }[];
 };
 
-export const GUIDES: Guide[] = [
+const ALL_ARTICLES: Article[] = [
   {
     slug: "personal-trainer-pt-private-trainer-names",
     title: "Personal trainer, PT or private trainer: what's the difference?",
     summary: "PT, 1-2-1 training, private trainer, mobile PT, coach, instructor: what each name usually means in the UK, and which one fits what you want.",
     updated: "2026-11-27",
+    published: "2026-11-27",
+    section: "choosing",
+    headline: "PT, 1-2-1, private trainer, coach: the names decoded",
+    photo: { alt: "A trainer kneels beside a client doing push-ups in a gym", credit: "Jonathan Borba", source: "https://unsplash.com/photos/woman-kneeling-beside-man-R0y_bEUjiOM" },
+    quick: [
+      "Personal trainer, PT and 1-2-1 training all mean much the same thing.",
+      "What changes the price is where you train, who else is there and who the trainer works for.",
+      "None of these titles is protected by law in the UK, so always ask about qualifications.",
+    ],
+    callout: { at: 5, big: "0", text: "of these job titles are protected by law in the UK" },
     sections: [
       {
         heading: "Mostly, they mean the same thing",
@@ -80,6 +126,16 @@ export const GUIDES: Guide[] = [
     title: "Pilates for beginners: what happens at your first class",
     summary: "What a first Pilates class is like, the words instructors use, what to wear and bring, how often to go, and how to choose a class or instructor.",
     updated: "2026-11-26",
+    published: "2026-11-26",
+    section: "pilates-yoga",
+    headline: "Your first Pilates class: the shaking is normal (and other things nobody tells you)",
+    photo: { alt: "People stretching forward on mats in a studio", credit: "Christian Harb", source: "https://unsplash.com/photos/people-stretching-on-yoga-mats-in-a-studio-UGNGnSdEklQ" },
+    quick: [
+      "Mention any injury, pregnancy or recent birth on the health form, even if it seems minor.",
+      "Small, slow movements are harder than they look. Shaking is normal; pain isn't.",
+      "Once or twice a week is a good start.",
+    ],
+    callout: { at: 2, big: "45-60", text: "minutes: how long most Pilates classes last" },
     sections: [
       {
         heading: "What Pilates is",
@@ -131,7 +187,7 @@ export const GUIDES: Guide[] = [
     ],
     related: [
       { href: "/specialisms/pilates", label: "Pilates instructors near you" },
-      { href: "/guides/reformer-vs-mat-pilates", label: "Reformer or mat Pilates?" },
+      { href: "/articles/reformer-vs-mat-pilates", label: "Reformer or mat Pilates?" },
     ],
   },
   {
@@ -139,6 +195,17 @@ export const GUIDES: Guide[] = [
     title: "Starting with a personal trainer in January: a realistic first 12 weeks",
     summary: "How to start training in the new year without burning out by February: what to expect month by month, how to set a goal you can keep, and when to book.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "training",
+    headline: "Why most January fitness plans are dead by February, and how to make yours last",
+    photo: { alt: "Two people training with battle ropes in a gym", credit: "Meghan Holmes", source: "https://unsplash.com/photos/two-person-inside-gym-exercising-buWcS7G1_28" },
+    quick: [
+      "New year plans fail when they're built for the most motivated version of you.",
+      "Pick one goal you can measure, like running 5k without stopping.",
+      "Book in December: early morning and evening slots fill first.",
+    ],
+    callout: { at: 4, big: "150", text: "minutes of moderate activity a week, plus strength work on two days: the UK Chief Medical Officers' guideline" },
+    shop: "beginner-gym-plan",
     sections: [
       {
         heading: "Why January plans fall apart",
@@ -189,7 +256,7 @@ export const GUIDES: Guide[] = [
     ],
     related: [
       { href: "/specialisms/confidence", label: "Trainers who work well with beginners" },
-      { href: "/guides/how-often-should-you-see-a-personal-trainer", label: "How often should you see a trainer?" },
+      { href: "/articles/how-often-should-you-see-a-personal-trainer", label: "How often should you see a trainer?" },
     ],
   },
   {
@@ -197,6 +264,16 @@ export const GUIDES: Guide[] = [
     title: "Bootcamps and small group training: what to expect and how to choose",
     summary: "What happens at an outdoor bootcamp or small group class, who it suits, how it differs from one-to-one training, and what to ask before you join.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "training",
+    headline: "Bootcamp isn't the army: what really happens at a group session in the park",
+    photo: { alt: "A coach watches a group doing push-ups outdoors", credit: "Will Haddock", source: "https://unsplash.com/photos/trainer-watches-athletes-doing-push-ups-outdoors-JmtGnsl_NuE" },
+    quick: [
+      "A good bootcamp gives easier and harder versions of every exercise.",
+      "Small group training sits between a bootcamp and one-to-one sessions.",
+      "Ask what happens when it rains, gets dark early or the park is waterlogged.",
+    ],
+    callout: { at: 1, big: "2-8", text: "people: the usual size of a small group personal training session" },
     sections: [
       {
         heading: "What a bootcamp actually is",
@@ -240,7 +317,7 @@ export const GUIDES: Guide[] = [
     ],
     related: [
       { href: "/specialisms/bootcamp", label: "Outdoor bootcamps near you" },
-      { href: "/guides/questions-to-ask-a-personal-trainer", label: "Questions to ask a trainer" },
+      { href: "/articles/questions-to-ask-a-personal-trainer", label: "Questions to ask a trainer" },
     ],
   },
   {
@@ -248,6 +325,16 @@ export const GUIDES: Guide[] = [
     title: "How to check a personal trainer is qualified",
     summary: "What a Level 3 qualification means, how to look a trainer up on the CIMSPA register, and the insurance they should hold.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "choosing",
+    headline: "Anyone can call themselves a personal trainer. Here's how to check yours is the real deal",
+    photo: { alt: "A trainer watches a woman lift a barbell", credit: "Vitaly Gariev", source: "https://unsplash.com/photos/woman-lifting-weights-with-trainer-watching-rD0poLlu57M" },
+    quick: [
+      "Personal trainer isn't a protected title in the UK.",
+      "Look for a Level 3 qualification, and search the CIMSPA directory.",
+      "A self-employed trainer should have insurance and be happy to show it.",
+    ],
+    callout: { at: 1, big: "L3", text: "the Level 3 Diploma in Personal Training: the standard qualification to look for" },
     sections: [
       {
         heading: "Personal training isn't a protected title",
@@ -284,7 +371,7 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: [
-      { href: "/guides/questions-to-ask-a-personal-trainer", label: "Questions to ask before your first session" },
+      { href: "/articles/questions-to-ask-a-personal-trainer", label: "Questions to ask before your first session" },
       { href: "/trainers", label: "Search independent trainers" },
     ],
   },
@@ -293,6 +380,17 @@ export const GUIDES: Guide[] = [
     title: "Pre and postnatal personal training: what it is and when to start",
     summary: "What a pre and postnatal trainer does differently, when it is usually safe to start after birth, and what to ask them.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "body-mind",
+    headline: "Exercise while pregnant and after birth: what's safe, and when to start",
+    photo: { alt: "A pregnant woman in a tank top, side on", credit: "Jeferson Santu", source: "https://unsplash.com/photos/a-pregnant-woman-in-black-pants-and-a-tan-tank-top-qH3kUl3JUxc" },
+    quick: [
+      "NHS guidance: if you were active before pregnancy, you can usually keep going and adjust as you go.",
+      "After birth, your GP or midwife gives the go-ahead, not a trainer.",
+      "Leaking, heaviness or doming down the middle of your stomach? Mention it at your check.",
+    ],
+    callout: { at: 2, big: "6-8", text: "weeks after birth: when most people have their postnatal check, before structured exercise" },
+    shop: "postnatal-return-plan",
     sections: [
       {
         heading: "What makes it different",
@@ -331,6 +429,15 @@ export const GUIDES: Guide[] = [
     title: "Online or in-person personal training?",
     summary: "How online coaching works, who it suits, and when training in person with someone local is the better choice.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "choosing",
+    headline: "Online coach or someone in the room? The honest pros and cons",
+    photo: { alt: "A woman stretches on a mat at home while watching a laptop", credit: "Vitaly Gariev", source: "https://unsplash.com/photos/woman-stretching-on-yoga-mat-watching-laptop-02_PUCjs7pw" },
+    quick: [
+      "Online coaching suits people who know the basics, train at odd hours or travel a lot.",
+      "New, injured, pregnant or learning technical lifts? Someone in the room makes a real difference.",
+      "Plenty of local trainers do both.",
+    ],
     sections: [
       {
         heading: "How online coaching works",
@@ -367,6 +474,15 @@ export const GUIDES: Guide[] = [
     title: "Questions to ask a personal trainer before your first session",
     summary: "Ten questions to ask when you contact a trainer, so you know what you are paying for before you book.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "choosing",
+    headline: "Ten questions to ask a personal trainer before you hand over any money",
+    photo: { alt: "A trainer and client go through a plan on a clipboard", credit: "Vitaly Gariev", source: "https://unsplash.com/photos/trainer-and-client-discussing-workout-plan-in-gym-6ESp0qoio_I" },
+    quick: [
+      "Ask about qualifications, insurance and who they usually train.",
+      "Ask where sessions happen and whether you need your own gym membership.",
+      "A good trainer will have plenty of questions for you too.",
+    ],
     sections: [
       {
         heading: "About them",
@@ -400,7 +516,7 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: [
-      { href: "/guides/how-to-check-a-personal-trainer-is-qualified", label: "How to check a trainer is qualified" },
+      { href: "/articles/how-to-check-a-personal-trainer-is-qualified", label: "How to check a trainer is qualified" },
       { href: "/specialisms/confidence", label: "Trainers who work well with beginners" },
     ],
   },
@@ -409,6 +525,16 @@ export const GUIDES: Guide[] = [
     title: "How to choose a postnatal personal trainer",
     summary: "The qualifications, questions and warning signs to look for when you pick a trainer to help you get back to exercise after having a baby.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "choosing",
+    headline: "Choosing a postnatal trainer: the red flags to watch for",
+    photo: { alt: "A woman and a small child exercising on mats in a living room", credit: "Vitaly Gariev", source: "https://unsplash.com/photos/a-woman-and-a-child-doing-yoga-in-a-living-room-lnQF8Z32VHE" },
+    quick: [
+      "Have your six to eight week check before you book anyone.",
+      "Look for a specific pre and postnatal qualification on top of their main one.",
+      "Be wary of anyone promising to get your body back by a deadline.",
+    ],
+    shop: "postnatal-return-plan",
     sections: [
       {
         heading: "Start with your postnatal check",
@@ -445,7 +571,7 @@ export const GUIDES: Guide[] = [
     ],
     related: [
       { href: "/specialisms/pre-post-natal", label: "Pre and postnatal trainers across the UK" },
-      { href: "/guides/pre-and-postnatal-personal-training", label: "Pre and postnatal training: what it is and when to start" },
+      { href: "/articles/pre-and-postnatal-personal-training", label: "Pre and postnatal training: what it is and when to start" },
     ],
   },
   {
@@ -453,6 +579,16 @@ export const GUIDES: Guide[] = [
     title: "Reformer or mat Pilates: which should you choose?",
     summary: "How reformer and mat Pilates differ, what each one is good for, and how to pick a class or instructor if you are new to Pilates.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "pilates-yoga",
+    headline: "Reformer or mat Pilates? What those springs are really for",
+    photo: { alt: "A leg extended on a Pilates reformer", credit: "Roxana Popovici", source: "https://unsplash.com/photos/woman-does-pilates-exercise-on-a-reformer-machine-aY5uOJ2o96g" },
+    quick: [
+      "Same method: mat uses your body weight, reformer uses springs and a sliding carriage.",
+      "The springs can support you as well as add resistance.",
+      "Mat classes are usually bigger, cheaper and easier to find.",
+    ],
+    callout: { at: 0, big: "1900s", text: "when Joseph Pilates developed the exercises both styles come from" },
     sections: [
       {
         heading: "Same method, different equipment",
@@ -495,6 +631,17 @@ export const GUIDES: Guide[] = [
     title: "What happens in a personal training session?",
     summary: "What to expect from your first session with a personal trainer, what a normal session looks like, and what to wear and bring.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "training",
+    headline: "Your first PT session: what really happens (it's gentler than you think)",
+    photo: { alt: "A trainer watches a man do push-ups", credit: "Vitaly Gariev", source: "https://unsplash.com/photos/man-does-push-ups-with-woman-spotting-him-chXrzX3WjEw" },
+    quick: [
+      "You'll fill in a health form first, often called a PAR-Q.",
+      "The first session is mostly talking and watching how you move.",
+      "Stiff for a day or two is normal. Sharp pain, or pain in a joint, isn't.",
+    ],
+    callout: { at: 2, big: "45-60", text: "minutes: how long most personal training sessions last" },
+    shop: "beginner-gym-plan",
     sections: [
       {
         heading: "Before the first session",
@@ -529,7 +676,7 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: [
-      { href: "/guides/questions-to-ask-a-personal-trainer", label: "Questions to ask before your first session" },
+      { href: "/articles/questions-to-ask-a-personal-trainer", label: "Questions to ask before your first session" },
       { href: "/specialisms/confidence", label: "Trainers who work well with beginners" },
     ],
   },
@@ -538,6 +685,17 @@ export const GUIDES: Guide[] = [
     title: "How often should you see a personal trainer?",
     summary: "How many sessions a week make sense for different goals and budgets, and how to keep progressing between sessions.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "training",
+    headline: "Once a week, three times, or once a month? How often you really need a PT",
+    photo: { alt: "A row of dumbbells on a gym rack", credit: "Samuel Girven", source: "https://unsplash.com/photos/gym-dumbbells-on-rack-VJ2s0c20qCo" },
+    quick: [
+      "Once a week works well if you also train on your own.",
+      "Two or three a week suits beginners, injury comebacks and big dates.",
+      "Already training regularly? A check-in every two to four weeks can be enough.",
+    ],
+    callout: { at: 0, big: "150", text: "minutes of moderate activity a week, plus strength on two days: the NHS guideline for adults" },
+    shop: "dumbbell-only-plan",
     sections: [
       {
         heading: "What the guidelines say",
@@ -571,7 +729,7 @@ export const GUIDES: Guide[] = [
       },
     ],
     related: [
-      { href: "/guides/online-vs-in-person-personal-training", label: "Online or in-person personal training?" },
+      { href: "/articles/online-vs-in-person-personal-training", label: "Online or in-person personal training?" },
       { href: "/specialisms/general-fitness", label: "Trainers for general fitness" },
     ],
   },
@@ -580,6 +738,16 @@ export const GUIDES: Guide[] = [
     title: "Personal training for over-50s: what to look for",
     summary: "Why strength and balance work matters more as you get older, what a good trainer for over-50s does, and the questions to ask.",
     updated: "2026-11-24",
+    published: "2026-11-24",
+    section: "body-mind",
+    headline: "Strong at 50, 60 and beyond: what to look for in a trainer",
+    photo: { alt: "An older man and a younger man high-five in a sports hall", credit: "Centre for Ageing Better", source: "https://unsplash.com/photos/two-men-giving-each-other-a-high-five-indoors-oFQHh4jBREc" },
+    quick: [
+      "From middle age, people slowly lose muscle and bone strength unless they work to keep it.",
+      "A good trainer focuses on everyday strength: chairs, shopping, stairs.",
+      "It's never too late to start.",
+    ],
+    callout: { at: 0, big: "2", text: "days a week of strength and balance work: what NHS guidance recommends for older adults" },
     sections: [
       {
         heading: "Why strength matters more with age",
@@ -618,12 +786,149 @@ export const GUIDES: Guide[] = [
       { href: "/specialisms/home-visits", label: "Trainers who come to your home" },
     ],
   },
+  {
+    slug: "how-parkrun-changed-saturday-mornings",
+    title: "Thirteen runners and a stopwatch: how parkrun changed Saturday mornings",
+    summary: "It started with a handful of club runners in a London park. Why a free, timed 5k became part of so many people's week, and where a running coach fits in.",
+    published: "2026-12-04",
+    updated: "2026-12-04",
+    section: "running",
+    headline: "Thirteen runners and a stopwatch: how parkrun took over Saturday mornings",
+    photo: { alt: "A parkrun finish sign by the water", credit: "C", source: "https://unsplash.com/photos/finish-line-sign-at-a-parkrun-event-ed45rw905E8" },
+    quick: [
+      "parkrun began with 13 runners in Bushy Park, London, on 2 October 2004.",
+      "It's free, weekly and timed, and you're allowed to walk.",
+      "Want to go faster or further? That's where a running coach comes in.",
+    ],
+    callout: { at: 1, big: "5k", text: "free and timed, every Saturday morning. Walkers welcome" },
+    status: "draft",
+    shop: "first-half-marathon-plan",
+    sections: [
+      {
+        heading: "A time trial in Bushy Park",
+        body: [
+          "On 2 October 2004, thirteen runners lined up in Bushy Park, in south-west London, for a free, timed 5k. It was organised by Paul Sinton-Hewitt, a club runner who was injured at the time and wanted a way to keep seeing his running friends. It was called the Bushy Park Time Trial. Nobody there was trying to start a movement.",
+          "Two decades on, parkrun is the event that people who would never call themselves runners talk about on a Friday night. It has spread to parks, beaches and country estates across the UK and well beyond, and the basic idea has barely changed.",
+        ],
+      },
+      {
+        heading: "What actually happens",
+        body: [
+          "parkrun is a 5k on a Saturday morning, every week, in the same place. It is free. You register once online and bring your barcode, and your time is emailed to you afterwards. There is no entry fee, no medal and no prize, and the people in high-vis jackets pointing the way are volunteers, many of them runners taking a week off.",
+          "You don't have to run. Walking is welcome, and every event has a volunteer tail walker who finishes last, so nobody else has to. On Sunday mornings there is also junior parkrun, a 2k for children aged 4 to 14.",
+        ],
+      },
+      {
+        heading: "Why it works",
+        body: [
+          "Most fitness advice is about effort. parkrun quietly gets the other things right. It is at the same time every week, so it becomes a habit rather than a decision. It costs nothing, so there is no barrier on a skint month. And it is social without being a club: you can turn up alone, speak to nobody and still feel part of something.",
+          "It also changes what counts as success. Your finish time is yours, and the only person you are compared with is last week's you. For people coming back to exercise after a long break, a baby or an illness, that matters more than any training plan.",
+        ],
+      },
+      {
+        heading: "When you want more than Saturday",
+        body: [
+          "Plenty of people are happy with one parkrun a week, and that is a perfectly good reason to get up on a Saturday. Others get curious: about getting under 30 minutes, running a 10k, or entering a half marathon.",
+          "That is the point where a running coach earns their place. A good coach can look at how you run, spread your training so the miles go up without the niggles, and add the strength work that most runners skip. If something keeps hurting, they will also tell you when it is time to see a physio instead. Our running coaches are listed by town, and many coach online.",
+        ],
+      },
+      {
+        heading: "If you are thinking of trying it",
+        body: [
+          "Find your nearest event on the parkrun website, register, and print or save your barcode. Arrive ten minutes early for the first-timers' briefing, start near the back, and walk whenever you need to. If you have a heart condition, are pregnant or are recovering from an injury or illness, check with your GP first.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/specialisms/running", label: "Running coaches" },
+      { href: "/online", label: "Online coaches" },
+      { href: "/articles/starting-with-a-personal-trainer-in-january", label: "Starting with a trainer in January" },
+    ],
+  },
+  {
+    slug: "training-through-a-british-winter",
+    title: "Dark mornings, cold hands: keeping going through a British winter",
+    summary: "Why routines slip between November and February, and the small, unglamorous changes that keep people training until the evenings get light again.",
+    published: "2026-12-11",
+    updated: "2026-12-11",
+    section: "training",
+    headline: "Dark mornings, cold hands: how to keep training until spring",
+    photo: { alt: "Snow falling on a city park at night", credit: "Evan Wise", source: "https://unsplash.com/photos/a-woman-is-walking-through-the-snow-at-night-SBVWM7Ysmes" },
+    quick: [
+      "The winter slump is normal: you're reacting to cold, dark and tired.",
+      "Make training easy to start, and lower the bar for what counts.",
+      "Be seen, stick to lit routes and move indoors when it's icy.",
+    ],
+    callout: { at: 4, big: "10µg", text: "of vitamin D a day in autumn and winter: what the NHS advises everyone to consider" },
+    status: "draft",
+    shop: "dumbbell-only-plan",
+    sections: [
+      {
+        heading: "The slump is normal",
+        body: [
+          "Once the clocks go back at the end of October, the day shrinks at both ends. The run you did after work in September now happens in the dark, the morning session means scraping the car, and the sofa makes a very good argument. If your routine has wobbled, you are not lacking willpower. You are reacting sensibly to cold, dark and tired.",
+          "The trick most trainers use with their clients is not to fight winter head on. It is to make training easier to start, and to lower the bar for what counts.",
+        ],
+      },
+      {
+        heading: "Make it easier to start",
+        body: [
+          "Lay your kit out the night before. Book sessions as fixed appointments rather than hoping you will feel like it. Move a session to lunchtime, when there is still daylight. Short, regular sessions beat long ones you keep cancelling.",
+          "It helps to have somewhere to go that isn't outside. A trainer who comes to your home, or an online coach who sets you sessions you can do in the living room, takes the weather out of the decision.",
+        ],
+      },
+      {
+        heading: "Lower the bar for what counts",
+        body: [
+          "The UK Chief Medical Officers' guidelines suggest adults aim for around 150 minutes of moderate activity a week, such as brisk walking, plus muscle-strengthening activity on at least two days. That can be broken into small pieces. A 20-minute walk at lunch and two short strength sessions at home is a respectable winter week.",
+          "Think of winter as a season for keeping what you have built, not for personal bests. Spring is much more pleasant if you arrive at it still in the habit.",
+        ],
+      },
+      {
+        heading: "If you train outside",
+        body: [
+          "Be seen: wear something bright or reflective and carry a light if you run or cycle in the dark. Stick to lit, familiar routes, and switch to an indoor session when paths are icy. Dress in layers you can take off, and spend a few extra minutes warming up, because cold muscles take longer to get going.",
+          "Cold air can set off symptoms for some people with asthma, so if that is you, follow the advice from your GP or asthma nurse and carry your reliever inhaler.",
+        ],
+      },
+      {
+        heading: "Look after the basics",
+        body: [
+          "Winter training is easier when the rest of life is in decent shape. Sleep, a proper meal before an evening session and a warm drink afterwards all make it more likely you will go again. The NHS also advises that everyone consider taking a daily vitamin D supplement of 10 micrograms in autumn and winter, when there isn't enough sunlight for the body to make its own.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/specialisms/home-visits", label: "Trainers who come to your home" },
+      { href: "/online", label: "Online coaches" },
+      { href: "/specialisms/bootcamp", label: "Outdoor bootcamps" },
+    ],
+  },
 ];
 
-export const guideBy = (slug: string) => GUIDES.find((g) => g.slug === slug);
+/** Drafts show on preview links (and locally) so ed can read them, never on the live site. */
+const SHOW_DRAFTS = process.env.VERCEL_ENV !== "production";
+
+/** Every live article, newest first. */
+export const ARTICLES: Article[] = ALL_ARTICLES.filter((a) => SHOW_DRAFTS || a.status !== "draft").sort(
+  (a, b) => b.published.localeCompare(a.published) || ALL_ARTICLES.indexOf(a) - ALL_ARTICLES.indexOf(b),
+);
+
+/** Live articles that search engines should know about (no drafts, even on previews). */
+export const PUBLISHED_ARTICLES = ARTICLES.filter((a) => a.status !== "draft");
+
+export const articleBy = (slug: string) => ARTICLES.find((g) => g.slug === slug);
+
+export const articlesIn = (section: SectionSlug) => ARTICLES.filter((a) => a.section === section);
+
+export const dateLabel = (iso: string, short = false) =>
+  new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: short ? "short" : "long", year: "numeric", timeZone: "UTC" });
 
 /** Specialisms (and "online" / "home-visits") each guide is most useful for. Drives "keep reading" panels. */
-const GUIDE_TOPICS: Record<string, string[]> = {
+const ARTICLE_TOPICS: Record<string, string[]> = {
+  "how-parkrun-changed-saturday-mornings": ["running", "endurance", "general-fitness"],
+  "training-through-a-british-winter": ["home-visits", "online", "general-fitness"],
+  "pilates-for-beginners": ["pilates", "confidence", "mobility", "flexibility"],
   "personal-trainer-pt-private-trainer-names": ["general-fitness", "home-visits", "bootcamp", "online"],
   "starting-with-a-personal-trainer-in-january": ["confidence", "general-fitness", "weight-loss"],
   "bootcamps-and-small-group-training": ["bootcamp", "hiit", "functional", "crossfit"],
@@ -638,26 +943,27 @@ const GUIDE_TOPICS: Record<string, string[]> = {
   "personal-training-for-over-50s": ["older-adults", "rehab", "home-visits"],
 };
 
-export const guideTopics = (slug: string) => GUIDE_TOPICS[slug] ?? [];
+export const articleTopics = (slug: string) => ARTICLE_TOPICS[slug] ?? [];
 
-/** The guides that best fit a set of specialisms, best match first; general guides fill any gaps. */
-export function guidesForTopics(topics: string[], n = 2, exclude?: string): Guide[] {
+/** The articles that best fit a set of specialisms, best match first; general articles fill any gaps. */
+export function articlesForTopics(topics: string[], n = 2, exclude?: string): Article[] {
   const fallback = ["questions-to-ask-a-personal-trainer", "how-to-check-a-personal-trainer-is-qualified", "what-happens-in-a-personal-training-session"];
-  return GUIDES.filter((g) => g.slug !== exclude)
-    .map((g, i) => ({ g, i, score: guideTopics(g.slug).filter((t) => topics.includes(t)).length * 10 - (fallback.includes(g.slug) ? 0 : 1) }))
+  return ARTICLES.filter((g) => g.slug !== exclude)
+    .map((g, i) => ({ g, i, score: articleTopics(g.slug).filter((t) => topics.includes(t)).length * 10 - (fallback.includes(g.slug) ? 0 : 1) }))
     .sort((a, b) => b.score - a.score || a.i - b.i)
     .slice(0, n)
     .map((x) => x.g);
 }
 
 /** The guide after this one, going round in a loop, so every guide ends with somewhere to go next. */
-export function nextGuide(slug: string): Guide {
-  const i = GUIDES.findIndex((g) => g.slug === slug);
-  return GUIDES[(i + 1) % GUIDES.length];
+export function nextArticle(slug: string): Article {
+  const pool = ARTICLES.filter((g) => g.status !== "draft" || g.slug === slug);
+  const i = pool.findIndex((g) => g.slug === slug);
+  return pool[(i + 1) % pool.length];
 }
 
 /** Rough reading time for a guide, in minutes. */
-export function readingMinutes(g: Guide): number {
+export function readingMinutes(g: Article): number {
   const words = [g.summary, ...g.sections.flatMap((s) => [s.heading, ...s.body])].join(" ").split(/\s+/).length;
   return Math.max(2, Math.round(words / 220));
 }

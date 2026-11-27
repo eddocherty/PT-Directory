@@ -2,18 +2,22 @@ import Link from "next/link";
 import { Arrow } from "./Arrow";
 import { PlanCover } from "./PlanCover";
 import { TrainerCard } from "./TrainerCard";
-import { guideTopics, nextGuide, readingMinutes, type Guide } from "@/lib/guides";
+import Image from "next/image";
+import { articleTopics, nextArticle, readingMinutes, sectionName, type Article } from "@/lib/articles";
 import { formatPrice, pickPlan, type Product } from "@/lib/products";
 import { FITNESS_GOALS, TRAINING_STYLES } from "@/lib/taxonomy";
 import { topicBySlug } from "@/lib/topics";
 import { cachedSearch, type SearchFilters } from "@/lib/trainers";
 
-export function GuideCard({ g, big = false }: { g: Guide; big?: boolean }) {
+export function ArticleCard({ g, big = false }: { g: Article; big?: boolean }) {
   return (
-    <Link href={`/guides/${g.slug}`} className={`group flex flex-col justify-between gap-4 border border-line bg-paper p-5 transition hover:border-ink ${big ? "sm:p-7" : ""}`}>
+    <Link href={`/articles/${g.slug}`} className={`group flex flex-col justify-between gap-4 border border-line bg-paper p-5 transition hover:border-ink ${big ? "sm:p-7" : ""}`}>
       <div>
-        <p className="text-xs font-semibold text-accent">Guide · {readingMinutes(g)} min read</p>
-        <p className={`display mt-2 group-hover:text-accent ${big ? "text-2xl sm:text-3xl" : "text-xl"}`}>{g.title}</p>
+        <div className={`relative -mx-5 -mt-5 mb-4 overflow-hidden bg-soft ${big ? "aspect-[2/1] sm:-mx-7 sm:-mt-7" : "aspect-[16/9]"}`}>
+          <Image src={`/articles/${g.slug}.jpg`} alt="" fill sizes={big ? "(min-width: 1024px) 700px, 100vw" : "(min-width: 1024px) 400px, 50vw"} className="object-cover transition duration-500 group-hover:scale-[1.03]" />
+        </div>
+        <p className="text-xs font-semibold text-accent">{sectionName(g.section)} · {readingMinutes(g)} min read</p>
+        <p className={`display mt-2 group-hover:text-accent ${big ? "text-2xl sm:text-3xl" : "text-xl"}`}>{g.headline}</p>
         {big && <p className="mt-3 text-muted">{g.summary}</p>}
       </div>
       <span className="inline-flex items-center gap-1 text-sm font-semibold">Read it <Arrow className="h-3.5 w-3.5 transition group-hover:translate-x-1" /></span>
@@ -50,12 +54,12 @@ export function topicHref(topic: string | undefined) {
   return topicBySlug(topic) ? `/specialisms/${topic}` : "/trainers";
 }
 
-/** End of a guide: what to read next, trainers who fit the guide, and the plan that fits. No dead ends. */
-export async function GuideNextUp({ g }: { g: Guide }) {
-  const topics = guideTopics(g.slug);
+/** End of an article: what to read next, trainers who fit the guide, and the plan that fits. No dead ends. */
+export async function ArticleNextUp({ g }: { g: Article }) {
+  const topics = articleTopics(g.slug);
   const main = topics[0];
   const plan = pickPlan(topics, topics);
-  const next = nextGuide(g.slug);
+  const next = nextArticle(g.slug);
   let trainers: Awaited<ReturnType<typeof cachedSearch>>["trainers"] = [];
   try {
     trainers = (await cachedSearch(filtersFor(main))).trainers.slice(0, 3);
@@ -66,7 +70,7 @@ export async function GuideNextUp({ g }: { g: Guide }) {
       <div className="mx-auto max-w-7xl px-4 py-12">
         <p className="eyebrow text-accent">Keep going</p>
         <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-          <GuideCard g={next} big />
+          <ArticleCard g={next} big />
           <PlanCard p={plan} eyebrow="Want a plan to follow?" />
         </div>
         {trainers.length > 0 && (

@@ -9,7 +9,7 @@ import { allTownStats, ukCounts } from "@/lib/stats";
 import { CITIES } from "@/lib/taxonomy";
 import { MIN_TRAINERS, TOPICS, TOPIC_INTROS, lowerFirst, topicBySlug, topicParam } from "@/lib/topics";
 import { cachedSearch } from "@/lib/trainers";
-import { GUIDES } from "@/lib/guides";
+import { ARTICLES } from "@/lib/articles";
 
 type Props = { params: Promise<{ topic: string }>; searchParams: Promise<RawParams> };
 
@@ -60,8 +60,8 @@ export default async function SpecialismPage({ params, searchParams }: Props) {
             />
             <LinkList
               title="Before you book"
-              items={GUIDES.filter((g) => g.related.some((r) => r.href === `/specialisms/${topic.slug}`) || g.slug.startsWith("how-to-check") || g.slug.startsWith("questions"))
-                .map((g) => ({ href: `/guides/${g.slug}`, label: g.title }))}
+              items={ARTICLES.filter((g) => g.related.some((r) => r.href === `/specialisms/${topic.slug}`) || g.slug.startsWith("how-to-check") || g.slug.startsWith("questions"))
+                .map((g) => ({ href: `/articles/${g.slug}`, label: g.headline }))}
             />
             <LinkList
               title="Other specialisms"

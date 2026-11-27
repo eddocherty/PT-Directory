@@ -1,4 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
+import { ARTICLES, articleBy, readingMinutes, sectionName, type Article } from "@/lib/articles";
+import { mostReadArticleSlugs } from "@/lib/article-stats";
 import { AllFilters } from "@/components/AllFilters";
 import { ShopBanner } from "@/components/ShopPromo";
 import { TrainerCard } from "@/components/TrainerCard";
@@ -34,22 +37,18 @@ export async function generateMetadata(): Promise<Metadata> {
 export const revalidate = 300;
 
 const STYLE_TILES = ["strength", "pilates", "boxing", "yoga", "running", "bootcamp"];
-type Counts = Awaited<ReturnType<typeof ukCounts>>;
-const NAMES: { term: string; text: string; href: string; count: (uk: Counts) => number }[] = [
-  { term: "Personal trainer, or PT", text: "A coach who plans your sessions and trains you, usually one-to-one.", href: "/trainers", count: (uk) => uk.total },
-  { term: "1-2-1 or one-to-one training", text: "Just you and the trainer for the whole session. Pick your town to compare them.", href: "/locations", count: () => 0 },
-  { term: "Private trainer, private PT", text: "Usually self-employed rather than a gym employee. Worth checking their qualifications.", href: "/guides/how-to-check-a-personal-trainer-is-qualified", count: () => 0 },
-  { term: "Mobile personal trainer", text: "Comes to your home, a park or your workplace, and brings the kit.", href: "/specialisms/home-visits", count: (uk) => uk.topics["home-visits"] ?? 0 },
-  { term: "Online personal trainer", text: "Video sessions or a plan with check-ins, wherever you live.", href: "/online", count: (uk) => uk.online },
-  { term: "Small group training", text: "Bootcamps and classes of a few people. Cheaper per session than 1-2-1.", href: "/specialisms/bootcamp", count: (uk) => uk.topics.bootcamp ?? 0 },
-  { term: "Pilates instructor", text: "Mat or reformer Pilates, one-to-one or in a small class.", href: "/specialisms/pilates", count: (uk) => uk.topics.pilates ?? 0 },
-];
+/** Good first reads, shown until there is enough traffic for a real "most read" list. */
+const START_HERE = ["personal-trainer-pt-private-trainer-names", "how-to-check-a-personal-trainer-is-qualified", "pilates-for-beginners", "what-happens-in-a-personal-training-session", "online-vs-in-person-personal-training"];
 
 const GOAL_LIST = ["weight-loss", "muscle-gain", "pre-post-natal", "rehab", "older-adults", "confidence", "sports-performance", "general-fitness"];
 
 export default async function Home() {
-  const [featured, stats, uk] = await Promise.all([featuredTrainers(4), allTownStats(), ukCounts()]);
+  const [featured, stats, uk, mostRead] = await Promise.all([featuredTrainers(4), allTownStats(), ukCounts(), mostReadArticleSlugs().catch(() => [] as string[])]);
   const facts = buildFacts(uk, stats);
+  // Articles: the newest three, plus a side list of the most read (or, until there's traffic, good first reads).
+  const [lead, ...recent] = ARTICLES.slice(0, 3);
+  const pick = (slugs: string[]) => slugs.map(articleBy).filter((a): a is Article => !!a && a.slug !== lead.slug && !recent.includes(a));
+  const side = pick(mostRead.length ? mostRead : START_HERE).slice(0, 4);
   return (
     <>
       {/* Hero */}
@@ -226,33 +225,56 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* What people call it. Each row is a real way of searching for a trainer, a plain answer, and the
-          page that lists those trainers, with the live count, so the words earn their place. */}
+      {/* Articles funnel. Sits below the trainer search, tools and shop, so the directory stays the main event.
+          The intro carries the other names people search for (1-2-1, private, mobile, online). */}
       <section className="border-t border-line">
-        <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
+        <div className="mx-auto grid max-w-7xl gap-x-14 gap-y-10 px-4 py-16 lg:grid-cols-[minmax(0,4fr)_minmax(0,7fr)]">
           <div>
-            <h2 className="display text-4xl sm:text-5xl">PT, 1-2-1, private trainer: same idea</h2>
+            <p className="eyebrow text-accent">Articles</p>
+            <h2 className="display mt-3 text-4xl sm:text-5xl">Worth a read</h2>
             <p className="mt-4 max-w-sm text-muted">
-              People search for personal training in a lot of ways. Here is what each one usually means, and where to find it on {SITE_NAME}.
+              Straight-talking pieces on training, running and Pilates, plus what a PT, 1-2-1 coach, private, mobile or online trainer actually does for you.
             </p>
-            <Link href="/guides/personal-trainer-pt-private-trainer-names" className="mt-6 inline-flex items-center gap-2.5 border-b-4 border-accent pb-1.5 text-[15px] font-bold hover:text-accent">
-              What the names mean <Arrow className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-          <ul className="border-t border-ink">
-            {NAMES.map((x) => {
-              const n = x.count(uk);
-              return (
-                <li key={x.term}>
-                  <Link href={x.href} className="group grid gap-1 border-b border-line py-4 hover:border-accent sm:grid-cols-[minmax(0,14rem)_minmax(0,1fr)_auto] sm:items-baseline sm:gap-6">
-                    <span className="font-semibold group-hover:text-accent">{x.term}</span>
-                    <span className="text-sm text-muted">{x.text}</span>
-                    <span className="text-sm tabular-nums text-muted">{n ? n.toLocaleString("en-GB") : ""}</span>
+            <Link href="/articles" className="btn mt-6">All articles</Link>
+            <p className="eyebrow mt-10 border-b border-ink pb-3">{mostRead.length ? "Most read this month" : "Start here"}</p>
+            <ol>
+              {side.map((a, i) => (
+                <li key={a.slug}>
+                  <Link href={`/articles/${a.slug}`} className="group flex gap-4 border-b border-line py-3.5">
+                    <span className="w-6 shrink-0 pt-0.5 text-sm font-bold tabular-nums text-accent">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="min-w-0 flex-1 font-semibold leading-snug group-hover:text-accent">{a.headline}</span>
+                    <span className="shrink-0 pt-0.5 text-xs font-medium tabular-nums text-muted">{readingMinutes(a)} min</span>
                   </Link>
                 </li>
-              );
-            })}
-          </ul>
+              ))}
+            </ol>
+          </div>
+          <div>
+            <p className="eyebrow border-b border-ink pb-3">Latest</p>
+            <Link href={`/articles/${lead.slug}`} className="group mt-5 block">
+              <div className="relative aspect-[16/9] overflow-hidden bg-soft">
+                <Image src={`/articles/${lead.slug}.jpg`} alt={lead.photo.alt} fill sizes="(min-width: 1024px) 760px, 100vw" className="object-cover transition duration-700 group-hover:scale-[1.02]" />
+              </div>
+              <p className="chip mt-4">{sectionName(lead.section)}</p>
+              <p className="display mt-2 text-2xl group-hover:text-accent sm:text-3xl">{lead.headline}</p>
+              <p className="mt-2 max-w-2xl text-muted">{lead.summary}</p>
+            </Link>
+            <ul className="mt-6 grid gap-6 border-t border-line pt-6 sm:grid-cols-2">
+              {recent.map((a) => (
+                <li key={a.slug}>
+                  <Link href={`/articles/${a.slug}`} className="group flex gap-4">
+                    <div className="relative aspect-[4/3] w-28 shrink-0 overflow-hidden bg-soft">
+                      <Image src={`/articles/${a.slug}.jpg`} alt="" fill sizes="112px" className="object-cover transition duration-500 group-hover:scale-[1.04]" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-accent">{sectionName(a.section)}</p>
+                      <p className="mt-1 font-bold leading-snug group-hover:text-accent">{a.headline}</p>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 

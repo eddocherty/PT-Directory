@@ -10,8 +10,8 @@ import { ShopProfileCard } from "@/components/ShopPromo";
 import { Stars } from "@/components/Stars";
 import { Avatar } from "@/components/Avatar";
 import { HeartButton, RecentlyViewed, RememberViewed } from "@/components/Saved";
-import { GuideCard } from "@/components/NextUp";
-import { guidesForTopics } from "@/lib/guides";
+import { ArticleCard } from "@/components/NextUp";
+import { articlesForTopics } from "@/lib/articles";
 import { FITNESS_GOALS, SPORTS, TRAINING_STYLES, nameFor } from "@/lib/taxonomy";
 import { abs } from "@/lib/site";
 import { allTownStats, countySlug, townFor } from "@/lib/stats";
@@ -124,7 +124,7 @@ export default async function TrainerPage({ params }: Props) {
   ].filter(Boolean) as { label: string; href: string; track: string }[];
 
   const saved = { slug: t.slug, name: t.name, city: t.city, styles: t.styles, goals: t.goals };
-  const reading = guidesForTopics([...t.styles, ...t.goals, ...(t.home_visits ? ["home-visits"] : []), ...(t.online ? ["online"] : [])], 2);
+  const reading = articlesForTopics([...t.styles, ...t.goals, ...(t.home_visits ? ["home-visits"] : []), ...(t.online ? ["online"] : [])], 2);
 
   return (
     <>
@@ -329,7 +329,7 @@ export default async function TrainerPage({ params }: Props) {
         <div className="mx-auto max-w-7xl px-4 py-10">
           <h2 className="display text-2xl">Before you get in touch</h2>
           <div className="mt-5 grid gap-3 md:grid-cols-2">
-            {reading.map((g) => <GuideCard key={g.slug} g={g} />)}
+            {reading.map((g) => <ArticleCard key={g.slug} g={g} />)}
           </div>
         </div>
       </section>

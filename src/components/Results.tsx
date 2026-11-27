@@ -3,6 +3,8 @@ import { Arrow } from "./Arrow";
 import { Fragment } from "react";
 import { ShopResultsCard } from "./ShopPromo";
 import { TrainerCard } from "./TrainerCard";
+import { ArticleTile } from "./ArticleTile";
+import { articlesForTopics } from "@/lib/articles";
 import { PAGE_SIZE, type SearchFilters, type TrainerSummary } from "@/lib/trainers";
 import { toQuery, type RawParams } from "@/lib/filters";
 import { FITNESS_GOALS, GENDERS, RADII, SPORTS, TRAINING_STYLES, type Option } from "@/lib/taxonomy";
@@ -123,6 +125,16 @@ export function Results({
     );
   }
 
+  // Two articles per page that match what people searched for, after the 8th and 16th trainers (so they land at the end of a row of three). Trainers
+  // always come first, and a page of only a few trainers gets at most one article.
+  const topics = [...(filters.styles ?? []), ...(filters.goals ?? []), ...(filters.online ? ["online"] : []), ...(filters.homeVisits ? ["home-visits"] : [])];
+  const picks = articlesForTopics(topics, 6);
+  const offset = (page - 1) * 2;
+  const reading: Record<number, (typeof picks)[number] | undefined> = {
+    7: picks[offset % picks.length],
+    15: picks[(offset + 1) % picks.length],
+  };
+
   return (
     <div className="flex flex-col gap-6">
       {toolbar}
@@ -130,6 +142,7 @@ export function Results({
         {trainers.map((t, i) => (
           <Fragment key={t.id}>
             <TrainerCard t={t} />
+            {reading[i] && i < trainers.length - 1 && <ArticleTile a={reading[i]!} />}
             {/* Low-cost first step, shown once per page after a few trainers */}
             {i === Math.min(5, trainers.length - 1) && <ShopResultsCard goals={filters.goals} styles={filters.styles} />}
           </Fragment>
