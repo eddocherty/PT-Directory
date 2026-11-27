@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import { INDEXABLE, SITE_NAME, SITE_URL, TAGLINE } from "@/lib/site";
 import { Logo } from "@/components/Logo";
 import { FROM_PRICE } from "@/lib/products";
-import { Analytics } from "@vercel/analytics/next";
+import { SiteAnalytics } from "@/components/SiteAnalytics";
 import { Tracker } from "@/components/Tracker";
 import { ShortlistNavLink } from "@/components/Saved";
 import "./globals.css";
@@ -87,7 +87,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           </p>
         </footer>
         <Tracker />
-        <Analytics />
+        <SiteAnalytics />
       </body>
     </html>
   );

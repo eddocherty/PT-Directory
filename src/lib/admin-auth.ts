@@ -88,6 +88,39 @@ export async function requireAdmin(): Promise<void> {
   if (!(await isAdmin())) redirect("/admin/login");
 }
 
+/**
+ * "This device is mine": a signed, long-lived cookie that only ed's own browsers get (on admin login,
+ * or from the switch on /admin). Page views from a browser that has it are counted as internal,
+ * not as real visitors. Members of the public never get this cookie.
+ */
+export const MINE_COOKIE = "lpt_mine";
+const MINE_DAYS = 400; // the longest browsers allow
+
+export function makeMineValue(): string {
+  const exp = Date.now() + MINE_DAYS * 86400_000;
+  return `${exp}.${sign(`mine.${exp}`)}`;
+}
+
+export function isMineValue(value: string | undefined): boolean {
+  if (!value || !adminConfigured()) return false;
+  const [expStr, sig] = value.split(".");
+  const exp = Number(expStr);
+  if (!exp || exp < Date.now() || !sig) return false;
+  return safeEqual(Buffer.from(sig), Buffer.from(sign(`mine.${exp}`)));
+}
+
+export const mineCookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+  maxAge: MINE_DAYS * 86400,
+};
+
+export async function isMyDevice(): Promise<boolean> {
+  return isMineValue((await cookies()).get(MINE_COOKIE)?.value);
+}
+
 export const sessionCookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",

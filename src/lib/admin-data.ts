@@ -9,7 +9,10 @@ export type Dashboard = {
   visitors: number;
   profile_views: number;
   contacts: number;
-  daily: { day: string; pageviews: number; visitors: number }[];
+  daily: { day: string; pageviews: number; visitors: number; excluded?: number }[];
+  /** Missing until the traffic SQL has been run in Supabase. */
+  split?: { real: number; internal: number; bot: number; real_visitors: number; real_contacts: number; excluded_contacts: number };
+  reasons?: { reason: string; traffic: string; views: number }[];
   top_pages: { path: string; views: number; visitors: number }[];
   referrers: { source: string; views: number }[];
   countries: { country: string; views: number }[];
@@ -71,11 +74,16 @@ async function all<T>(build: (from: number, to: number) => PromiseLike<{ data: T
   }
 }
 
-export async function loadDashboard(days: number): Promise<Dashboard> {
+export type TrafficView = "real" | "excluded" | "all";
+
+export async function loadDashboard(days: number, traffic: TrafficView = "real"): Promise<Dashboard> {
   const db = getAdminDb()!;
-  const { data, error } = await db.rpc("admin_dashboard", { p_days: days });
-  if (error) throw new Error(error.message);
-  return data as Dashboard;
+  const { data, error } = await db.rpc("admin_dashboard", { p_days: days, p_traffic: traffic });
+  if (!error) return data as Dashboard;
+  // Before the traffic SQL is run, only the old one-argument version exists.
+  const old = await db.rpc("admin_dashboard", { p_days: days });
+  if (old.error) throw new Error(error.message);
+  return old.data as Dashboard;
 }
 
 type TrainerRow = {
