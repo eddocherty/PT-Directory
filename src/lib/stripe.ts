@@ -56,3 +56,27 @@ export async function checkOrder(stripe: Stripe, ref: { sessionId?: string; orde
   }
   return { status: "ok", slug, email };
 }
+
+// ---------------------------------------------------------------------------------------------
+// Paid profiles: £10 a month. ed sends each trainer their own link (/join/<their-slug>), Stripe
+// takes the payment, and the trainer's profile switches to paid. Cancelling switches it back.
+
+/** The monthly price, found by its lookup key so we never create duplicates. Made once, the first time. */
+export const PROFILE_PRICE_KEY = "localpt_profile_monthly_1000";
+export const PROFILE_PRICE_PENCE = 1000;
+
+export async function profilePriceId(stripe: Stripe): Promise<string> {
+  const found = await stripe.prices.list({ lookup_keys: [PROFILE_PRICE_KEY], active: true, limit: 1 });
+  if (found.data[0]) return found.data[0].id;
+  const price = await stripe.prices.create({
+    currency: "gbp",
+    unit_amount: PROFILE_PRICE_PENCE,
+    recurring: { interval: "month" },
+    lookup_key: PROFILE_PRICE_KEY,
+    product_data: { name: "LocalPT trainer profile" },
+  });
+  return price.id;
+}
+
+/** Statuses that keep a profile paid. past_due is a grace period while Stripe retries the card. */
+export const PAID_STATUSES = new Set(["active", "trialing", "past_due"]);

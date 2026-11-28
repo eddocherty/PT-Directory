@@ -44,6 +44,8 @@ export type Trainer = TrainerSummary & {
   last_verified_at: string | null;
   photos: string[];
   reviews: Review[];
+  /** Paying £10 a month: their page shows the extras ed has added. */
+  is_paid: boolean;
 };
 
 export type SearchFilters = {
@@ -113,6 +115,7 @@ export async function getTrainer(slug: string): Promise<Trainer | null> {
     sports: data.sports ?? [],
     photos: data.photos ?? [],
     free_consultation: data.free_consultation ?? false,
+    is_paid: data.is_paid === true,
     reviews: list,
     review_count: list.length,
     rating_avg: list.length ? Math.round((list.reduce((a, v) => a + v.rating, 0) / list.length) * 10) / 10 : null,
@@ -177,10 +180,54 @@ export async function sendEnquiry(e: {
   if (!db) return { ok: false, error: "The database isn’t connected yet." };
   const id = await trainerId(e.slug);
   if (!id) return { ok: false, error: "We couldn’t find that trainer." };
-  const { error } = await db.from("enquiries").insert({
-    trainer_id: id, name: e.name, email: e.email, phone: e.phone || null, goal: e.goal || null, message: e.message || null,
-  });
-  return error ? { ok: false, error: error.message } : { ok: true };
+  const row = { trainer_id: id, name: e.name, email: e.email, phone: e.phone || null, goal: e.goal || null, message: e.message || null };
+  // The server's own client returns the new row's id, so we can note whether it was passed on.
+  const { getAdminDb } = await import("./admin-db");
+  const admin = getAdminDb();
+  if (!admin) {
+    const { error } = await db.from("enquiries").insert(row);
+    return error ? { ok: false, error: error.message } : { ok: true };
+  }
+  const { data, error } = await admin.from("enquiries").insert(row).select("id").single();
+  if (error) return { ok: false, error: error.message };
+  await forwardEnquiry(data.id as string, id, e).catch((err) => console.error("forward enquiry", err));
+  return { ok: true };
+}
+
+/** Paying trainers get each enquiry by email, with Reply going straight to the client. */
+async function forwardEnquiry(enquiryId: string, trainerIdValue: string, e: { name: string; email: string; phone?: string; goal?: string; message?: string }) {
+  const { getAdminDb } = await import("./admin-db");
+  const { sendEmail } = await import("./email");
+  const { BRAND } = await import("@/brand");
+  const admin = getAdminDb()!;
+  const [{ data: t }, { data: p }] = await Promise.all([
+    admin.from("trainers").select("name, email, is_paid").eq("id", trainerIdValue).maybeSingle(),
+    admin.from("paid_profiles").select("enquiry_email").eq("trainer_id", trainerIdValue).maybeSingle(),
+  ]);
+  if (!t?.is_paid) return;
+  const to = (p?.enquiry_email as string | null) || (t.email as string | null);
+  if (!to) {
+    await admin.from("enquiries").update({ forward_error: "No enquiry email saved for this trainer" }).eq("id", enquiryId);
+    return;
+  }
+  const text = [
+    `Hi ${t.name},`,
+    ``,
+    `${e.name} sent you an enquiry through your ${BRAND.name} profile.`,
+    ``,
+    `Name: ${e.name}`,
+    `Email: ${e.email}`,
+    e.phone ? `Phone: ${e.phone}` : null,
+    e.goal ? `Main goal: ${e.goal}` : null,
+    ``,
+    e.message || "(No message)",
+    ``,
+    `Just press Reply to answer ${e.name} directly.`,
+    ``,
+    `${BRAND.name}, ${BRAND.domain}`,
+  ].filter((l) => l !== null).join("\n");
+  const r = await sendEmail({ to, subject: `New enquiry from ${e.name} via ${BRAND.name}`, text, replyTo: e.email });
+  await admin.from("enquiries").update(r.ok ? { forwarded_at: new Date().toISOString(), forward_error: null } : { forward_error: r.error }).eq("id", enquiryId);
 }
 
 export async function submitReview(r: {

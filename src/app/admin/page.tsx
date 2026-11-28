@@ -8,6 +8,10 @@ import { DailyChart } from "@/components/admin/DailyChart";
 import { TrainerTable } from "@/components/admin/TrainerTable";
 import { LeadTable } from "@/components/admin/LeadTable";
 import { BRAND } from "@/brand";
+import { loadPaid } from "@/lib/admin-paid";
+import { checkStripeAction, linkSubscription } from "./paid/actions";
+import { JoinLinkFinder } from "@/components/admin/JoinLink";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
 
@@ -16,6 +20,7 @@ const TABS = [
   { id: "trainers", label: "Trainers (client list)" },
   { id: "leads", label: "Outreach pipeline" },
   { id: "inbox", label: "Requests & enquiries" },
+  { id: "paid", label: "Paid profiles" },
 ] as const;
 const RANGES = [7, 30, 90, 365];
 const VIEWS: { id: TrafficView; label: string }[] = [
@@ -39,7 +44,7 @@ const REASONS: Record<string, string> = {
 };
 
 type Href = (p: { tab?: string; days?: number; view?: TrafficView }) => string;
-type Props = { searchParams: Promise<{ tab?: string; days?: string; view?: string; indexnow?: string; device?: string }> };
+type Props = { searchParams: Promise<{ tab?: string; days?: string; view?: string; indexnow?: string; device?: string; msg?: string }> };
 
 const fmt = (n: number) => n.toLocaleString("en-GB");
 
@@ -65,6 +70,7 @@ export default async function AdminPage({ searchParams }: Props) {
         </div>
       </div>
 
+      {sp.msg && <p role="status" className="mt-4 border-l-4 border-accent bg-paper px-4 py-3 text-sm">{sp.msg.slice(0, 300)}</p>}
       {sp.indexnow && <p role="status" className="mt-4 bg-soft px-4 py-3 text-sm">{sp.indexnow.slice(0, 200)}</p>}
       {sp.device && (
         <p role="status" className="mt-4 border-l-4 border-accent bg-paper px-4 py-3 text-sm">
@@ -97,6 +103,7 @@ function Setup() {
 }
 
 async function Body({ tab, days, view, href }: { tab: string; days: number; view: TrafficView; href: Href }) {
+  if (tab === "paid") return <PaidTab />;
   let dash: Dashboard;
   try {
     dash = await loadDashboard(days, view);
@@ -383,5 +390,94 @@ function Table({ title, head, rows }: { title: string; head: string[]; rows: (st
         </table>
       )}
     </div>
+  );
+}
+
+const ukDay = (d: string | null) => (d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "");
+const STATUS: Record<string, string> = { active: "Paying", past_due: "Card failed, Stripe retrying", trialing: "Trial", canceled: "Cancelled", unpaid: "Unpaid", incomplete: "Not finished", incomplete_expired: "Not finished" };
+
+/** Private to ed: who pays £10 a month, their payment links, and a way into each trainer's page editor. */
+async function PaidTab() {
+  let data: Awaited<ReturnType<typeof loadPaid>>;
+  try {
+    data = await loadPaid();
+  } catch (e) {
+    return (
+      <div className="mt-8 rounded-3xl bg-paper p-6 text-sm">
+        <p className="display text-2xl">One SQL file to run first</p>
+        <p className="mt-2">Run <b>paid-profiles.sql</b> in the Supabase SQL editor, then refresh this page.</p>
+        <p className="mt-2 text-muted">{(e as Error).message}</p>
+      </div>
+    );
+  }
+  const { paid, unlinked, ended, trainers } = data;
+  return (
+    <section className="mt-6 grid gap-6">
+      <div className="rounded-3xl bg-paper p-6">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="display text-2xl">Paying trainers <span className="text-muted">{paid.length}</span></h2>
+            <p className="mt-1 text-xs text-muted">Only you can see this. £{(paid.length * 10).toLocaleString("en-GB")} a month. Click a name to edit their page.</p>
+          </div>
+          <form action={checkStripeAction}><button className="btn-ghost text-xs" title="Reads every subscription from Stripe and updates this list">Check Stripe now</button></form>
+        </div>
+        {paid.length === 0 ? <p className="mt-4 text-sm text-muted">Nobody yet. Send a trainer their payment link below.</p> : (
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full min-w-[640px] text-sm">
+              <thead className="text-left text-xs uppercase tracking-wider text-muted">
+                <tr className="border-b border-line"><th className="py-2">Trainer</th><th>Since</th><th>Stripe</th><th>Page</th><th className="text-right">Last edited</th></tr>
+              </thead>
+              <tbody>
+                {paid.map((p) => (
+                  <tr key={p.id} className="border-b border-line">
+                    <td className="py-2"><Link href={`/admin/paid/${p.slug}`} className="font-semibold underline">{p.name}</Link> <span className="text-muted">{p.city}</span></td>
+                    <td>{ukDay(p.paid_since)}</td>
+                    <td>{p.paid_manual ? "Switched on by hand" : p.status ? `${STATUS[p.status] ?? p.status}${p.cancel_at_period_end ? `, ends ${ukDay(p.current_period_end)}` : ""}` : "?"}</td>
+                    <td>{p.filled === 0 ? <span className="font-semibold text-red-700">Nothing added yet</span> : `${p.filled} of 7 sections`}</td>
+                    <td className="text-right text-muted">{ukDay(p.updated_at)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {unlinked.length > 0 && (
+        <div className="rounded-3xl bg-paper p-6">
+          <h2 className="display text-2xl">Payments to match to a listing</h2>
+          <p className="mt-1 text-xs text-muted">These came through the general link. Paste the trainer’s profile address to link them.</p>
+          <ul className="mt-4 divide-y divide-line text-sm">
+            {unlinked.map((u) => (
+              <li key={u.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
+                <span><b>{u.name ?? "No name"}</b> · {u.email ?? "no email"} · {STATUS[u.status] ?? u.status} · {ukDay(u.created_at)}</span>
+                <form action={linkSubscription.bind(null, u.id)} className="flex gap-2">
+                  <input name="listing" required placeholder="localpt.co.uk/trainers/…" className="input w-64" aria-label="Their profile address" />
+                  <button className="btn-ghost text-xs">Link</button>
+                </form>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="rounded-3xl bg-paper p-6">
+        <h2 className="display text-2xl">Payment links</h2>
+        <p className="mb-4 mt-1 text-xs text-muted">Each trainer has their own link. When they pay through it, their page switches to paid straight away.</p>
+        <JoinLinkFinder trainers={trainers} origin={SITE_URL} />
+      </div>
+
+      {ended.length > 0 && (
+        <div className="rounded-3xl bg-paper p-6">
+          <h2 className="display text-2xl">Used to pay</h2>
+          <p className="mt-1 text-xs text-muted">Back to a free listing. Their extras are kept, so they come straight back if they pay again.</p>
+          <ul className="mt-4 divide-y divide-line text-sm">
+            {ended.map((p) => (
+              <li key={p.id} className="py-2"><Link href={`/admin/paid/${p.slug}`} className="font-semibold underline">{p.name}</Link> <span className="text-muted">{p.city} · {STATUS[p.status ?? ""] ?? p.status}</span></li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </section>
   );
 }
