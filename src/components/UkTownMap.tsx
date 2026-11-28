@@ -34,3 +34,6 @@ export function UkTownMap({ stats, className = "" }: { stats: Record<string, Tow
     </MapHover>
   );
 }
+
+/** The outline and projection, for the small "where in the UK" locator on paid profiles. */
+export { UK_OUTLINE, W as UK_W, H as UK_H, x as ukX, y as ukY };
