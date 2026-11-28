@@ -17,7 +17,7 @@ const TOUCH_RESUME_MS = 5000; // after a tap, keep the label up this long before
  * second tap on the same dot opens the town page.
  * The dots carry their name and count as data attributes, so the map itself stays a server component.
  */
-export function MapHover({ className = "", children }: { className?: string; children: React.ReactNode }) {
+export function MapHover({ className = "", children, tourMinWidth = 0 }: { className?: string; children: React.ReactNode; tourMinWidth?: number }) {
   const box = useRef<HTMLDivElement>(null);
   const active = useRef<Element | null>(null);
   const [tip, setTip] = useState<Tip | null>(null);
@@ -46,6 +46,7 @@ export function MapHover({ className = "", children }: { className?: string; chi
   useEffect(() => {
     if (manual || !box.current) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (window.innerWidth < tourMinWidth) return; // e.g. paid profiles: on phones the labels would run under the photo
     const dots = Array.from(box.current.querySelectorAll('[data-town][data-has="1"]'));
     if (!dots.length) return;
     let last = -1;
@@ -65,7 +66,7 @@ export function MapHover({ className = "", children }: { className?: string; chi
       clearTimeout(hide);
       clearInterval(loop);
     };
-  }, [manual, point]);
+  }, [manual, point, tourMinWidth]);
 
   // Hand control back to the automatic tour a moment after the visitor leaves.
   const resume = useRef<ReturnType<typeof setTimeout>>(undefined);

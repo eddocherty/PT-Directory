@@ -20,7 +20,7 @@ import { cachedSearch, getTrainer, isThin, type Trainer } from "@/lib/trainers";
 import { CITIES } from "@/lib/taxonomy";
 import { getPaidProfile } from "@/lib/paid";
 import { isAdmin } from "@/lib/admin-auth";
-import { PaidGallery, PaidPrices, PaidReviews, PaidSections, PaidVideos, PaidWorkouts, TakingClients } from "@/components/PaidProfile";
+import { PaidLayout } from "@/components/paid/PaidLayout";
 
 /**
  * Heading size for a trainer's name, stepped down by its longest word, so one long word
@@ -149,6 +149,57 @@ export default async function TrainerPage({ params }: Props) {
   const saved = { slug: t.slug, name: t.name, city: t.city, styles: t.styles, goals: t.goals };
   const reading = articlesForTopics([...t.styles, ...t.goals, ...(t.home_visits ? ["home-visits"] : []), ...(t.online ? ["online"] : [])], 2);
 
+  const crumbs = [
+    ...(town
+      ? [
+          { name: town.county, href: `/counties/${countySlug(town.county)}` },
+          { name: town.name, href: `/locations/${town.slug}` },
+        ]
+      : [{ name: "Trainers", href: "/trainers" }]),
+    { name: t.name, href: `/trainers/${t.slug}` },
+  ];
+
+  // Paying trainers get their own page design (components/paid). Everything below the `if` is the free listing, unchanged.
+  if (paid) {
+    return (
+      <>
+        {t.status !== "published" ? (
+          <p className="sticky top-0 z-40 bg-ink px-4 py-2 text-center text-sm font-semibold text-paper">
+            Hidden listing: only you can see this, because you’re logged in to admin.{" "}
+            <Link href={`/admin/paid/${t.slug}`} className="underline">Edit this page</Link>
+          </p>
+        ) : <RememberViewed t={saved} />}
+        <PaidLayout
+          t={t}
+          paid={paid}
+          town={town}
+          first={first}
+          saved={saved}
+          crumbs={crumbs}
+          nameClass={nameSize(t.name)}
+          sinceYear={t.years_experience != null ? EXPERIENCE_BASE_YEAR - t.years_experience : null}
+          links={links}
+          reading={
+            <section className="border-t border-line bg-soft">
+              <div className="mx-auto max-w-7xl px-4 py-10">
+                <h2 className="display text-2xl">Before you get in touch</h2>
+                <div className="mt-5 grid gap-3 md:grid-cols-2">
+                  {reading.map((g) => <ArticleCard key={g.slug} g={g} />)}
+                </div>
+              </div>
+            </section>
+          }
+        />
+        <RecentlyViewed exclude={t.slug} title="Trainers you looked at" />
+        <JsonLd data={businessData(t)} />
+        <div className="sticky bottom-0 z-30 flex items-center justify-between gap-3 border-t border-line bg-paper/95 px-4 py-3 backdrop-blur lg:hidden">
+          {first !== t.name && <span className="min-w-0 truncate text-sm font-semibold">{t.name}</span>}
+          <a href="#contact" data-track="contact_button" className="btn ml-auto">Contact {first}</a>
+        </div>
+      </>
+    );
+  }
+
   return (
     <>
       {t.status !== "published" ? (
@@ -161,7 +212,7 @@ export default async function TrainerPage({ params }: Props) {
       <section className="bg-soft text-ink">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] md:items-end md:py-14">
           <div className="relative">
-            <Avatar t={{ ...t, image_url: paid ? paid.gallery[0] ?? null : t.image_url }} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
+            <Avatar t={t} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
           </div>
           <div className="flex flex-col gap-5">
             <Breadcrumbs
@@ -178,7 +229,6 @@ export default async function TrainerPage({ params }: Props) {
             <div>
               <h1 className={`display [overflow-wrap:anywhere] ${nameSize(t.name)}`}>{t.name}</h1>
               <p className="mt-3 text-lg text-muted">{where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
-              {paid && <TakingClients value={paid.taking_clients} updated={paid.taking_clients_updated_at} />}
             </div>
             {t.review_count > 0 && t.rating_avg != null && (
               <a href="#reviews" className="flex items-center gap-2 text-sm">
@@ -208,12 +258,6 @@ export default async function TrainerPage({ params }: Props) {
             </section>
           )}
 
-          {paid && <PaidGallery photos={paid.gallery} name={t.name} />}
-          {paid && <PaidVideos videos={paid.videos} first={first} />}
-          {paid && <PaidPrices prices={paid.prices} updated={paid.prices_updated_at} first={first} />}
-          {paid && <PaidWorkouts workouts={paid.workouts} />}
-          {paid && <PaidSections sections={paid.sections} />}
-          {paid && <PaidReviews reviews={paid.reviews} first={first} />}
 
           <section>
             <H2>Specialisms</H2>
