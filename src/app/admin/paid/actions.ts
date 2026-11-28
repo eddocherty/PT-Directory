@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { requireAdmin } from "@/lib/admin-auth";
 import { getAdminDb } from "@/lib/admin-db";
 import { MEDIA_BUCKET, type PaidProfile } from "@/lib/paid";
+import { DEMO_SLUG } from "@/lib/media";
 import { getStripe } from "@/lib/stripe";
 import { refreshPaidFlag, syncSubscription } from "@/lib/subscriptions";
 
@@ -124,4 +125,72 @@ export async function checkStripeAction(): Promise<void> {
     }
   }
   redirect(`/admin?tab=paid&msg=${encodeURIComponent(msg)}`);
+}
+
+
+
+/**
+ * A hidden, clearly labelled test trainer so ed can see a paid page from both sides.
+ * status "hidden": never in search, town pages, the sitemap or Google. Only ed (logged in) can open it.
+ */
+export async function createDemoAction(): Promise<void> {
+  await requireAdmin();
+  const db = getAdminDb()!;
+  const { data: existing } = await db.from("trainers").select("id").eq("slug", DEMO_SLUG).maybeSingle();
+  let id = existing?.id as string | undefined;
+  if (!id) {
+    const { data, error } = await db.from("trainers").insert({
+      slug: DEMO_SLUG,
+      name: "Demo Trainer (test only)",
+      business_name: "Demo Trainer (test only)",
+      headline: "A pretend trainer for testing paid profiles. Not a real person.",
+      bio: "This is a hidden test listing. Only you can see it while you're logged in to admin.",
+      city: "Kendal",
+      region: "Cumbria",
+      in_person: true,
+      online: true,
+      home_visits: true,
+      years_experience: 6,
+      qualifications: ["Level 3 Personal Trainer (example)"],
+      source: "demo",
+      is_sample: true,
+      status: "hidden",
+    }).select("id").single();
+    if (error) redirect(`/admin?tab=paid&msg=${encodeURIComponent(`Couldn’t make the demo: ${error.message}`)}`);
+    id = data!.id as string;
+    await db.from("trainer_styles").insert([{ trainer_id: id, style_slug: "strength" }, { trainer_id: id, style_slug: "pilates" }]);
+    await db.from("trainer_goals").insert([{ trainer_id: id, goal_slug: "general-fitness" }, { trainer_id: id, goal_slug: "pre-post-natal" }]);
+  }
+  await db.from("paid_profiles").upsert({
+    trainer_id: id,
+    about: "TEST PROFILE. This is where a paying trainer's own words go: who they are, how they train and who they love working with.\n\nEverything on this page was added from your admin editor. Try changing it, uploading a photo or two, and sending yourself an enquiry.",
+    prices: [
+      { label: "1-to-1 session, 60 minutes (example)", price: "£40", note: "Block of 10 for £360" },
+      { label: "Small group, up to 4 (example)", price: "£15", note: "" },
+    ],
+    prices_updated_at: new Date().toISOString().slice(0, 10),
+    workouts: [{ title: "20-minute starter workout (example)", body: "3 rounds:\n10 goblet squats\n10 press-ups (knees are fine)\n20-second plank\nRest 60 seconds between rounds.", link: "" }],
+    sections: [{ heading: "Where I train (example)", body: "A trainer might list their studio, parks they use, or the areas they cover for home visits." }],
+    reviews: [{ author: "Example client", body: "This is an example review, only on the test profile. Real reviews come word for word from real clients.", rating: 5, source: "Example", date: new Date().toISOString().slice(0, 10) }],
+    taking_clients: "yes",
+    taking_clients_updated_at: new Date().toISOString().slice(0, 10),
+    enquiry_email: process.env.ADMIN_NOTIFY_EMAIL ?? null,
+    updated_at: new Date().toISOString(),
+  });
+  await refreshPaidFlag(id, true);
+  redirect(`/admin/paid/${DEMO_SLUG}`);
+}
+
+/** Deletes the demo trainer and everything attached to it. Refuses to touch any real listing. */
+export async function deleteDemoAction(): Promise<void> {
+  await requireAdmin();
+  const db = getAdminDb()!;
+  const { data: t } = await db.from("trainers").select("id, source, status").eq("slug", DEMO_SLUG).maybeSingle();
+  if (t && t.source === "demo" && t.status === "hidden") {
+    const { data: files } = await db.storage.from(MEDIA_BUCKET).list(`gallery/${t.id}`);
+    if (files?.length) await db.storage.from(MEDIA_BUCKET).remove(files.map((f) => `gallery/${t.id}/${f.name}`));
+    await db.from("subscriptions").delete().eq("trainer_id", t.id);
+    await db.from("trainers").delete().eq("id", t.id); // paid page, enquiries and styles go with it
+  }
+  redirect(`/admin?tab=paid&msg=${encodeURIComponent("Demo profile deleted.")}`);
 }

@@ -19,6 +19,7 @@ import { MIN_TRAINERS, TOWN_RADIUS } from "@/lib/topics";
 import { cachedSearch, getTrainer, isThin, type Trainer } from "@/lib/trainers";
 import { CITIES } from "@/lib/taxonomy";
 import { getPaidProfile } from "@/lib/paid";
+import { isAdmin } from "@/lib/admin-auth";
 import { PaidGallery, PaidPrices, PaidReviews, PaidSections, PaidVideos, PaidWorkouts, TakingClients } from "@/components/PaidProfile";
 
 /**
@@ -40,8 +41,9 @@ const EXPERIENCE_BASE_YEAR = 2026;
 type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const t = await getTrainer((await params).slug);
+  const t = await getTrainer((await params).slug, await isAdmin());
   if (!t) return {};
+  if (t.status !== "published") return { title: `${t.name} (hidden)`, robots: { index: false, follow: false } };
   return {
     title: `${t.name}, personal trainer${t.city ? ` in ${t.city}` : ""}`,
     description: describe(t),
@@ -101,7 +103,7 @@ function H2({ children }: { children: React.ReactNode }) {
 }
 
 export default async function TrainerPage({ params }: Props) {
-  const t = await getTrainer((await params).slug);
+  const t = await getTrainer((await params).slug, await isAdmin());
   if (!t) {
     // A removed listing: send old links to its town page rather than an error. Slugs end with the town, e.g. "-leeds".
     const slug = (await params).slug;
@@ -149,7 +151,12 @@ export default async function TrainerPage({ params }: Props) {
 
   return (
     <>
-      <RememberViewed t={saved} />
+      {t.status !== "published" ? (
+        <p className="sticky top-0 z-40 bg-ink px-4 py-2 text-center text-sm font-semibold text-paper">
+          Hidden listing: only you can see this, because you’re logged in to admin.{" "}
+          <Link href={`/admin/paid/${t.slug}`} className="underline">Edit this page</Link>
+        </p>
+      ) : <RememberViewed t={saved} />}
       {/* Hero */}
       <section className="bg-soft text-ink">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] md:items-end md:py-14">

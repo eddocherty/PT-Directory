@@ -9,7 +9,7 @@ import { TrainerTable } from "@/components/admin/TrainerTable";
 import { LeadTable } from "@/components/admin/LeadTable";
 import { BRAND } from "@/brand";
 import { loadPaid } from "@/lib/admin-paid";
-import { checkStripeAction, linkSubscription } from "./paid/actions";
+import { checkStripeAction, createDemoAction, linkSubscription } from "./paid/actions";
 import { JoinLinkFinder } from "@/components/admin/JoinLink";
 import { SITE_URL } from "@/lib/site";
 
@@ -419,7 +419,10 @@ async function PaidTab() {
             <h2 className="display text-2xl">Paying trainers <span className="text-muted">{paid.length}</span></h2>
             <p className="mt-1 text-xs text-muted">Only you can see this. £{(paid.length * 10).toLocaleString("en-GB")} a month. Click a name to edit their page.</p>
           </div>
-          <form action={checkStripeAction}><button className="btn-ghost text-xs" title="Reads every subscription from Stripe and updates this list">Check Stripe now</button></form>
+          <div className="flex gap-4">
+            <form action={createDemoAction}><button className="btn-ghost text-xs" title="A hidden test trainer only you can see">Open demo profile</button></form>
+            <form action={checkStripeAction}><button className="btn-ghost text-xs" title="Reads every subscription from Stripe and updates this list">Check Stripe now</button></form>
+          </div>
         </div>
         {paid.length === 0 ? <p className="mt-4 text-sm text-muted">Nobody yet. Send a trainer their payment link below.</p> : (
           <div className="mt-4 overflow-x-auto">

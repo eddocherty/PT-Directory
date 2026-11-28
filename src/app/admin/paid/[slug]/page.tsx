@@ -6,7 +6,8 @@ import { emptyProfile, getPaidProfile } from "@/lib/paid";
 import { emailConfigured } from "@/lib/email";
 import { SITE_URL } from "@/lib/site";
 import { PaidEditor } from "@/components/admin/PaidEditor";
-import { setManualPaid } from "../actions";
+import { deleteDemoAction, setManualPaid } from "../actions";
+import { DEMO_SLUG } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +18,7 @@ export default async function EditPaid({ params, searchParams }: { params: Promi
   const sp = await searchParams;
   const db = getAdminDb();
   if (!db) notFound();
-  const { data: t } = await db.from("trainers").select("id, slug, name, city, email, bio, is_paid, paid_manual").eq("slug", slug).maybeSingle();
+  const { data: t } = await db.from("trainers").select("id, slug, name, city, email, bio, is_paid, paid_manual, status, source").eq("slug", slug).maybeSingle();
   if (!t) notFound();
   const profile = (await getPaidProfile(t.id)) ?? emptyProfile(t.id);
   const join = `${SITE_URL}/join/${t.slug}`;
@@ -36,6 +37,13 @@ export default async function EditPaid({ params, searchParams }: { params: Promi
       </div>
       {sp.saved && <p role="status" className="mt-4 border-l-4 border-accent bg-paper px-4 py-3 text-sm">{sp.saved === "on" ? "Paid page switched on." : "Paid page switched off. Their extras are kept but hidden."}</p>}
 
+      {t.slug === DEMO_SLUG && t.source === "demo" && (
+        <div className="mt-6 rounded-3xl border-2 border-accent bg-paper p-6 text-sm">
+          <p className="font-semibold">This is the hidden demo profile. Nobody but you can see it.</p>
+          <p className="mt-1">Open its page, send yourself an enquiry, upload a photo here and press Save to see changes go live. Delete it when you’re done.</p>
+          <form action={deleteDemoAction} className="mt-3"><button className="btn-ghost text-xs text-red-700">Delete demo profile</button></form>
+        </div>
+      )}
       <div className="mt-6 rounded-3xl bg-paper p-6 text-sm">
         <p><b>Payment link:</b> <code className="break-all">{join}</code></p>
         <p className="mt-1 text-xs text-muted">You can fill this page in before they pay. Nothing shows on the site until their page is paid.</p>
