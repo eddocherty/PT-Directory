@@ -465,7 +465,6 @@ async function Fitness({ town }: { town: City }) {
                 <li key={p.name} className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 border-b border-line py-2.5 transition-colors hover:bg-soft/70">
                   <span className="min-w-0">
                     <span className="block truncate font-semibold">{p.name}</span>
-                    <span className="block text-xs text-muted">{p.dir}</span>
                   </span>
                   <span className="text-right font-semibold tabular-nums">{p.miles < 0.1 ? "<0.1" : p.miles} mi</span>
                 </li>
