@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Arrow } from "@/components/Arrow";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { ARTICLES, PUBLISHED_ARTICLES, SECTIONS, articlesIn, dateLabel, readingMinutes, sectionName, type Article } from "@/lib/articles";
+import { SECTIONS, articles, articlesIn, isScheduled, publishedArticles, dateLabel, readingMinutes, sectionName, type Article } from "@/lib/articles";
 import { TOOLS } from "@/lib/tools";
 import { FROM_PRICE } from "@/lib/products";
 import { FactStrip } from "@/components/Facts";
@@ -42,6 +42,7 @@ function Row({ a, n }: { a: Article; n?: number }) {
           <span>{dateLabel(a.published, true)}</span>
           <span>{readingMinutes(a)} min read</span>
           {a.status === "draft" && <span className="text-accent">Draft</span>}
+          {isScheduled(a) && <span className="text-accent">Scheduled</span>}
         </p>
       </Link>
     </li>
@@ -50,6 +51,8 @@ function Row({ a, n }: { a: Article; n?: number }) {
 
 export default async function ArticlesPage() {
   const [uk, stats] = await Promise.all([ukCounts(), allTownStats()]);
+  const ARTICLES = articles();
+  const PUBLISHED_ARTICLES = publishedArticles();
   const [lead, ...rest] = ARTICLES;
   const latest = rest.slice(0, 4);
   const sections = SECTIONS.map((s) => ({ ...s, items: articlesIn(s.slug) })).filter((s) => s.items.length);
