@@ -126,7 +126,7 @@ function Hero({ t, paid, town, first, saved, crumbs, nameClass }: Props) {
                 {/* The town centre: a pin with a slow pulse, and its name */}
                 <span className="pointer-events-none absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent/50 opacity-0 motion-safe:animate-[ring-pulse_3.6s_ease-out_infinite]" />
                 <span className="pointer-events-none absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-paper bg-accent shadow-[0_0_0_1px_rgba(36,87,197,0.4)]" />
-                <span className="pointer-events-none absolute left-1/2 top-1/2 ml-4 -translate-y-1/2 whitespace-nowrap bg-ink px-2 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-paper">
+                <span className="pointer-events-none absolute left-1/2 top-1/2 mt-3 -translate-x-1/2 whitespace-nowrap md:ml-4 md:mt-0 md:translate-x-0 md:-translate-y-1/2 bg-ink px-2 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-paper">
                   {town.name} centre
                 </span>
               </div>
@@ -493,8 +493,8 @@ export function PaidLayout(props: Props) {
   const hasClientWords = paid.reviews.some((r) => r.body);
 
   const sections: { id: string; label: string; title: string; body: React.ReactNode }[] = [];
-  if (about) sections.push({ id: "about", label: `About ${first}`, title: `About ${first}`, body: <About text={about} /> });
-  if (videos.length) sections.push({ id: "videos", label: videos.length === 1 ? `Meet ${first}` : "Videos", title: videos.length === 1 ? `Meet ${first}` : "Videos", body: <Videos videos={videos} first={first} /> });
+  if (about) sections.push({ id: "about", label: "About", title: `About ${first}`, body: <About text={about} /> });
+  if (videos.length) sections.push({ id: "videos", label: "Videos", title: videos.length === 1 ? `Meet ${first}` : "Videos", body: <Videos videos={videos} first={first} /> });
   if (photos.length) sections.push({ id: "photos", label: "Photos", title: "Photos", body: <Gallery photos={photos} name={t.name} /> });
   sections.push({ id: "training", label: "Training", title: `What ${first} trains`, body: <Training {...props} /> });
   if (hasPrices) sections.push({ id: "prices", label: "Prices", title: "Prices", body: <Prices paid={paid} first={first} /> });

@@ -115,7 +115,7 @@ export function SectionIndex({ items }: { items: { id: string; label: string }[]
         <span className="tabular-nums text-ink">{pct === 100 ? "All read" : `${pct}% read`}</span>
       </p>
       {/* Overall progress, with the runner */}
-      <div className={`relative mb-1 mt-3 h-0.5 bg-line ${running ? "" : "runner-rest"}`} aria-hidden>
+      <div className={`relative mb-1 mt-7 h-0.5 bg-line ${running ? "" : "runner-rest"}`} aria-hidden>
         <div className="absolute inset-y-0 left-0 bg-accent transition-[width] duration-200" style={{ width: `${pct}%` }}>
           {!calm && <Runner className="absolute -right-2.5 bottom-0.5 h-5 w-5 text-accent" />}
         </div>
