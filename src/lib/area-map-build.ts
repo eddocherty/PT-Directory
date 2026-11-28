@@ -16,7 +16,18 @@ const UA = "LocalPT area maps (+https://localpt.co.uk)";
 
 export type Layer = "water" | "park" | "river" | "minor" | "mid" | "major" | "rail";
 export type Place = { name: string; x: number; y: number; miles: number; dir: string };
-export type AreaMap = { paths: Partial<Record<Layer, string>>; places: Place[] };
+/** Kinds of fitness place we pick out of OpenStreetMap, in the order the page lists them. */
+export const SPOT_KINDS = {
+  gym: "Gyms & studios",
+  pool: "Swimming",
+  sport: "Leisure centres & sports clubs",
+  outdoor: "Parks to train in",
+  shop: "Kit, bikes & health food",
+} as const;
+export type SpotKind = keyof typeof SPOT_KINDS;
+/** A fitness place near the town centre. Room for a paid "featured" spot later (sponsorship), never shown unless real. */
+export type Spot = Place & { kind: SpotKind };
+export type AreaMap = { paths: Partial<Record<Layer, string>>; places: Place[]; spots: Spot[] };
 
 const ROAD_CLASS: Record<string, Layer> = {
   motorway: "major", trunk: "major", primary: "major",
@@ -27,20 +38,36 @@ const ROAD_CLASS: Record<string, Layer> = {
 const PLACE_CLASSES = new Set(["town", "village", "suburb", "quarter", "neighbourhood", "hamlet"]);
 const COMPASS = ["north", "north-east", "east", "south-east", "south", "south-west", "west", "north-west"];
 
-const tileX = (lng: number) => ((lng + 180) / 360) * 2 ** ZOOM;
-const tileY = (lat: number) => {
+const tileX = (lng: number, z = ZOOM) => ((lng + 180) / 360) * 2 ** z;
+const tileY = (lat: number, z = ZOOM) => {
   const r = (lat * Math.PI) / 180;
-  return ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * 2 ** ZOOM;
+  return ((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2) * 2 ** z;
 };
+
+// Points of interest are only all there at zoom 14; we look within about 2.5 miles of the centre.
+const POI_ZOOM = 14;
+const SPOT_MILES = 2.5;
+/** Which kind of fitness place an OpenStreetMap point is (OpenMapTiles "poi" class/subclass and its name), or null. */
+function spotKind(cls: string, sub: string, name: string): SpotKind | null {
+  if (/parkrun/i.test(name)) return "outdoor";
+  if (/swimming|water_park/.test(sub) || /\b(pool|lido|baths)\b/i.test(name)) return "pool";
+  if (/fitness_centre|fitness_station|dance|yoga|martial_arts/.test(sub) || /gym|fitness|pilates|crossfit|yoga|boxing|dojo|bootcamp|martial/i.test(name)) return "gym";
+  if (sub === "sports_centre" || sub === "stadium" || sub === "track" || sub === "ice_rink" || /climbing/i.test(name)) return "sport";
+  if (cls === "shop" && /^(health_food|nutrition_supplements|sports|outdoor)$/.test(sub)) return "shop";
+  if (cls === "bicycle" && sub === "bicycle") return "shop";
+  if (sub === "park" && !/school|playing field|cemetery|churchyard|\b(square|court|close|place|walk|pos)\b/i.test(name)) return "outdoor";
+  return null;
+}
 
 /** Douglas-Peucker: drop points that bend the line by less than eps pixels. */
 function simplify(pts: [number, number][], eps: number): [number, number][] {
   if (pts.length < 3) return pts;
   const [a, b] = [pts[0], pts[pts.length - 1]];
-  const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy) || 1;
+  const dx = b[0] - a[0], dy = b[1] - a[1], len = Math.hypot(dx, dy);
   let max = 0, at = 0;
   for (let i = 1; i < pts.length - 1; i++) {
-    const d = Math.abs(dy * pts[i][0] - dx * pts[i][1] + b[0] * a[1] - b[1] * a[0]) / len;
+    // A closed ring starts and ends on the same point: measure from that point instead of a line.
+    const d = len ? Math.abs(dy * pts[i][0] - dx * pts[i][1] + b[0] * a[1] - b[1] * a[0]) / len : Math.hypot(pts[i][0] - a[0], pts[i][1] - a[1]);
     if (d > max) { max = d; at = i; }
   }
   if (max <= eps) return [a, b];
@@ -77,6 +104,35 @@ export async function buildAreaMap(lat: number, lng: number, townName: string): 
 
   const lines: Record<Layer, string[]> = { water: [], park: [], river: [], minor: [], mid: [], major: [], rail: [] };
   const places = new Map<string, Place>();
+
+  const compass = (dx: number, dy: number) => COMPASS[Math.round(((((Math.atan2(dx, -dy) * 180) / Math.PI) + 360) % 360) / 45) % 8];
+
+  // Fitness places: a separate pass over zoom-14 tiles near the centre, reading only their points of interest.
+  const spots = new Map<string, Spot>();
+  const pcx = tileX(lng, POI_ZOOM), pcy = tileY(lat, POI_ZOOM), poiPx = tilePx / 2;
+  const poiHalf = (SPOT_MILES * PX_PER_MILE) / poiPx;
+  const poiTiles: [number, number][] = [];
+  for (let x = Math.floor(pcx - poiHalf); x <= Math.floor(pcx + poiHalf); x++)
+    for (let y = Math.floor(pcy - poiHalf); y <= Math.floor(pcy + poiHalf); y++) poiTiles.push([x, y]);
+  const poiPass = Promise.all(poiTiles.map(async ([tx, ty]) => {
+    const url = template.replace("{z}", String(POI_ZOOM)).replace("{x}", String(tx)).replace("{y}", String(ty));
+    const res = await fetch(url, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(10000), cache: "no-store" });
+    if (!res.ok) return; // points are a bonus: a missing tile just means fewer of them
+    for (const { name, extent, features } of readTile(new Uint8Array(await res.arrayBuffer()))) {
+      if (name !== "poi") continue;
+      for (const f of features) {
+        const label = String(f.props.name_en ?? f.props.name ?? "").trim();
+        const pt = f.geom[0]?.[0];
+        if (!label || !pt || spots.has(label)) continue;
+        const kind = spotKind(String(f.props.class ?? ""), String(f.props.subclass ?? ""), label);
+        if (!kind) continue;
+        const x = (tx + pt.x / extent - pcx) * poiPx + MAP_W / 2, y = (ty + pt.y / extent - pcy) * poiPx + MAP_H / 2;
+        const dx = x - MAP_W / 2, dy = y - MAP_H / 2, miles = Math.hypot(dx, dy) / PX_PER_MILE;
+        if (miles > SPOT_MILES) continue;
+        spots.set(label, { name: label, kind, x: Math.round(x), y: Math.round(y), miles: Math.round(miles * 10) / 10, dir: compass(dx, dy) });
+      }
+    }
+  })).catch(() => undefined);
 
   await Promise.all(tiles.map(async ([tx, ty]) => {
     const url = template.replace("{z}", String(ZOOM)).replace("{x}", String(tx)).replace("{y}", String(ty));
@@ -129,7 +185,8 @@ export async function buildAreaMap(lat: number, lng: number, townName: string): 
           addLines("river", f.geom, px);
         } else if (name === "water" && f.type === 3) {
           addAreas("water", f.geom, px);
-        } else if (name === "park" && f.type === 3) {
+        } else if (name === "landcover" && f.props.subclass === "park" && f.type === 3) {
+          // Town parks only ("park" layer is national parks, far too big to draw)
           addAreas("park", f.geom, px);
         } else if (name === "place" && PLACE_CLASSES.has(cls) && f.type === 1 && f.geom[0]?.[0]) {
           const label = String(f.props["name:en"] ?? f.props.name ?? "").trim();
@@ -148,6 +205,15 @@ export async function buildAreaMap(lat: number, lng: number, townName: string): 
   const paths: AreaMap["paths"] = {};
   for (const [k, v] of Object.entries(lines)) if (v.length) paths[k as Layer] = v.join("");
   if (!paths.minor && !paths.mid && !paths.major) throw new Error("no roads");
-  return { paths, places: [...places.values()].sort((a, b) => a.miles - b.miles).slice(0, 14) };
+  await poiPass;
+  // Up to five nearest of each kind.
+  const byKind = new Map<SpotKind, Spot[]>();
+  // Leisure centres matter most to people training, so they go ahead of clubs in their list.
+  const rank = (sp: Spot) => (/leisure centre/i.test(sp.name) ? 0 : 1);
+  for (const sp of [...spots.values()].sort((a, b) => rank(a) - rank(b) || a.miles - b.miles)) {
+    const list = byKind.get(sp.kind) ?? [];
+    if (list.length < 5) byKind.set(sp.kind, [...list, sp]);
+  }
+  return { paths, places: [...places.values()].sort((a, b) => a.miles - b.miles).slice(0, 14), spots: [...byKind.values()].flat() };
 }
 

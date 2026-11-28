@@ -3,9 +3,9 @@ import { unstable_cache } from "next/cache";
 import type { City } from "./taxonomy";
 import { MAP_H, MAP_W, buildAreaMap, type AreaMap } from "./area-map-build";
 
-export { MAP_H, MAP_W, PX_PER_MILE, type AreaMap, type Place } from "./area-map-build";
+export { MAP_H, MAP_W, PX_PER_MILE, SPOT_KINDS, type AreaMap, type Place, type Spot, type SpotKind } from "./area-map-build";
 
-const cachedBuild = unstable_cache(buildAreaMap, ["area-map-v1"], { revalidate: 60 * 60 * 24 * 30 });
+const cachedBuild = unstable_cache(buildAreaMap, ["area-map-v2"], { revalidate: 60 * 60 * 24 * 30 });
 
 /** The town's map, or null when the tiles can't be reached (the page then shows its plain background). Failures aren't cached. */
 export async function getAreaMap(town: Pick<City, "lat" | "lng" | "name">): Promise<AreaMap | null> {

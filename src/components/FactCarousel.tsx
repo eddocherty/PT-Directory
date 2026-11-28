@@ -107,7 +107,7 @@ export function FactCarousel({ facts }: { facts: Fact[] }) {
 }
 
 /** Small two-frame stick runner; the frames swap to make the legs and arms move. */
-function Runner({ className = "" }: { className?: string }) {
+export function Runner({ className = "" }: { className?: string }) {
   return (
     <svg viewBox="0 0 20 20" className={className} fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
       <circle cx="13" cy="3.4" r="1.9" fill="currentColor" stroke="none" />

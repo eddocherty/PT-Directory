@@ -12,7 +12,7 @@ import { HeartButton } from "@/components/Saved";
 import { Stars } from "@/components/Stars";
 import { MapHover } from "@/components/MapHover";
 import { UK_H, UK_OUTLINE, UK_W, ukX, ukY } from "@/components/UkTownMap";
-import { getAreaMap, MAP_H, MAP_W, PX_PER_MILE, type Place } from "@/lib/area-map";
+import { getAreaMap, MAP_H, MAP_W, PX_PER_MILE, SPOT_KINDS, type Spot, type SpotKind } from "@/lib/area-map";
 import type { PaidProfile } from "@/lib/paid";
 import { videoEmbed } from "@/lib/paid";
 import type { City } from "@/lib/taxonomy";
@@ -62,27 +62,37 @@ function lowestPrice(prices: PaidProfile["prices"]) {
 
 /* ------------------------------------------------------------------ hero */
 
-/** Streets, place names and the distance rings, centred on the photo. Waits for the drawing without holding up the page. */
+/** One fitness place in words, as the map label shows it: "Leisure centre · 0.9 miles south". */
+const SPOT_ONE: Record<SpotKind, string> = { gym: "Gym or studio", pool: "Swimming", sport: "Sports & leisure", outdoor: "Park", shop: "Kit & health shop" };
+const miles = (m: number) => (m < 0.1 ? "under 0.1 miles" : `${m} ${m === 1 ? "mile" : "miles"}`);
+
+/**
+ * Streets, neighbourhood names and fitness places, drawn around the town centre. Waits for the drawing without
+ * holding up the page. The fitness places are blue dots whose labels come up one at a time (and on hover).
+ */
 async function AreaLayer({ town }: { town: City }) {
   const map = await getAreaMap(town);
   if (!map) return null;
-  // Places hidden behind the photo don't take part in the label tour.
-  const clear = (p: Place) => Math.abs(p.x - MAP_W / 2) > 230 || Math.abs(p.y - MAP_H / 2) > 290;
+  // On wide screens the photo sits about 400 map units left of the centre; spots under it skip the label tour.
+  const clear = (p: Spot) => !(Math.abs(p.x - (MAP_W / 2 - 400)) < 210 && Math.abs(p.y - MAP_H / 2) < 260);
   return (
     <>
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={`/area-map/${town.slug}.svg`} alt="" aria-hidden width={MAP_W} height={MAP_H} decoding="async" className="absolute inset-0 h-full w-full max-w-none motion-safe:animate-[map-drift_38s_ease-in-out_infinite_alternate]" />
+      <img src={`/area-map/${town.slug}.svg`} alt="" aria-hidden width={MAP_W} height={MAP_H} decoding="async" className="absolute inset-0 h-full w-full max-w-none" />
       {map.places.map((p) => (
+        <span key={p.name} aria-hidden className="pointer-events-none absolute -translate-y-1/2 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.14em] text-ink/30" style={{ left: pct(p.x, MAP_W), top: pct(p.y, MAP_H) }}>
+          {p.name}
+        </span>
+      ))}
+      {map.spots.map((p) => (
         <span
           key={p.name}
           data-town={p.name}
           data-has={clear(p) ? "1" : "0"}
-          data-count={`${p.miles} ${p.miles === 1 ? "mile" : "miles"} ${p.dir} of the centre`}
-          className="absolute -ml-[3px] -mt-[3px] h-1.5 w-1.5 bg-ink/30 [&.is-active]:bg-accent"
+          data-count={`${SPOT_ONE[p.kind]} · ${miles(p.miles)} ${p.dir}`}
+          className="absolute -ml-[5px] -mt-[5px] h-2.5 w-2.5 rounded-full border-2 border-soft bg-accent/70 transition-transform hover:scale-150 [&.is-active]:scale-150 [&.is-active]:bg-accent"
           style={{ left: pct(p.x, MAP_W), top: pct(p.y, MAP_H) }}
-        >
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-bold uppercase tracking-[0.14em] text-ink/35">{p.name}</span>
-        </span>
+        />
       ))}
     </>
   );
@@ -103,23 +113,29 @@ function Hero({ t, paid, town, first, saved, crumbs, nameClass }: Props) {
           aria-hidden={!town}
         >
           {town && (
-            <MapHover tourMinWidth={768} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-              <div className="relative h-[930px] w-[1500px] md:h-[1395px] md:w-[2250px]">
+            <MapHover tourMinWidth={768} className="absolute left-[70%] top-1/2 -translate-x-1/2 -translate-y-1/2 md:left-[64%]">
+              <div className="relative h-[930px] w-[1500px] motion-safe:animate-[map-drift_38s_ease-in-out_infinite_alternate] md:h-[1395px] md:w-[2250px]">
                 <Suspense fallback={null}><AreaLayer town={town} /></Suspense>
-                {/* Distance rings from the town centre, with a slow pulse out from the photo */}
+                {/* Distance rings from the town centre */}
                 {RINGS.map((mi) => (
                   <span key={mi} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-accent/35" style={{ width: pct(mi * PX_PER_MILE * 2, MAP_W), aspectRatio: "1" }}>
                     {/* Label sits on the ring, up and to the right of the photo (30° above east) */}
                     <span className="absolute hidden -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-soft px-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-accent md:block" style={{ left: "93.3%", top: "25%" }}>{mi < 1 ? "½ mile" : `${mi} ${mi === 1 ? "mile" : "miles"}`}</span>
                   </span>
                 ))}
-                <span className="pointer-events-none absolute left-1/2 top-1/2 h-[160px] w-[160px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent/40 md:h-[260px] md:w-[260px] opacity-0 motion-safe:animate-[ring-pulse_4.5s_ease-out_infinite]" />
+                {/* The town centre: a pin with a slow pulse, and its name */}
+                <span className="pointer-events-none absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent/50 opacity-0 motion-safe:animate-[ring-pulse_3.6s_ease-out_infinite]" />
+                <span className="pointer-events-none absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border-[3px] border-paper bg-accent shadow-[0_0_0_1px_rgba(36,87,197,0.4)]" />
+                <span className="pointer-events-none absolute left-1/2 top-1/2 ml-4 -translate-y-1/2 whitespace-nowrap bg-ink px-2 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-paper">
+                  {town.name} centre
+                </span>
               </div>
             </MapHover>
           )}
         </div>
-        {/* The photo sits on the town centre */}
-        <figure className="absolute left-1/2 top-1/2 w-[150px] -translate-x-1/2 -translate-y-1/2 md:w-[min(300px,60%)]">
+        {/* A dashed line from the photo to the town centre pin, so the photo reads as "based here" */}
+        {town && <span aria-hidden className="absolute left-[30%] right-[30%] top-1/2 border-t-2 border-dashed border-accent/40 md:left-[27%] md:right-[36%]" />}
+        <figure className="absolute left-[30%] top-1/2 w-[132px] -translate-x-1/2 -translate-y-1/2 md:left-[27%] md:w-[min(260px,44%)]">
           <div className="relative rounded-2xl shadow-[0_24px_60px_-24px_rgba(17,18,20,0.45)]">
             {photo ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -216,11 +232,10 @@ function Glance({ t, paid, first, sinceYear }: Props) {
 
 /* ---------------------------------------------------------------- sections */
 
-function Section({ id, n, title, children }: { id: string; n: number; title: string; children: React.ReactNode }) {
+function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
     <section id={id} data-reveal className="scroll-mt-24">
-      <div className="mb-6 flex items-baseline gap-4 border-b-2 border-ink pb-3">
-        <span className="text-sm font-bold tabular-nums text-accent">{String(n).padStart(2, "0")}</span>
+      <div className="mb-6 border-b-2 border-ink pb-3">
         <h2 className="display text-3xl [overflow-wrap:anywhere] sm:text-4xl">{title}</h2>
       </div>
       {children}
@@ -415,44 +430,54 @@ function ClientWords({ reviews, first }: { reviews: PaidProfile["reviews"]; firs
   );
 }
 
-/** Where the town is in the UK, and the neighbourhoods around its centre (OpenStreetMap names and distances). */
-async function Around({ town, first }: { town: City; first: string }) {
+/**
+ * Fitness places near the town centre, grouped by kind: gyms and studios, pools, leisure centres and clubs, parks,
+ * and kit or health food shops. All from OpenStreetMap, with crow-flies distances from the centre.
+ * (A paid "featured" place could later sit at the top of a group, clearly labelled. Nothing is invented here.)
+ */
+async function Fitness({ town }: { town: City }) {
   const map = await getAreaMap(town);
-  const places = (map?.places ?? []).slice(0, 8);
+  const groups = (Object.keys(SPOT_KINDS) as SpotKind[])
+    .map((k) => ({ kind: k, title: SPOT_KINDS[k], spots: (map?.spots ?? []).filter((s) => s.kind === k) }))
+    .filter((g) => g.spots.length);
+  if (!groups.length) return <p className="text-muted">We couldn’t load places near {town.name} just now.</p>;
   return (
-    <div className="grid gap-8 sm:grid-cols-[150px_minmax(0,1fr)]">
-      <div className="flex items-start gap-5 sm:block">
-        <svg viewBox={`-1 -1 ${UK_W + 2} ${UK_H + 2}`} className="h-40 w-auto shrink-0 overflow-visible sm:h-56" role="img" aria-label={`${town.name} on a map of the UK`}>
-          <path d={UK_OUTLINE} className="fill-soft stroke-accent/40" strokeWidth={0.35} strokeLinejoin="round" />
-          <circle cx={ukX(town.lng)} cy={ukY(town.lat)} r={3} className="fill-accent/20 [transform-box:fill-box] [transform-origin:center] motion-safe:animate-[dot-pulse_2.8s_ease-out_infinite]" />
-          <circle cx={ukX(town.lng)} cy={ukY(town.lat)} r={1.3} className="fill-accent" />
+    <>
+      <div className="mb-8 flex items-center gap-5">
+        <svg viewBox={`-1 -1 ${UK_W + 2} ${UK_H + 2}`} className="h-24 w-auto shrink-0 overflow-visible" role="img" aria-label={`${town.name} on a map of the UK`}>
+          <path d={UK_OUTLINE} className="fill-soft stroke-accent/40" strokeWidth={0.5} strokeLinejoin="round" />
+          <circle cx={ukX(town.lng)} cy={ukY(town.lat)} r={3.5} className="fill-accent/20 [transform-box:fill-box] [transform-origin:center] motion-safe:animate-[dot-pulse_2.8s_ease-out_infinite]" />
+          <circle cx={ukX(town.lng)} cy={ukY(town.lat)} r={1.8} className="fill-accent" />
         </svg>
-        <p className="mt-3 text-sm sm:max-w-none">
-          <span className="block font-bold">{town.name}</span>
-          <span className="block text-muted">{town.county}, {town.nation}</span>
-          <span className="mt-1 block text-xs tabular-nums text-muted">{coords(town)}</span>
+        <p className="max-w-md text-base leading-relaxed">
+          Places to train, swim and stock up near <strong>{town.name}</strong> centre, {town.county}. Distances are as the crow flies.
         </p>
       </div>
-      <div className="min-w-0">
-        {places.length > 0 ? (
-          <>
-            <p className="mb-3 text-sm text-muted">Neighbourhoods and villages near {town.name} centre, as the crow flies.</p>
-            <ul className="border-t border-line">
-              {places.map((p) => (
-                <li key={p.name} className="grid grid-cols-[minmax(0,1fr)_auto_5.5rem] items-baseline gap-x-4 border-b border-line py-2.5">
-                  <span className="truncate font-semibold">{p.name}</span>
-                  <span className="text-xs text-muted">{p.dir}</span>
-                  <span className="text-right tabular-nums font-semibold">{p.miles} mi</span>
+      <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
+        {groups.map((g) => (
+          <div key={g.kind}>
+            <p className="eyebrow flex items-baseline justify-between border-b-2 border-ink pb-2">
+              {g.title}
+              <span className="tabular-nums text-accent">{g.spots.length}</span>
+            </p>
+            <ul>
+              {g.spots.map((p) => (
+                <li key={p.name} className="group grid grid-cols-[minmax(0,1fr)_auto] items-baseline gap-x-4 border-b border-line py-2.5 transition-colors hover:bg-soft/70">
+                  <span className="min-w-0">
+                    <span className="block truncate font-semibold">{p.name}</span>
+                    <span className="block text-xs text-muted">{p.dir}</span>
+                  </span>
+                  <span className="text-right font-semibold tabular-nums">{p.miles < 0.1 ? "<0.1" : p.miles} mi</span>
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-xs text-muted">Place names and distances from OpenStreetMap. Ask {first} where they train and which areas they cover.</p>
-          </>
-        ) : (
-          <p className="text-muted">Ask {first} where they train and which areas they cover.</p>
-        )}
+          </div>
+        ))}
       </div>
-    </div>
+      <p className="mt-5 text-xs text-muted">
+        Places from <a href="https://www.openstreetmap.org/copyright" className="underline hover:text-ink" target="_blank" rel="noopener">OpenStreetMap</a>, which anyone can add to, so a few may be missing.
+      </p>
+    </>
   );
 }
 
@@ -474,7 +499,6 @@ export function PaidLayout(props: Props) {
   sections.push({ id: "training", label: "Training", title: `What ${first} trains`, body: <Training {...props} /> });
   if (hasPrices) sections.push({ id: "prices", label: "Prices", title: "Prices", body: <Prices paid={paid} first={first} /> });
   if (hasClientWords) sections.push({ id: "clients", label: "What clients say", title: "What clients say", body: <ClientWords reviews={paid.reviews} first={first} /> });
-  if (hasWorkouts) sections.push({ id: "workouts", label: "Workouts to try", title: "Workouts to try", body: <Workouts workouts={paid.workouts} /> });
   paid.sections.filter((s) => s.heading && s.body).forEach((s, i) =>
     sections.push({ id: `more-${i + 1}`, label: s.heading, title: s.heading, body: <p className="whitespace-pre-line text-base leading-relaxed">{s.body}</p> }),
   );
@@ -488,7 +512,9 @@ export function PaidLayout(props: Props) {
       ),
     });
   }
-  if (town) sections.push({ id: "area", label: `Around ${town.name}`, title: `Around ${town.name}`, body: <Suspense fallback={null}><Around town={town} first={first} /></Suspense> });
+  if (town) sections.push({ id: "area", label: `Fitness around ${town.name}`, title: `Fitness around ${town.name}`, body: <Suspense fallback={null}><Fitness town={town} /></Suspense> });
+  // Workouts always come last.
+  if (hasWorkouts) sections.push({ id: "workouts", label: "Workouts to try", title: "Workouts to try", body: <Workouts workouts={paid.workouts} /> });
 
   return (
     <>
@@ -498,7 +524,7 @@ export function PaidLayout(props: Props) {
 
       <div className="mx-auto grid max-w-7xl gap-12 px-4 py-14 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16">
         <div className="flex min-w-0 flex-col gap-16">
-          {sections.map((s, i) => <Section key={s.id} id={s.id} n={i + 1} title={s.title}>{s.body}</Section>)}
+          {sections.map((s) => <Section key={s.id} id={s.id} title={s.title}>{s.body}</Section>)}
 
           {t.reviews.length > 0 ? (
             <section id="reviews" data-reveal className="scroll-mt-24">
@@ -529,11 +555,7 @@ export function PaidLayout(props: Props) {
         </div>
 
         <aside className="min-w-0 lg:sticky lg:top-24 lg:self-start">
-          <div className="mb-8 hidden lg:block">
-            <p className="eyebrow mb-2 text-muted">On this page</p>
-            <SectionIndex items={[...sections.map((s) => ({ id: s.id, label: s.label })), { id: "contact", label: `Contact ${first}` }]} />
-          </div>
-          <div id="contact" className="scroll-mt-24 border-t-4 border-accent bg-soft p-6">
+          <div id="contact" className="scroll-mt-24 border-t-4 border-accent bg-soft p-6 shadow-[0_18px_40px_-28px_rgba(17,18,20,0.5)]">
             <p className="display text-2xl [overflow-wrap:anywhere] sm:text-3xl">Contact {first}</p>
             <p className="mb-4 mt-2 text-sm text-muted">Ask {first} about {hasPrices ? "availability" : "prices and availability"}.</p>
             <EnquiryForm slug={t.slug} firstName={first} />
@@ -542,6 +564,9 @@ export function PaidLayout(props: Props) {
                 {links.map((l) => <a key={l.label} href={l.href} target="_blank" rel="nofollow noopener" data-track={l.track} className="btn-ghost text-sm">{l.label}</a>)}
               </div>
             )}
+          </div>
+          <div className="mt-8 hidden lg:block">
+            <SectionIndex items={sections.map((s) => ({ id: s.id, label: s.label }))} />
           </div>
         </aside>
       </div>

@@ -150,3 +150,5 @@ a.chip:hover, a.chip-ink:hover { @apply text-accent; }
 @keyframes map-drift { from { transform: translate3d(-14px, 6px, 0); } to { transform: translate3d(14px, -6px, 0); } }
 @keyframes ring-pulse { 0% { opacity: 0.55; scale: 1; } 80%, 100% { opacity: 0; scale: 3.4; } }
 @keyframes dot-pulse { 0% { opacity: 0.9; transform: scale(0.6); } 100% { opacity: 0; transform: scale(2.6); } }
+/* Paid profiles: the "On this page" runner only jogs while the visitor scrolls */
+.runner-rest .runner-a, .runner-rest .runner-b { animation-play-state: paused; }

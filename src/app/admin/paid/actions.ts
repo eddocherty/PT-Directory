@@ -170,7 +170,7 @@ export async function createDemoAction(): Promise<void> {
     ],
     prices_updated_at: new Date().toISOString().slice(0, 10),
     workouts: [{ title: "20-minute starter workout (example)", body: "3 rounds:\n10 goblet squats\n10 press-ups (knees are fine)\n20-second plank\nRest 60 seconds between rounds.", link: "" }],
-    sections: [{ heading: "Where I train (example)", body: "A trainer might list their studio, parks they use, or the areas they cover for home visits." }],
+    sections: [],
     reviews: [{ author: "Example client", body: "This is an example review, only on the test profile. Real reviews come word for word from real clients.", rating: 5, source: "Example", date: new Date().toISOString().slice(0, 10) }],
     taking_clients: "yes",
     taking_clients_updated_at: new Date().toISOString().slice(0, 10),
