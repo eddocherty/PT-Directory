@@ -5,7 +5,7 @@ export default function robots(): MetadataRoute.Robots {
   // Preview deployments must never compete with the real site in search results.
   if (!INDEXABLE) return { rules: { userAgent: "*", disallow: "/" } };
   return {
-    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/api/", "/shop/thanks"] },
+    rules: { userAgent: "*", allow: "/", disallow: ["/admin", "/api/", "/shop/thanks", "/join"] },
     sitemap: abs("/sitemap.xml"),
   };
 }

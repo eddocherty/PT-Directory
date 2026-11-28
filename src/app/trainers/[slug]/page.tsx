@@ -18,6 +18,8 @@ import { allTownStats, countySlug, townFor } from "@/lib/stats";
 import { MIN_TRAINERS, TOWN_RADIUS } from "@/lib/topics";
 import { cachedSearch, getTrainer, isThin, type Trainer } from "@/lib/trainers";
 import { CITIES } from "@/lib/taxonomy";
+import { getPaidProfile } from "@/lib/paid";
+import { PaidGallery, PaidPrices, PaidReviews, PaidSections, PaidVideos, PaidWorkouts, TakingClients } from "@/components/PaidProfile";
 
 /**
  * Heading size for a trainer's name, stepped down by its longest word, so one long word
@@ -108,8 +110,11 @@ export default async function TrainerPage({ params }: Props) {
     notFound();
   }
   const town = townFor(t.city);
+  // Paying trainers (£10 a month) get the extras ed has added. Free listings never change.
+  const paid = t.is_paid ? await getPaidProfile(t.id) : null;
+  // A paying trainer's page doesn't list rival trainers nearby.
   const [stats, near] = town
-    ? await Promise.all([allTownStats(), cachedSearch({ lat: town.lat, lng: town.lng, radius: TOWN_RADIUS })])
+    ? await Promise.all([allTownStats(), t.is_paid ? null : cachedSearch({ lat: town.lat, lng: town.lng, radius: TOWN_RADIUS })])
     : [null, null];
   // Up to six other trainers near the same town, ones sharing a style first, for people comparing options.
   const shared = (o: { styles: string[] }) => o.styles.filter((s) => t.styles.includes(s)).length;
@@ -126,7 +131,9 @@ export default async function TrainerPage({ params }: Props) {
   const isPerson = !!t.business_name && t.business_name !== t.name && !/^the\s/i.test(t.name);
   const first = isPerson ? t.name.split(" ")[0] : t.name;
   // Real listings nobody has claimed yet: enquiries would have no one to read them, so send people to the trainer directly.
-  const direct = !t.claimed;
+  const direct = !t.claimed && !t.is_paid;
+  const wa = paid?.whatsapp ? (await import("@/lib/paid")).whatsappNumber(paid.whatsapp) : null;
+  const about = paid?.about?.trim() || t.bio;
   const checked = t.last_verified_at ? new Date(t.last_verified_at).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : null;
   const sourceLabel = t.source === "osm" ? "OpenStreetMap and their own website" : t.source === "website" ? "their own website" : null;
   const where = [t.city, t.region && t.region !== t.city ? t.region : null].filter(Boolean).join(", ");
@@ -134,6 +141,7 @@ export default async function TrainerPage({ params }: Props) {
     t.website && !direct && { label: "Website", href: t.website, track: "website" },
     t.instagram && { label: "Instagram", href: `https://instagram.com/${t.instagram.replace(/^@/, "")}`, track: "instagram" },
     t.phone && { label: "Call", href: `tel:${t.phone}`, track: "phone" },
+    wa && { label: "WhatsApp", href: `https://wa.me/${wa}`, track: "whatsapp" },
   ].filter(Boolean) as { label: string; href: string; track: string }[];
 
   const saved = { slug: t.slug, name: t.name, city: t.city, styles: t.styles, goals: t.goals };
@@ -146,7 +154,7 @@ export default async function TrainerPage({ params }: Props) {
       <section className="bg-soft text-ink">
         <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)] gap-8 px-4 py-8 md:grid-cols-[minmax(0,420px)_minmax(0,1fr)] md:items-end md:py-14">
           <div className="relative">
-            <Avatar t={t} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
+            <Avatar t={{ ...t, image_url: paid ? paid.gallery[0] ?? null : t.image_url }} size="hero" className="aspect-square w-full rounded-3xl md:aspect-[4/5]" />
           </div>
           <div className="flex flex-col gap-5">
             <Breadcrumbs
@@ -163,6 +171,7 @@ export default async function TrainerPage({ params }: Props) {
             <div>
               <h1 className={`display [overflow-wrap:anywhere] ${nameSize(t.name)}`}>{t.name}</h1>
               <p className="mt-3 text-lg text-muted">{where || "UK"}{t.online && " · Online coaching UK-wide"}</p>
+              {paid && <TakingClients value={paid.taking_clients} updated={paid.taking_clients_updated_at} />}
             </div>
             {t.review_count > 0 && t.rating_avg != null && (
               <a href="#reviews" className="flex items-center gap-2 text-sm">
@@ -185,12 +194,19 @@ export default async function TrainerPage({ params }: Props) {
 
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 lg:grid-cols-[1fr_380px]">
         <div className="flex min-w-0 flex-col gap-12">
-          {t.bio && (
+          {about && (
             <section>
               <H2>About {first}</H2>
-              <p className="whitespace-pre-line text-base leading-relaxed">{t.bio}</p>
+              <p className="whitespace-pre-line text-base leading-relaxed">{about}</p>
             </section>
           )}
+
+          {paid && <PaidGallery photos={paid.gallery} name={t.name} />}
+          {paid && <PaidVideos videos={paid.videos} first={first} />}
+          {paid && <PaidPrices prices={paid.prices} updated={paid.prices_updated_at} first={first} />}
+          {paid && <PaidWorkouts workouts={paid.workouts} />}
+          {paid && <PaidSections sections={paid.sections} />}
+          {paid && <PaidReviews reviews={paid.reviews} first={first} />}
 
           <section>
             <H2>Specialisms</H2>
@@ -301,20 +317,21 @@ export default async function TrainerPage({ params }: Props) {
               </div>
             )}
           </div>
-          <ShopProfileCard goals={t.goals} styles={t.styles} />
+          {/* A paying trainer's page carries no adverts for our own plans. */}
+          {!t.is_paid && <ShopProfileCard goals={t.goals} styles={t.styles} />}
           {direct && sourceLabel && (
             <p className="mt-4 px-2 text-xs text-muted">
               Details from {sourceLabel}{t.source === "osm" && " (© OpenStreetMap contributors, ODbL)"}{checked && `, checked ${checked}`}.
             </p>
           )}
-          <p className="mt-4 px-2 text-xs text-muted">
+          {!t.is_paid && <p className="mt-4 px-2 text-xs text-muted">
             Is this your listing?{" "}
             <Link href={`/remove?listing=${t.slug}`} className="underline hover:text-ink">Request removal or a correction</Link>.
-          </p>
+          </p>}
         </aside>
       </div>
 
-      {town && (
+      {town && !t.is_paid && (
         <section className="border-t border-line">
           <div className="mx-auto max-w-7xl px-4 py-10">
             <div className="flex flex-wrap items-center justify-between gap-4">
