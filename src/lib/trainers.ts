@@ -199,18 +199,28 @@ export async function submitReview(r: {
 /** Too little written about a trainer for the profile to be worth a place in Google on its own. */
 export const isThin = (t: { bio: string | null }) => (t.bio?.trim().length ?? 0) < 80;
 
-/** Every published, real trainer's slug, for the sitemap. Thin profiles are left out. */
+/**
+ * Every published, real trainer's slug, for the sitemap. Thin profiles are left out.
+ * Supabase returns at most 1,000 rows per request, so this reads the table in pages of 1,000.
+ */
 export async function publishedTrainerSlugs(): Promise<{ slug: string; updated_at: string | null }[]> {
   const db = getSupabase();
   if (!db) return [];
-  const { data, error } = await db
-    .from("trainers")
-    .select("slug, updated_at, bio")
-    .eq("status", "published")
-    .eq("is_sample", false)
-    .limit(5000);
-  if (error) throw new Error(error.message);
-  return ((data ?? []) as { slug: string; updated_at: string | null; bio: string | null }[])
+  type Row = { slug: string; updated_at: string | null; bio: string | null };
+  const rows: Row[] = [];
+  for (let from = 0; ; from += 1000) {
+    const { data, error } = await db
+      .from("trainers")
+      .select("slug, updated_at, bio")
+      .eq("status", "published")
+      .eq("is_sample", false)
+      .order("slug")
+      .range(from, from + 999);
+    if (error) throw new Error(error.message);
+    rows.push(...((data ?? []) as Row[]));
+    if (!data || data.length < 1000) break;
+  }
+  return rows
     .filter((t) => !isThin(t))
     .map(({ slug, updated_at }) => ({ slug, updated_at }));
 }
