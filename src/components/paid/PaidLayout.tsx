@@ -31,7 +31,7 @@ const TAKING = {
 } as const;
 
 // The street drawing (3000 x 1860) is shown at 3/4 size on wide screens and half size on phones: see the box sizes in Hero.
-const RINGS = [1, 2]; // miles from the town centre
+const RINGS = [0.5, 1, 2]; // miles from the town centre
 
 type Props = {
   t: Trainer;
@@ -97,29 +97,30 @@ function Hero({ t, paid, town, first, saved, crumbs, nameClass }: Props) {
   return (
     <section className="relative overflow-hidden border-b border-line bg-soft">
       {/* The map side: full bleed to the right on wide screens, a band across the top on phones. */}
-      <div className="relative h-[430px] overflow-hidden md:absolute md:inset-y-0 md:left-[44%] md:right-0 md:h-auto">
+      <div className="relative h-[340px] overflow-hidden md:absolute md:inset-y-0 md:left-[44%] md:right-0 md:h-auto">
         <div
           className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_78%)] md:[mask-image:linear-gradient(to_right,transparent,#000_22%)]"
           aria-hidden={!town}
         >
           {town && (
-            <MapHover className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" >
+            <MapHover tourMinWidth={768} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               <div className="relative h-[930px] w-[1500px] md:h-[1395px] md:w-[2250px]">
                 <Suspense fallback={null}><AreaLayer town={town} /></Suspense>
                 {/* Distance rings from the town centre, with a slow pulse out from the photo */}
                 {RINGS.map((mi) => (
                   <span key={mi} className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-dashed border-accent/35" style={{ width: pct(mi * PX_PER_MILE * 2, MAP_W), aspectRatio: "1" }}>
-                    <span className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-soft px-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-accent">{mi} {mi === 1 ? "mile" : "miles"}</span>
+                    {/* Label sits on the ring, up and to the right of the photo (30° above east) */}
+                    <span className="absolute hidden -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-soft px-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-accent md:block" style={{ left: "93.3%", top: "25%" }}>{mi < 1 ? "½ mile" : `${mi} ${mi === 1 ? "mile" : "miles"}`}</span>
                   </span>
                 ))}
-                <span className="pointer-events-none absolute left-1/2 top-1/2 h-[200px] w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent/40 opacity-0 motion-safe:animate-[ring-pulse_4.5s_ease-out_infinite]" />
+                <span className="pointer-events-none absolute left-1/2 top-1/2 h-[160px] w-[160px] -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-accent/40 md:h-[260px] md:w-[260px] opacity-0 motion-safe:animate-[ring-pulse_4.5s_ease-out_infinite]" />
               </div>
             </MapHover>
           )}
         </div>
         {/* The photo sits on the town centre */}
-        <figure className="absolute left-1/2 top-1/2 w-[190px] -translate-x-1/2 -translate-y-1/2 md:w-[min(300px,60%)]">
-          <div className="relative shadow-[0_24px_60px_-24px_rgba(17,18,20,0.45)]">
+        <figure className="absolute left-1/2 top-1/2 w-[150px] -translate-x-1/2 -translate-y-1/2 md:w-[min(300px,60%)]">
+          <div className="relative rounded-2xl shadow-[0_24px_60px_-24px_rgba(17,18,20,0.45)]">
             {photo ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={photo} alt={t.name} fetchPriority="high" className="aspect-[4/5] w-full rounded-2xl object-cover" />
@@ -130,12 +131,12 @@ function Hero({ t, paid, town, first, saved, crumbs, nameClass }: Props) {
           {town && (
             <figcaption className="mt-3 flex items-baseline justify-between gap-3 border-t-2 border-ink pt-1.5 text-[10px] font-bold uppercase tracking-[0.16em]">
               <span>{town.name}</span>
-              <span className="tabular-nums text-muted">{coords(town)}</span>
+              <span className="hidden tabular-nums text-muted md:inline">{coords(town)}</span>
             </figcaption>
           )}
         </figure>
         {town && (
-          <p className="absolute bottom-2 right-3 text-[10px] text-muted">
+          <p className="absolute bottom-1.5 right-3 bg-soft/80 px-1 text-[9px] text-muted md:text-[10px]">
             Map data © <a href="https://www.openstreetmap.org/copyright" className="underline hover:text-ink" rel="noopener" target="_blank">OpenStreetMap</a> contributors
           </p>
         )}
@@ -205,7 +206,7 @@ function Glance({ t, paid, first, sinceYear }: Props) {
           <div key={c.label} className={`min-w-0 py-6 ${i % 2 ? "pl-4 sm:pl-6" : "pr-4 sm:pr-6"} ${i % 2 ? "border-l border-line" : ""} ${i >= 2 ? "border-t border-line lg:border-t-0" : ""} lg:px-6 ${i > 0 ? "lg:border-l lg:border-line" : "lg:pl-0"}`}>
             <dt className="eyebrow text-muted">{c.label}</dt>
             <dd className="display mt-2 text-4xl sm:text-5xl">{c.value}</dd>
-            <dd className="mt-2 truncate text-sm text-muted">{c.sub}</dd>
+            <dd className="mt-2 line-clamp-2 text-sm text-muted lg:truncate">{c.sub}</dd>
           </div>
         ))}
       </dl>

@@ -21,7 +21,7 @@ export type AreaMap = { paths: Partial<Record<Layer, string>>; places: Place[] }
 const ROAD_CLASS: Record<string, Layer> = {
   motorway: "major", trunk: "major", primary: "major",
   secondary: "mid", tertiary: "mid",
-  minor: "minor", service: "minor",
+  minor: "minor",
   rail: "rail",
 };
 const PLACE_CLASSES = new Set(["town", "village", "suburb", "quarter", "neighbourhood", "hamlet"]);
@@ -49,7 +49,18 @@ function simplify(pts: [number, number][], eps: number): [number, number][] {
 
 const PAD = 40;
 const inside = ([x, y]: [number, number]) => x > -PAD && x < MAP_W + PAD && y > -PAD && y < MAP_H + PAD;
-const fmt = (pts: [number, number][]) => "M" + pts.map(([x, y]) => `${Math.round(x)} ${Math.round(y)}`).join("L");
+const MINOR_RADIUS = 1.9 * 1609.34 * PX_PER_METRE;
+const nearCentre = ([x, y]: [number, number]) => Math.hypot(x - MAP_W / 2, y - MAP_H / 2) < MINOR_RADIUS;
+/** Whole pixels, then each point as a short step from the one before ("M10 20l3-1 4 2"), about 40% smaller than absolute points. */
+const fmt = (pts: [number, number][]) => {
+  const r = pts.map(([x, y]) => [Math.round(x), Math.round(y)]);
+  let d = `M${r[0][0]} ${r[0][1]}l`;
+  for (let i = 1; i < r.length; i++) {
+    const dx = r[i][0] - r[i - 1][0], dy = r[i][1] - r[i - 1][1];
+    d += `${i > 1 && dx >= 0 ? " " : ""}${dx}${dy >= 0 ? " " : ""}${dy}`;
+  }
+  return d;
+};
 
 export async function buildAreaMap(lat: number, lng: number, townName: string): Promise<AreaMap> {
   const meta = await fetch("https://tiles.openfreemap.org/planet", { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(8000), cache: "no-store" });
@@ -83,13 +94,17 @@ export async function buildAreaMap(lat: number, lng: number, townName: string): 
     const addLines = (layer: Layer, geom: P[][], px: Px) => {
       for (const ring of geom) {
         // Keep only the stretches inside the drawing, split where a line leaves it.
+        // Side streets only near the centre (they'd fade out under the page's mask anyway), simplified harder,
+        // which keeps a big city's drawing light.
+        const minor = layer === "minor";
+        const keep = minor ? nearCentre : inside;
         let run: [number, number][] = [];
         const flush = () => {
-          if (run.length > 1) lines[layer].push(fmt(simplify(run, 1.4)));
+          if (run.length > 1) lines[layer].push(fmt(simplify(run, minor ? 2.2 : 1.4)));
           run = [];
         };
         for (const p of ring.map(px)) {
-          if (inside(p)) run.push(p);
+          if (keep(p)) run.push(p);
           else { if (run.length) run.push(p); flush(); }
         }
         flush();

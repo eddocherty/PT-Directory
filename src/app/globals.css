@@ -148,5 +148,5 @@ a.chip:hover, a.chip-ink:hover { @apply text-accent; }
 .reveal-armed.reveal-in { opacity: 1; transform: none; }
 /* The street map drifts a few pixels, a ring pulses out from the photo, the town dot on the UK locator breathes */
 @keyframes map-drift { from { transform: translate3d(-14px, 6px, 0); } to { transform: translate3d(14px, -6px, 0); } }
-@keyframes ring-pulse { 0% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); } 80%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(3.4); } }
+@keyframes ring-pulse { 0% { opacity: 0.55; scale: 1; } 80%, 100% { opacity: 0; scale: 3.4; } }
 @keyframes dot-pulse { 0% { opacity: 0.9; transform: scale(0.6); } 100% { opacity: 0; transform: scale(2.6); } }
