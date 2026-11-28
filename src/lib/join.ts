@@ -11,6 +11,8 @@ export async function startCheckout(req: Request, trainer: { id: string; slug: s
   try {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
+      // UK business priced in pounds: don't let Stripe offer overseas cards their own currency.
+      adaptive_pricing: { enabled: false },
       line_items: [{ price: await profilePriceId(stripe), quantity: 1 }],
       metadata: meta,
       subscription_data: { metadata: meta, description: trainer ? `LocalPT profile: ${trainer.name}` : "LocalPT profile" },
