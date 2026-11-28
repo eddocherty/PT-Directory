@@ -7,14 +7,16 @@ import { Arrow } from "@/components/Arrow";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { JsonLd } from "@/components/JsonLd";
 import { ArticleNextUp } from "@/components/NextUp";
-import { ARTICLES, articleBy, articlesIn, dateLabel, readingMinutes, sectionName } from "@/lib/articles";
+import { articleBy, buildableArticles, isScheduled, articlesIn, dateLabel, readingMinutes, sectionName } from "@/lib/articles";
 import { formatPrice, getProduct } from "@/lib/products";
 import { SITE_NAME, abs } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const generateStaticParams = () => ARTICLES.map((g) => ({ slug: g.slug }));
+export const generateStaticParams = () => buildableArticles().map((g) => ({ slug: g.slug }));
 export const dynamicParams = false;
+/** Re-checked hourly, so a scheduled piece goes live on its day without a redeploy. */
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const g = articleBy((await params).slug);
@@ -26,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     alternates: { canonical: `/articles/${g.slug}` },
     openGraph: { type: "article", title: g.headline, description: g.summary, images: [image], publishedTime: g.published, modifiedTime: g.updated },
     twitter: { card: "summary_large_image", title: g.headline, description: g.summary, images: [image.url] },
-    ...(g.status === "draft" ? { robots: { index: false, follow: false } } : {}),
+    ...(g.status === "draft" || isScheduled(g) ? { robots: { index: false, follow: false } } : {}),
   };
 }
 
@@ -46,6 +48,9 @@ export default async function ArticlePage({ params }: Props) {
           <Breadcrumbs items={[{ name: "Articles", href: "/articles" }, { name: sectionName(g.section), href: `/articles#${g.section}` }]} className="mb-6" />
           {g.status === "draft" && (
             <p className="mb-5 border-l-4 border-accent bg-zap px-4 py-2 text-sm font-semibold">Draft. Only visible on preview links, not on the live site.</p>
+          )}
+          {isScheduled(g) && (
+            <p className="mb-5 border-l-4 border-accent bg-zap px-4 py-2 text-sm font-semibold">Scheduled. Goes live on the site on {dateLabel(g.published)}. Until then it only shows on preview links.</p>
           )}
           <Link href={`/articles#${g.section}`} className="chip">{sectionName(g.section)}</Link>
           <h1 className="display mt-4 max-w-4xl text-4xl sm:text-6xl">{g.headline}</h1>

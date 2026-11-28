@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ARTICLES, articleBy, readingMinutes, sectionName, type Article } from "@/lib/articles";
+import { articleBy, articles, readingMinutes, sectionName, type Article } from "@/lib/articles";
 import { mostReadArticleSlugs } from "@/lib/article-stats";
 import { AllFilters } from "@/components/AllFilters";
 import { ShopBanner } from "@/components/ShopPromo";
@@ -46,7 +46,7 @@ export default async function Home() {
   const [featured, stats, uk, mostRead] = await Promise.all([featuredTrainers(4), allTownStats(), ukCounts(), mostReadArticleSlugs().catch(() => [] as string[])]);
   const facts = buildFacts(uk, stats);
   // Articles: the newest three, plus a side list of the most read (or, until there's traffic, good first reads).
-  const [lead, ...recent] = ARTICLES.slice(0, 3);
+  const [lead, ...recent] = articles().slice(0, 3);
   const pick = (slugs: string[]) => slugs.map(articleBy).filter((a): a is Article => !!a && a.slug !== lead.slug && !recent.includes(a));
   const side = pick(mostRead.length ? mostRead : START_HERE).slice(0, 4);
   return (

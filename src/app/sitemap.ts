@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { PRODUCTS } from "@/lib/products";
 import { abs } from "@/lib/site";
 import { AREAS } from "@/lib/areas";
-import { PUBLISHED_ARTICLES } from "@/lib/articles";
+import { publishedArticles } from "@/lib/articles";
 import { COUNTIES, allAreaStats, allTownStats, ukCounts, areaIndexable, areaKey, liveTopics, townIndexable, townTopicIndexable } from "@/lib/stats";
 import { CITIES } from "@/lib/taxonomy";
 import { MIN_TRAINERS, TOPICS } from "@/lib/topics";
@@ -44,7 +44,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...AREAS.filter((a) => areaIndexable(areaStats[areaKey(a)])).map((a) => page(`/locations/${a.city}/${a.slug}`, 0.7)),
     ...trainers.map((t) => page(`/trainers/${t.slug}`, 0.5, t.updated_at)),
     page("/articles", 0.6),
-    ...PUBLISHED_ARTICLES.map((g) => page(`/articles/${g.slug}`, 0.6, g.updated)),
+    ...publishedArticles().map((g) => page(`/articles/${g.slug}`, 0.6, g.updated)),
     page("/match", 0.6),
     page("/tools", 0.5),
     page("/tools/sessions-per-week", 0.5),

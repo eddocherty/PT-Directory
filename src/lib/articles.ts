@@ -8,6 +8,9 @@
  *
  * To add a piece: copy one below, give it a new slug, set `status: "draft"` while it is being reviewed (drafts
  * only appear on preview links, never on the live site), then remove `status` to publish it.
+ *
+ * To schedule a piece, remove `status` and give it a future `published` date: it stays hidden on the live site
+ * until that day (UK time), then appears on its own. The pages that list articles re-check every few hours.
  */
 export const SECTIONS = [
   { slug: "choosing", name: "Choosing a trainer" },
@@ -50,6 +53,79 @@ export type Article = {
 };
 
 const ALL_ARTICLES: Article[] = [
+  {
+    slug: "christmas-gifts-for-people-who-train",
+    title: "Christmas gift ideas for people who love fitness (that they'll actually use)",
+    summary: "With a week to go, presents for the runner, the living-room lifter and the Pilates regular in your life, plus how to give sessions with a personal trainer without dropping a hint.",
+    published: "2026-12-18",
+    updated: "2026-12-18",
+    section: "training",
+    headline: "Step away from the novelty socks: Christmas gifts for people who train",
+    photo: { alt: "A runner dressed as Father Christmas, mid-stride in a city road race", credit: "Jim Luo", source: "https://unsplash.com/photos/man-in-santa-costume-running-a-race-27To-SUJKGY" },
+    quick: [
+      "The best fitness gifts make the next session easier, not harder.",
+      "Shoes and big kit are personal: give a voucher, not a guess.",
+      "Skip anything that hints someone should change how they look.",
+    ],
+    callout: { at: 0, big: "7", text: "days to go. Vouchers, class passes and race entries can all be sorted at the last minute" },
+    shop: "beginner-gym-plan",
+    sections: [
+      {
+        heading: "The one rule",
+        body: [
+          "The fitness present that gets used is the one that makes the next session a little easier: warmer, brighter, comfier, or simply one less thing to sort out. The one that ends up in a drawer is usually the clever gadget nobody asked for.",
+          "So before you buy, do some quiet detective work. What do they already do, and when? What do they moan about? Cold hands on the morning run, a mat that slides on the kitchen floor and a barcode forgotten every other Saturday are all problems you can wrap.",
+        ],
+      },
+      {
+        heading: "For the runner",
+        body: [
+          "Winter running happens in the dark for a lot of people, so a decent head torch, a bright or reflective layer and a pair of thin running gloves are the kind of thing they will reach for every week. Proper running socks are the rare socks that get a genuine thank you.",
+          "If they do parkrun, a barcode wristband or tag means the barcode is never left at home. And if they have mentioned a race, an entry for it shows you were listening.",
+          "Leave the running shoes to them. Fit is personal, and many running shops like to watch you run before suggesting a pair. A voucher for their favourite shop does the same job without the guesswork.",
+        ],
+      },
+      {
+        heading: "For the living-room lifter",
+        body: [
+          "People who train at home tend to need a few simple things done well: a thicker, grippier mat, a set of resistance bands, or a kettlebell or dumbbells at a sensible weight. Weights are the gift where it pays to ask, or at least to look at what they already use, because too light gets boring and too heavy gets left in the hall.",
+          "Big kit like benches and racks needs space and a firm yes. If in doubt, a voucher for a fitness shop lets them choose.",
+        ],
+      },
+      {
+        heading: "For the Pilates or yoga regular",
+        body: [
+          "A class pass at the studio they already go to is hard to beat, because it is money they would have spent anyway. Many reformer studios ask people to wear grip socks, so a couple of pairs make a good stocking filler for regulars. A well-made mat or a bag to carry it in will get used too.",
+        ],
+      },
+      {
+        heading: "Sessions with a personal trainer",
+        body: [
+          "Sessions with a trainer can be a brilliant present for someone who has said they want help getting started, or getting stronger after a break. Plenty of independent trainers will sell a block of sessions or a gift voucher if you ask them directly.",
+          "Two things make it go well. First, let them choose: a voucher to put towards a trainer, or a list of a few local options, is better than a booked appointment with someone they have never spoken to. Second, let them book the first conversation themselves. A good trainer will ask about health, injuries and goals before the first session, and that is a chat people should have on their own terms. It is also worth checking any trainer is properly qualified and insured before you buy.",
+        ],
+      },
+      {
+        heading: "What to leave on the shelf",
+        body: [
+          "Unless someone has specifically asked for them, skip the bathroom scales, the diet books and anything with “body” and “blitz” on the box. A present that suggests someone should change how they look is a hint, not a gift, and Christmas morning is a bad time to deliver it.",
+          "Clothes in a guessed size, gadgets that need a monthly subscription and anything that needs a lot of space are best checked first, or swapped for a voucher.",
+        ],
+      },
+      {
+        heading: "And one for you",
+        body: [
+          "If January is when you plan to start, you can give yourself a head start now. Our shop has plans you can download and follow from your first session, and you can browse trainers near you by town in the meantime, so the first week of the new year is already sorted.",
+        ],
+      },
+    ],
+    related: [
+      { href: "/articles/how-to-check-a-personal-trainer-is-qualified", label: "How to check a trainer is qualified" },
+      { href: "/specialisms/running", label: "Running coaches" },
+      { href: "/specialisms/pilates", label: "Pilates instructors" },
+      { href: "/locations", label: "Personal trainers by town" },
+    ],
+  },
   {
     slug: "personal-trainer-pt-private-trainer-names",
     title: "Personal trainer, PT or private trainer: what's the difference?",
@@ -904,26 +980,39 @@ const ALL_ARTICLES: Article[] = [
   },
 ];
 
-/** Drafts show on preview links (and locally) so ed can read them, never on the live site. */
+/** Drafts and scheduled pieces show on preview links (and locally) so ed can read them, never on the live site. */
 const SHOW_DRAFTS = process.env.VERCEL_ENV !== "production";
 
-/** Every live article, newest first. */
-export const ARTICLES: Article[] = ALL_ARTICLES.filter((a) => SHOW_DRAFTS || a.status !== "draft").sort(
-  (a, b) => b.published.localeCompare(a.published) || ALL_ARTICLES.indexOf(a) - ALL_ARTICLES.indexOf(b),
-);
+/** Today's date in the UK as YYYY-MM-DD. Worked out on every call, so a scheduled piece appears on its day. */
+const ukToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/London" }).format(new Date());
 
-/** Live articles that search engines should know about (no drafts, even on previews). */
-export const PUBLISHED_ARTICLES = ARTICLES.filter((a) => a.status !== "draft");
+/** Ready to publish, but dated in the future: hidden on the live site until its `published` day. */
+export const isScheduled = (a: Article) => a.status !== "draft" && a.published > ukToday();
 
-export const articleBy = (slug: string) => ARTICLES.find((g) => g.slug === slug);
+const isLive = (a: Article) => a.status !== "draft" && !isScheduled(a);
 
-export const articlesIn = (section: SectionSlug) => ARTICLES.filter((a) => a.section === section);
+/** Every article that can be shown right now, newest first (on previews, drafts and scheduled pieces too). */
+export const articles = (): Article[] =>
+  ALL_ARTICLES.filter((a) => SHOW_DRAFTS || isLive(a)).sort(
+    (a, b) => b.published.localeCompare(a.published) || ALL_ARTICLES.indexOf(a) - ALL_ARTICLES.indexOf(b),
+  );
+
+/** Live articles that search engines should know about (no drafts or scheduled pieces, even on previews). */
+export const publishedArticles = () => articles().filter(isLive);
+
+/** Every page to build ahead of time: live and scheduled pieces (scheduled ones answer 404 until their day). */
+export const buildableArticles = () => ALL_ARTICLES.filter((a) => SHOW_DRAFTS || a.status !== "draft");
+
+export const articleBy = (slug: string) => articles().find((g) => g.slug === slug);
+
+export const articlesIn = (section: SectionSlug) => articles().filter((a) => a.section === section);
 
 export const dateLabel = (iso: string, short = false) =>
   new Date(`${iso}T12:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: short ? "short" : "long", year: "numeric", timeZone: "UTC" });
 
 /** Specialisms (and "online" / "home-visits") each guide is most useful for. Drives "keep reading" panels. */
 const ARTICLE_TOPICS: Record<string, string[]> = {
+  "christmas-gifts-for-people-who-train": ["running", "pilates", "general-fitness", "confidence"],
   "how-parkrun-changed-saturday-mornings": ["running", "endurance", "general-fitness"],
   "training-through-a-british-winter": ["home-visits", "online", "general-fitness"],
   "pilates-for-beginners": ["pilates", "confidence", "mobility", "flexibility"],
@@ -946,7 +1035,7 @@ export const articleTopics = (slug: string) => ARTICLE_TOPICS[slug] ?? [];
 /** The articles that best fit a set of specialisms, best match first; general articles fill any gaps. */
 export function articlesForTopics(topics: string[], n = 2, exclude?: string): Article[] {
   const fallback = ["questions-to-ask-a-personal-trainer", "how-to-check-a-personal-trainer-is-qualified", "what-happens-in-a-personal-training-session"];
-  return ARTICLES.filter((g) => g.slug !== exclude)
+  return articles().filter((g) => g.slug !== exclude)
     .map((g, i) => ({ g, i, score: articleTopics(g.slug).filter((t) => topics.includes(t)).length * 10 - (fallback.includes(g.slug) ? 0 : 1) }))
     .sort((a, b) => b.score - a.score || a.i - b.i)
     .slice(0, n)
@@ -955,7 +1044,7 @@ export function articlesForTopics(topics: string[], n = 2, exclude?: string): Ar
 
 /** The guide after this one, going round in a loop, so every guide ends with somewhere to go next. */
 export function nextArticle(slug: string): Article {
-  const pool = ARTICLES.filter((g) => g.status !== "draft" || g.slug === slug);
+  const pool = articles().filter((g) => isLive(g) || g.slug === slug);
   const i = pool.findIndex((g) => g.slug === slug);
   return pool[(i + 1) % pool.length];
 }
