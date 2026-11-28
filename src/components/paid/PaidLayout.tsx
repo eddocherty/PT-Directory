@@ -1,9 +1,7 @@
 // The page a paying trainer (£10 a month) gets. Free listings use the plain page in app/trainers/[slug] and never change.
 // Same house style as the rest of the site: ruled "timetable" rows, square corners, one cobalt accent, bold words
 // with a thick bar for buttons. Everything shown is either a fact we hold or something the trainer supplied.
-import Link from "next/link";
 import { Suspense } from "react";
-import { Arrow } from "@/components/Arrow";
 import { Avatar } from "@/components/Avatar";
 import { Breadcrumbs, type Crumb } from "@/components/Breadcrumbs";
 import { EnquiryForm } from "@/components/EnquiryForm";
@@ -43,7 +41,6 @@ type Props = {
   nameClass: string;
   sinceYear: number | null;
   links: { label: string; href: string; track: string }[];
-  topicHref: (slug: string) => string;
   reading: React.ReactNode;
 };
 
@@ -253,7 +250,7 @@ function About({ text }: { text: string }) {
   );
 }
 
-function Training({ t, first, town, topicHref }: Props) {
+function Training({ t, first, town }: Props) {
   const modes = [
     { label: "In person", on: t.in_person, note: t.city ? `In ${t.city}` : "Face to face" },
     { label: "Home visits", on: t.home_visits, note: t.city ? `Around ${t.city}` : "At your home" },
@@ -265,14 +262,8 @@ function Training({ t, first, town, topicHref }: Props) {
         <div>
           <p className="eyebrow mb-2 text-muted">Training styles</p>
           <ul className="border-t border-line">
-            {t.styles.map((s, i) => (
-              <li key={s}>
-                <Link href={topicHref(s)} className="group flex items-center gap-4 border-b border-line py-3 hover:text-accent">
-                  <span className="w-6 text-xs font-bold tabular-nums text-muted">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="display flex-1 text-2xl sm:text-3xl">{nameFor(TRAINING_STYLES, s)}</span>
-                  <Arrow className="h-4 w-4 text-muted transition group-hover:translate-x-1 group-hover:text-accent" />
-                </Link>
-              </li>
+            {t.styles.map((s) => (
+              <li key={s} className="display border-b border-line py-3 text-2xl sm:text-3xl">{nameFor(TRAINING_STYLES, s)}</li>
             ))}
           </ul>
         </div>
@@ -280,19 +271,14 @@ function Training({ t, first, town, topicHref }: Props) {
           <p className="eyebrow mb-2 text-muted">Helps you with</p>
           <ul className="border-t border-line">
             {t.goals.map((g) => (
-              <li key={g}>
-                <Link href={topicHref(g)} className="group flex items-center justify-between border-b border-line py-3 font-semibold hover:text-accent">
-                  {nameFor(FITNESS_GOALS, g)}
-                  <Arrow className="h-3.5 w-3.5 text-muted transition group-hover:translate-x-0.5 group-hover:text-accent" />
-                </Link>
-              </li>
+              <li key={g} className="border-b border-line py-3 font-semibold">{nameFor(FITNESS_GOALS, g)}</li>
             ))}
           </ul>
           {t.sports.length > 0 && (
             <>
               <p className="eyebrow mb-2 mt-6 text-muted">Sports &amp; hobbies</p>
               <div className="flex flex-wrap gap-x-4 gap-y-1">
-                {t.sports.map((s) => <Link key={s} href={`/trainers?sport=${s}`} className="chip text-muted">{nameFor(SPORTS, s)}</Link>)}
+                {t.sports.map((s) => <span key={s} className="chip text-muted">{nameFor(SPORTS, s)}</span>)}
               </div>
             </>
           )}

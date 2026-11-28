@@ -179,7 +179,6 @@ export default async function TrainerPage({ params }: Props) {
           nameClass={nameSize(t.name)}
           sinceYear={t.years_experience != null ? EXPERIENCE_BASE_YEAR - t.years_experience : null}
           links={links}
-          topicHref={topicHref}
           reading={
             <section className="border-t border-line bg-soft">
               <div className="mx-auto max-w-7xl px-4 py-10">
