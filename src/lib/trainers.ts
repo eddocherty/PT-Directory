@@ -46,6 +46,7 @@ export type Trainer = TrainerSummary & {
   reviews: Review[];
   /** Paying £10 a month: their page shows the extras ed has added. */
   is_paid: boolean;
+  status: string;
 };
 
 export type SearchFilters = {
@@ -91,14 +92,22 @@ export async function searchTrainers(f: SearchFilters, limit = PAGE_SIZE): Promi
   return { trainers: rows, total: rows[0]?.total_count ?? 0 };
 }
 
-export async function getTrainer(slug: string): Promise<Trainer | null> {
-  const db = getSupabase();
+/**
+ * One trainer's full profile. includeHidden is only ever true for ed logged in to /admin: it lets him
+ * look at hidden listings (such as the demo paid profile) exactly as visitors would see them.
+ */
+export async function getTrainer(slug: string, includeHidden = false): Promise<Trainer | null> {
+  let db = getSupabase();
+  if (includeHidden) {
+    const { getAdminDb } = await import("./admin-db");
+    db = getAdminDb() ?? db;
+  }
   if (!db) return null;
   const { data, error } = await db
     .from("trainers")
     .select("*, trainer_styles(style_slug), trainer_goals(goal_slug)")
     .eq("slug", slug)
-    .eq("status", "published")
+    .in("status", includeHidden ? ["published", "hidden"] : ["published"])
     .maybeSingle();
   if (error) throw new Error(error.message);
   if (!data) return null;
@@ -167,9 +176,11 @@ export async function featuredTrainers(limit = 4): Promise<TrainerSummary[]> {
 }
 
 async function trainerId(slug: string) {
-  const db = getSupabase();
+  // The server's own client also finds hidden listings (the demo profile ed tests enquiries on).
+  const { getAdminDb } = await import("./admin-db");
+  const db = getAdminDb() ?? getSupabase();
   if (!db) return null;
-  const { data } = await db.from("trainers").select("id").eq("slug", slug).maybeSingle();
+  const { data } = await db.from("trainers").select("id").eq("slug", slug).neq("status", "removed").maybeSingle();
   return (data?.id as string) ?? null;
 }
 
